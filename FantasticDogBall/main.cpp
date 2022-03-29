@@ -1,9 +1,8 @@
-#include <GLFW/glfw3.h>
-#include <GL/glew.h>
-#include <GL/glut.h>
 #include <cstdio>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-int main(void)
+int main(int argc, char* argv[])
 {
     GLFWwindow* window;
 
@@ -11,8 +10,6 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    glutInit(&argc, argv);
-    glutCreateWindow("GLEW Test");
     GLenum err = glewInit();
     if (GLEW_OK != err)
     {
