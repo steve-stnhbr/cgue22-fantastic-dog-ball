@@ -2,13 +2,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
-#include <bullet/btBulletDynamicsCommon.h>
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-
-void bulletSetup();
 
 unsigned int VBO;
 
@@ -51,8 +48,6 @@ int main(int argc, char* argv[])
     }
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-
-    bulletSetup();
     /*creating VBO*/
     glGenBuffers(1, &VBO);
 
@@ -90,13 +85,4 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-}
-
-void bulletSetup() {
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-    btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0, -10, 0));
 }
