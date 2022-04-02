@@ -1,10 +1,20 @@
 #include <cstdio>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <stdlib.h>
+
+void error_callback(int error, const char* msg);
+
+void error_callback(int error, const char* msg) {
+    fprintf(stderr, "(%i) %s", error, msg);
+}
 
 int main(int argc, char* argv[])
 {
     GLFWwindow* window;
+
+    glfwSetErrorCallback(error_callback);
+
 
     /* Initialize the library */
     if (!glfwInit()) {
