@@ -17,16 +17,14 @@ GLuint
     /**
     * this holds the vertexArray ID
     */
-    VAO, 
+    vao, 
     /*
         this will hold the vertexBuffer ID
     */
-    VBO;
+    vbo;
 
 int main(int argc, char* argv[])
 {
-    GLFWwindow* window;
-
     glfwSetErrorCallback(error_callback);
 
     /* Initialize the library */
@@ -39,10 +37,9 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
     {
-
         glfwTerminate();
         return -1;
     }
@@ -62,7 +59,7 @@ int main(int argc, char* argv[])
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
     /*creating VBO*/
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &vbo);
 
     bulletSetup();
 
@@ -110,7 +107,7 @@ void bulletSetup() {
 }
 
 void vertexArraySetup() {
-    glGenVertexArrays(1, &VAO);
-    glGenVertexArrays(2, &VBO);
-    glBindVertexArray(VAO);
+    glGenVertexArrays(1, &vao);
+    glGenVertexArrays(2, &vbo);
+    glBindVertexArray(vao);
 }
