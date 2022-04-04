@@ -4,7 +4,6 @@ constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
 #include <cstdio>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <stdlib.h>
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
 
@@ -12,15 +11,23 @@ void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void bulletSetup();
+void vertexArraySetup();
 
-unsigned int VBO;
+GLuint 
+    /**
+    * this holds the vertexArray ID
+    */
+    VAO, 
+    /*
+        this will hold the vertexBuffer ID
+    */
+    VBO;
 
 int main(int argc, char* argv[])
 {
     GLFWwindow* window;
 
     glfwSetErrorCallback(error_callback);
-
 
     /* Initialize the library */
     if (!glfwInit()) {
@@ -69,7 +76,6 @@ int main(int argc, char* argv[])
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
-
         /* Poll for and process events */
         glfwPollEvents();
     }
@@ -101,4 +107,10 @@ void bulletSetup() {
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
     btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
+}
+
+void vertexArraySetup() {
+    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(2, &VBO);
+    glBindVertexArray(VAO);
 }
