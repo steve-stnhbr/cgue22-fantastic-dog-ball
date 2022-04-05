@@ -3,5 +3,6 @@
 
 class Utils
 {
+public:
 	static std::string readFile(const char* path);
 };

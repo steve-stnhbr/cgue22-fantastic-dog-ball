@@ -1,4 +1,5 @@
 
+#include "Shaders.h"
 constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
 
 #include <cstdio>
@@ -6,6 +7,7 @@ constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
 #include <GLFW/glfw3.h>
 #include <bullet/btBulletCollisionCommon.h>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <stdexcept>
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -62,6 +64,25 @@ int main(int argc, char* argv[])
     glGenBuffers(1, &vbo);
 
     bulletSetup();
+
+    try
+    {
+        glUseProgram(Shaders::loadShadersFile({
+           GL_VERTEX_SHADER,
+           GL_FRAGMENT_SHADER
+            }, {
+                "./VertexShader.hlsl",
+                "./GeometryShader.hlsl"
+            }));
+    }
+    catch (Shaders::ShaderCompilationException& e)
+    {
+        printf("Shader compile error (%s):\n%s", e.shaderName.c_str(), e.what());
+    }
+    catch (Shaders::ProgramLinkException& e)
+    {
+	    
+    }
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
