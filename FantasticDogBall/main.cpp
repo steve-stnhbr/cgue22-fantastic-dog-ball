@@ -98,11 +98,11 @@ void processInput(GLFWwindow* window)
 }
 
 void bulletSetup() {
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-    btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    auto const collisionConfiguration = new btDefaultCollisionConfiguration();
+    auto const dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    auto const overlappingPairCache = new btDbvtBroadphase();
+    auto const solver = new btSequentialImpulseConstraintSolver;
+    auto const dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
 }
 
