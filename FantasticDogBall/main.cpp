@@ -1,6 +1,6 @@
 
 #include "Shaders.h"
-constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
+// constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
 
 #include <cstdio>
 #include <GL/glew.h>
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     }
     catch (Shaders::ProgramLinkException& e)
     {
-	    
+        printf("Program link error (%d):\n%s", e.program, e.what());
     }
 
     /* Loop until the user closes the window */

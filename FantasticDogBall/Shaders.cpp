@@ -15,9 +15,9 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 
-		char* message = static_cast<char*>(alloca(length*sizeof(char)));
+		char* message = static_cast<char*>(_malloca(length*sizeof(char)));
 		glGetShaderInfoLog(id, length, nullptr, message);
-
+		throw ShaderCompilationException(message, src.c_str());
 	}
 
 	return id;
@@ -62,9 +62,8 @@ unsigned int Shaders::loadShaders(bool src, const std::vector<unsigned> types, c
 		int length;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
 
-		char message[length];
-		glGetProgramInfoLog(program, length, nullptr, message);
-		printf("Failed to link shaders to program:\n%s", message);
+		char* message = static_cast<char*>(alloca(length * sizeof(char)));
+		throw ProgramLinkException(message, program);
 	}
 
 	return program;
