@@ -20,7 +20,6 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 
-!external/*
 
 [Rr]elease/
 [Rr]eleases/
@@ -364,3 +363,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Add library folders
+!external/*
+!external/lib/Debug
+!external/lib/Release
