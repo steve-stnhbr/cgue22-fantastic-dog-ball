@@ -9,10 +9,13 @@
 class Shaders
 {
 public:
+	static std::vector<unsigned> shaders, programs;
+
+	static void cleanup();
 	static unsigned int shaderFile(unsigned int type, const std::string& src);
 	static unsigned int shaderSource(unsigned int type, const std::string& src);
-	static unsigned int loadShadersFile(const std::vector<unsigned int> types, const std::vector<std::string> srcs);
-	static unsigned int loadShadersSource(const std::vector<unsigned int> types, const std::vector<std::string> srcs);
+	static unsigned int loadShadersFile(const std::vector<unsigned int>& types, const std::vector<std::string>& srcs);
+	static unsigned int loadShadersSource(const std::vector<unsigned int>& types, const std::vector<std::string>& srcs);
 
 
 	class ShaderCompilationException: public std::logic_error
@@ -37,6 +40,5 @@ public:
 	};
 
 private:
-	static unsigned int loadShaders(bool src, const std::vector<unsigned int> types, const std::vector<std::string> srcs);
+	static unsigned int loadShaders(const bool src, const std::vector<unsigned int>& types, const std::vector<std::string>& srcs);
 };
-

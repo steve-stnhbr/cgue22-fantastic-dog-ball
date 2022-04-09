@@ -1,18 +1,13 @@
 #pragma once
+#include "Render.h"
 
-#include <vector>
-#include <GL/glew.h>
-
-#include "Vertex.h"
 
 class RenderObject
 {
 private:
-	std::vector<Vertex> vertex_array;
-	std::vector<GLuint> index_array;
+	Render::Mesh		mesh_;
+	Render::Material	material;
 
 
-public:
-	RenderObject(std::vector<Vertex> vertex_array, std::vector<GLuint> index_array);
+
 };
-
