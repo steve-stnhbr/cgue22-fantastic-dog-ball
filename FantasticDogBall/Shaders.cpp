@@ -1,8 +1,8 @@
 #include "Shaders.h"
 #include "Utils.h"
 
-std::vector<unsigned> Shaders::shaders;
-std::vector<unsigned> Shaders::programs;
+std::vector<unsigned> shaders;
+std::vector<unsigned> programs;
 
 void Shaders::cleanup()
 {
@@ -28,12 +28,7 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE)
 	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-
-		char* message = static_cast<char*>(_malloca(length*sizeof(char)));
-		glGetShaderInfoLog(id, length, nullptr, message);
-		throw ShaderCompilationException(message, src.c_str());
+		throw ShaderCompilationException(getShaderLog(id), src.c_str());
 	}
 
 	return id;
@@ -73,22 +68,41 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 	}
 
 	glLinkProgram(program);
+	glValidateProgram(program);
 
 	int result;
 	glGetProgramiv(program, GL_LINK_STATUS, &result);
 	if (result == GL_FALSE)
 	{
-		int length;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-
-		char* message = static_cast<char*>(_malloca(length * sizeof(char)));
-		glGetProgramInfoLog(program, length, nullptr, message);
-		throw ProgramLinkException(message, program);
+		throw ProgramLinkException(getProgramLog(program), program);
 	}
-
+	
 	Shaders::programs.push_back(program);
 	return program;
 }
+
+
+const char* Shaders::getProgramLog(const unsigned program)
+{
+	int length;
+	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+
+	char* message = static_cast<char*>(_malloca(length * sizeof(char)));
+	glGetProgramInfoLog(program, length, nullptr, message);
+	return message;
+}
+
+
+const char* Shaders::getShaderLog(const unsigned id)
+{
+	int length;
+	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+
+	char* message = static_cast<char*>(_malloca(length * sizeof(char)));
+	glGetShaderInfoLog(id, length, nullptr, message);
+	return message;
+}
+
 
 Shaders::ProgramLinkException::ProgramLinkException() : base(""), program(0)
 {}
@@ -103,3 +117,28 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 {}
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
+
+Shaders::Program::Program(std::string vertexPath, std::string fragmentPath)
+{
+	Program::vertexPath = vertexPath;
+	Program::fragmentPath = fragmentPath;
+
+	Program::ID = loadShaders(false, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER}, {vertexPath, fragmentPath});
+}
+void Shaders::Program::setBool(const std::string& name, bool value) const
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+}
+void Shaders::Program::setInt(const std::string& name, int value) const
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shaders::Program::setFloat(const std::string& name, float value) const
+{
+	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shaders::Program::use()
+{
+	glUseProgram(ID);
+}

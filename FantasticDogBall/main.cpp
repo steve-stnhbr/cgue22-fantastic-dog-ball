@@ -11,6 +11,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Scene.h"
+
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -33,10 +35,14 @@ struct TestBufferData
 };
 
 GLuint
-	/**
-	 * this holds the vertexArray ID
-	 */
-	vao;
+/**
+ * this holds the vertexArray ID
+ */
+    vao,
+    /*
+     * this holds our vertex buffer object
+     */
+    vbo;
 
 int main(int argc, char* argv[])
 {
@@ -75,77 +81,50 @@ int main(int argc, char* argv[])
 
     initGl();
     initBullet();
-    vertexArraySetup();
-
-    GLuint testBuf;
-    glCreateBuffers(1, &testBuf);
-    constexpr GLsizeiptr bufferSize = sizeof(TestBufferData);
-
-    // glNamedBufferStorage(testBuf, bufferSize, nullptr, GL_DYNAMIC_STORAGE_BIT);
-    // glBindBufferRange(GL_UNIFORM_BUFFER, 0, testBuf, 0, bufferSize);
+    vertexArraySetup(); 
 
     constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
-    unsigned int program;
-
-    try
-    {
-        program = Shaders::loadShadersFile(
-            {
-				GL_VERTEX_SHADER,
-				GL_FRAGMENT_SHADER
-            }, {
-                "./VertexShader.glsl",
-                "./FragmentShader.glsl"
-            });
-    }
-    catch (Shaders::ShaderCompilationException& e)
-    {
-    	fprintf(stderr, "Shader compile error (%s):%s\n", e.shaderName.c_str(), e.what());
-        glfwTerminate();
-        exit(-12);
-    }
-    catch (Shaders::ProgramLinkException& e)
-    {
-        fprintf(stderr, "Program link error (%d):%s\n", e.program, e.what());
-        glfwTerminate();
-        exit(-13);
-    }
 
 
+    Scene scene = Scene();
+
+    Render::StaticMaterial material = Render::StaticMaterial{};
+
+    scene.addObject( RenderObject {
+	    Render::Mesh {
+	        std::vector<Vertex> {
+	            Vertex {
+	                {.5f, .5f, .0f},
+	                {.0f, .0f, .0f},
+	                {1.0f, .0f, .0f, 1.0f}
+	            },
+	            Vertex {
+	                {.5f, -.5f, .0f},
+	                {.0f, .0f, .0f},
+	                {.0f, 1.0f, .0f, 1.0f}
+	            },
+	            Vertex {
+	                {-.5f, .5f, .0f},
+	                {.0f, .0f, .0f},
+	                {.0f, .0f, 1.0f, 1.0f}
+	            },
+	        },
+	        std::vector <unsigned> {
+	            0, 1, 2
+	        }
+        }, &material, "TEST"
+    });
+    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
 
-
-        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        /*
-        const glm::mat4 m = glm::rotate(
-            glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, -3.5f)),
-            static_cast<float>(glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f)
-        );
-
-        const glm::mat4 p = glm::perspective(FOV, ratio, 0.1f, 1000.0f);
-
-        const TestBufferData buffer_data = {
-            p * m,
-            false
-        };
-
-        glNamedBufferSubData(
-            testBuf, 0, bufferSize, &buffer_data
-        );*/
-
         /* Render here */
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glLinkProgram(program);
-        glUseProgram(program);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        scene.render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -182,12 +161,8 @@ void processInput(GLFWwindow* window)
 
 void initGl()
 {
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_POLYGON_OFFSET_LINE);
-    glPolygonOffset(-1.0f, -1.0f);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
 }
 
 void initBullet() {
