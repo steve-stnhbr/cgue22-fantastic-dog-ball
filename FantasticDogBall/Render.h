@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
+#include <stb/stb_image.h>
 
 #include "Shaders.h"
 #include "Vertex.h"
@@ -54,18 +55,37 @@ namespace Render
 	};
 
 	// at the moment the texture type describes the location of a bitmap
-	typedef std::string texture;
+	struct Texture
+	{
+		std::string filePath;
+		int width, height, nrChannels;
+
+		unsigned char* data;
+		bool defined;
+
+		Texture(std::string filePath_)
+		{
+			if(filePath_.empty())
+			{
+				defined = false;
+			} else
+			{
+				filePath = filePath_;
+				data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 0);
+			}
+		}
+	};
 	// A material that is defined by different textures allowing for non-static properties
 	struct TextureMaterial final : public Material
 	{
-		const texture color;
-		const texture roughness;
-		const texture transmission;
-		const texture indexOfRefraction;
-		const texture metallic;
-		const texture specularity;
+		const Texture color;
+		const Texture roughness;
+		const Texture transmission;
+		const Texture indexOfRefraction;
+		const Texture metallic;
+		const Texture specularity;
 
-		const texture normal;
+		const Texture normal;
 
 		const Shaders::Program program = Shaders::Program(vertexShader, textureFragmentShader);
 		const static unsigned VAOi = 1;
@@ -77,9 +97,11 @@ namespace Render
 
 		Shaders::Program getProgram() override
 		{
+
 			return program;
 		}
 	};
+
 
 	// A Material that is defined by different shader files allowing for procedural generation of properties
 	struct ProceduralMaterial final : public Material
