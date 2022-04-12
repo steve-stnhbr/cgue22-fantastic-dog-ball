@@ -1,5 +1,4 @@
 
-#include "Shaders.h"
 // constexpr auto _ITERATOR_DEBUG_LEVEL = 2;
 
 #include <cstdio>
@@ -12,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Scene.h"
+#include "Shaders.h"
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -19,8 +19,6 @@ void processInput(GLFWwindow* window);
 void initGl();
 void initBullet();
 void vertexArraySetup();
-
-uint64_t frameCount = 0;
 
 const int
 	WINDOW_WIDTH = 1920,
@@ -90,28 +88,31 @@ int main(int argc, char* argv[])
 
     Render::StaticMaterial material = Render::StaticMaterial{};
 
+    std::vector<Vertex> vertecies = {
+        Vertex{
+            {.5f, .5f, .0f},
+            {.0f, .0f, .0f},
+            {1.0f, .0f, .0f, 1.0f}
+        },
+        Vertex{
+            {.5f, -.5f, .0f},
+            {.0f, .0f, .0f},
+            {.0f, 1.0f, .0f, 1.0f}
+        },
+        Vertex{
+            {-.5f, .5f, .0f},
+            {.0f, .0f, .0f},
+            {.0f, .0f, 1.0f, 1.0f}
+        },
+    };
+
+    std::vector <unsigned> indices = {
+        0, 1, 2
+    };
+
     scene.addObject( RenderObject {
 	    Render::Mesh {
-	        std::vector<Vertex> {
-	            Vertex {
-	                {.5f, .5f, .0f},
-	                {.0f, .0f, .0f},
-	                {1.0f, .0f, .0f, 1.0f}
-	            },
-	            Vertex {
-	                {.5f, -.5f, .0f},
-	                {.0f, .0f, .0f},
-	                {.0f, 1.0f, .0f, 1.0f}
-	            },
-	            Vertex {
-	                {-.5f, .5f, .0f},
-	                {.0f, .0f, .0f},
-	                {.0f, .0f, 1.0f, 1.0f}
-	            },
-	        },
-	        std::vector <unsigned> {
-	            0, 1, 2
-	        }
+	        vertecies, indices
         }, &material, "TEST"
     });
     
@@ -131,9 +132,6 @@ int main(int argc, char* argv[])
 
         /* Poll for and process events */
         glfwPollEvents();
-
-        frameCount++;
-        fprintf(stdout, "Drawing frame #%llu\n", frameCount);
     }
 
     Shaders::cleanup();

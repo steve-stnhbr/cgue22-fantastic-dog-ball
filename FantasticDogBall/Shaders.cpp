@@ -1,16 +1,17 @@
 #include "Shaders.h"
+
+#include "Render.h"
 #include "Utils.h"
 
-std::vector<unsigned> shaders;
-std::vector<unsigned> programs;
+std::vector<unsigned> shaders, programs;
 
 void Shaders::cleanup()
 {
-	for (const unsigned element : Shaders::programs)
+	for (const unsigned element : programs)
 	{
 		glDeleteProgram(element);
 	}
-	for (const unsigned element : Shaders::shaders)
+	for (const unsigned element : shaders)
 	{
 		glDeleteShader(element);
 	}
@@ -64,7 +65,7 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 	{
 		const unsigned int shader = src ? Shaders::shaderSource(types[i], srcs[i]) : Shaders::shaderFile(types[i], srcs[i]);
 		glAttachShader(program, shader);
-		Shaders::shaders.push_back(shader);
+		shaders.push_back(shader);
 	}
 
 	glLinkProgram(program);
@@ -77,7 +78,7 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 		throw ProgramLinkException(getProgramLog(program), program);
 	}
 	
-	Shaders::programs.push_back(program);
+	programs.push_back(program);
 	return program;
 }
 
@@ -125,17 +126,32 @@ Shaders::Program::Program(std::string vertexPath, std::string fragmentPath)
 
 	Program::ID = loadShaders(false, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER}, {vertexPath, fragmentPath});
 }
-void Shaders::Program::setBool(const std::string& name, bool value) const
+void Shaders::Program::setBool(const std::string& name, const bool value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
 }
-void Shaders::Program::setInt(const std::string& name, int value) const
+void Shaders::Program::setInt(const std::string& name, const int value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shaders::Program::setFloat(const std::string& name, float value) const
+void Shaders::Program::setFloat(const std::string& name, const float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shaders::Program::setTexture(const unsigned location, const Shaders::Texture& texture) const
+{
+	if(!texture.defined)
+	{
+		(* this).setFloat("texture" + std::to_string(location), texture.substituteValue);
+	}
+
+	GLuint textureHandle;
+	glCreateTextures(GL_TEXTURE_2D, 1, &textureHandle);
+	glTextureStorage2D(textureHandle, 1, GL_RGBA8, texture.width, texture.height);
+	glTextureSubImage2D(textureHandle, 0, 0, 0, texture.width, texture.height, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
+	glTextureParameteri(textureHandle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBindTextureUnit(location, textureHandle);
 }
 
 void Shaders::Program::use()

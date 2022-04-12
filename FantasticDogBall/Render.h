@@ -22,6 +22,9 @@ namespace Render
 	{
 		const std::vector<Vertex> vertex_array;
 		const std::vector<unsigned> index_array;
+		unsigned eboID, vboID;
+
+		Render::Mesh(std::vector<Vertex>&, std::vector<unsigned>&);
 	};
 	
 	struct Material
@@ -54,38 +57,17 @@ namespace Render
 		}
 	};
 
-	// at the moment the texture type describes the location of a bitmap
-	struct Texture
-	{
-		std::string filePath;
-		int width, height, nrChannels;
-
-		unsigned char* data;
-		bool defined;
-
-		Texture(std::string filePath_)
-		{
-			if(filePath_.empty())
-			{
-				defined = false;
-			} else
-			{
-				filePath = filePath_;
-				data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 0);
-			}
-		}
-	};
 	// A material that is defined by different textures allowing for non-static properties
 	struct TextureMaterial final : public Material
 	{
-		const Texture color;
-		const Texture roughness;
-		const Texture transmission;
-		const Texture indexOfRefraction;
-		const Texture metallic;
-		const Texture specularity;
+		const Shaders::Texture color;
+		const Shaders::Texture roughness;
+		const Shaders::Texture transmission;
+		const Shaders::Texture indexOfRefraction;
+		const Shaders::Texture metallic;
+		const Shaders::Texture specularity;
 
-		const Texture normal;
+		const Shaders::Texture normal;
 
 		const Shaders::Program program = Shaders::Program(vertexShader, textureFragmentShader);
 		const static unsigned VAOi = 1;

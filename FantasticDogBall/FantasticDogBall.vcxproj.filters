@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{da2bafbe-f113-4996-96a0-5c6ecf67c657}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,11 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="VertexShader.glsl">
-      <Filter>Quelldateien</Filter>
-    </None>
     <None Include="FragmentShader.glsl">
-      <Filter>Quelldateien</Filter>
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="VertexShader.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
