@@ -8,20 +8,23 @@ Renderer::Renderer()
 {
 }
 
+/**
+ * \brief 
+ * \param objects 
+ */
 void Renderer::render(const std::vector<RenderObject>& objects)
 {
+	
 	fprintf(stdout, "Rendering (%llu): \n", frameCount);
 	for (const RenderObject element : objects)
 	{
 		fprintf(stdout, "\t%s\n", element.name.c_str());
 		// bind program
-		auto prog = (*element.material).getProgram();
+		auto prog = element.material->getProgram();
 		prog.use();
 		// bind uniforms here
-		Camera camera;
-		camera.setData(Camera::Data(nullptr));
-		prog.setUniform("cameraData", 1, camera.buffer);
-
+		camera.setData(Camera::Data{glm::mat4(1), glm::mat4(1) });
+		prog.setUniform("CameraData", 1, camera.buffer);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

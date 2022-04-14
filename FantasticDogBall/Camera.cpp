@@ -5,6 +5,7 @@
 
 Camera::Camera(): data({ glm::mat4(1), glm::mat4(1) })
 {
+	buffer.create(sizeof(Data));
 }
 
 

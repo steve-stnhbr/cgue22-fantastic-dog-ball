@@ -49,6 +49,7 @@ namespace Shaders
 	public:
 		// the program ID
 		unsigned int ID;
+		bool linked = false;
 
 		std::string vertexPath, fragmentPath;
 

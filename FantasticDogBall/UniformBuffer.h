@@ -13,8 +13,12 @@ public:
 
 private:
 	const unsigned STANDARD_BUFFER_SIZE = 1024;
-	unsigned id;
+	unsigned id = 0;
 	void* data;
+
+	void checkCreated_(const char* file, int line);
+
+#define checkCreated() checkCreated_(__FILE__, __LINE__);
 
 };
 

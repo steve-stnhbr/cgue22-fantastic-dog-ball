@@ -146,6 +146,7 @@ void Shaders::Program::setUniform(const std::string& name, unsigned binding, Uni
 	glGetActiveUniformBlockiv(ID, ubi, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
 	glUniformBlockBinding(ID, ubi, binding);
 	buffer.bind();
+	Utils::checkError();
 }
 
 void Shaders::Program::setTexture(const unsigned location, const Shaders::Texture& texture) const
@@ -161,9 +162,11 @@ void Shaders::Program::setTexture(const unsigned location, const Shaders::Textur
 	glTextureSubImage2D(textureHandle, 0, 0, 0, texture.width, texture.height, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
 	glTextureParameteri(textureHandle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glBindTextureUnit(location, textureHandle);
+	Utils::checkError();
 }
 
 void Shaders::Program::use()
 {
 	glUseProgram(ID);
+	Utils::checkError();
 }
