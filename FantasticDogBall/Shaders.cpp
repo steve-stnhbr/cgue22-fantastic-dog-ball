@@ -138,6 +138,17 @@ void Shaders::Program::setFloat(const std::string& name, const float value) cons
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
+void Shaders::Program::setStruct(const std::string& name, unsigned binding, unsigned size, void* value) const
+{
+	auto ubi = glGetUniformBlockIndex(ID, name.c_str());
+	GLint blockSize;
+	glGetActiveUniformBlockiv(ID, ubi, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+	glUniformBlockBinding(ID, ubi, binding);
+	GLuint bufferID;
+	glCreateBuffers(1, &bufferID);
+	glNamedBufferData(bufferID, size, value, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
+}
 
 void Shaders::Program::setTexture(const unsigned location, const Shaders::Texture& texture) const
 {

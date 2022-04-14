@@ -29,6 +29,8 @@ const int
 	WINDOW_HEIGHT = 1080;
 const float
 	FOV = 45.0f;
+const char*
+NAME = "Fantastic Dog Ball";
 
 struct TestBufferData
 {
@@ -114,12 +116,12 @@ int main(int argc, char* argv[])
         0, 1, 2
     };
 
-    scene.addObject( RenderObject(
-	    Render::Mesh {
-	        vertecies, indices
-        }, &material, "TEST"
-    ));
-    
+    scene.addObject(RenderObject{
+        Render::Cube{
+            0, 0, 0, 1, 1, 1
+		}, &material, "CUBE"
+    });
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {

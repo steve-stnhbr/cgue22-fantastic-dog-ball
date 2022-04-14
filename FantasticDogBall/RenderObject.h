@@ -1,6 +1,9 @@
 #pragma once
 #include "Render.h"
 
+/**
+ * 
+ */
 class RenderObject
 {
 public:
@@ -28,4 +31,11 @@ public:
 	RenderObject(Render::Mesh, Render::Material*, const std::string&);
 
 	void buildVAO() const;
+
+
+};
+
+class Cube : public RenderObject
+{
+	Cube(float centerX, float centerY, float centerZ, float width, float height, float depth);
 };

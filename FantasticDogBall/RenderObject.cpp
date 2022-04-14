@@ -28,3 +28,4 @@ void RenderObject::buildVAO() const
 	
 	material->assignVertexAttributes(vaoID);
 }
+

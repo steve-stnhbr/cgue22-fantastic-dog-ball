@@ -15,7 +15,10 @@ void Renderer::render(const std::vector<RenderObject>& objects)
 	{
 		fprintf(stdout, "\t%s\n", element.name.c_str());
 		// bind program
-		(*element.material).getProgram().use();
+		auto prog = (*element.material).getProgram();
+		prog.use();
+		// bind uniforms her
+
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

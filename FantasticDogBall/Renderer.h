@@ -10,12 +10,4 @@ public:
 	Renderer();
 	GLenum renderMode;
 	void render(const std::vector<RenderObject>&);
-
-
-protected:
-	unsigned vaos[3];
-	void initVAOs();
-
-private:
-	unsigned generateEBO(const std::vector<unsigned int>&);
 };

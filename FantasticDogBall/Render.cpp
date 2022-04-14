@@ -5,6 +5,95 @@ Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_ar
 {
 }
 
+Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({
+			Vertex {
+				{
+					centerX + width/2, centerY + height/2, centerZ +depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX - width/2, centerY + height/2, centerZ +depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX + width/2, centerY - height/2, centerZ +depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX - width/2, centerY - height/2, centerZ +depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX + width/2, centerY + height/2, centerZ -depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX - width/2, centerY + height/2, centerZ -depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX + width/2, centerY - height/2, centerZ -depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},Vertex {
+				{
+					centerX - width/2, centerY - height/2, centerZ -depth/2
+				},
+				{
+					0, 0, 0
+				},
+				{
+					1.0f, .0f, .0f, 1.0f
+				},
+			},
+	}, {
+		0,1,2,1,2,3,3,4,5
+	})
+{
+}
+
+
 unsigned Render::loadProgram(const std::vector<GLenum>& types, const std::vector<std::string>& files)
 {
 	try

@@ -26,12 +26,19 @@ namespace Render
 
 		Render::Mesh(std::vector<Vertex>, std::vector<unsigned>);
 	};
-	
+
+	struct Cube: public Mesh
+	{
+		Cube(float, float, float, float, float, float);
+	};
+
 	struct Material
 	{
-		virtual unsigned getVAO() = 0;
 		virtual Shaders::Program getProgram() = 0;
 		virtual ~Material() = default;
+		/*
+		 * This function is responsible for assigning streams of vertex-attributes
+		 */
 		virtual void assignVertexAttributes(unsigned vao) = 0;
 	};
 	// A material that is defined by constant values for material properties
@@ -45,18 +52,23 @@ namespace Render
 		const float specularity = 0;
 
 		const Shaders::Program program = Shaders::Program(vertexShader, colorFragmentShader);
-		const static unsigned VAOi = 0;
-
-		unsigned getVAO() override
-		{
-			return VAOi;
-		}
 
 		Shaders::Program getProgram() override
 		{
+			program.setFloat("roughness", roughness);
+			program.setFloat("transmission", transmission);
+			program.setFloat("indexOfRefraction", indexOfRefraction);
+			program.setFloat("metallic", metallic);
+			program.setFloat("specularity", specularity);
 			return program;
 		}
 
+		/**
+		 * This function is responsible for assigning streams of vertex-attributes
+		 * location = 0, binding = 0: postition
+		 * location = 1, binding = 0: normal
+		 * location = 2, binding = 0: color
+		 */
 		void assignVertexAttributes(unsigned vao) override
 		{
 			// --- postition ---
@@ -87,26 +99,51 @@ namespace Render
 	struct TextureMaterial final : public Material
 	{
 		const Shaders::Texture color;
+		const Shaders::Texture normal;
 		const Shaders::Texture roughness;
-		const Shaders::Texture transmission;
-		const Shaders::Texture indexOfRefraction;
 		const Shaders::Texture metallic;
 		const Shaders::Texture specularity;
 
-		const Shaders::Texture normal;
-
 		const Shaders::Program program = Shaders::Program(vertexShader, textureFragmentShader);
-		const static unsigned VAOi = 1;
-
-		unsigned getVAO() override
-		{
-			return VAOi;
-		}
 
 		Shaders::Program getProgram() override
 		{
-
+			program.setTexture(0, color);
+			program.setTexture(1, normal);
+			program.setTexture(2, metallic);
+			program.setTexture(3, specularity);
 			return program;
+		}
+
+		/**
+		 * This function is responsible for assigning streams of vertex-attributes
+		 * location = 0, binding = 0: postition
+		 * location = 1, binding = 0: normal
+		 * location = 2, binding = 0: texture_coordinate
+		 */
+		void assignVertexAttributes(unsigned vao) override
+		{
+			// --- postition ---
+			glEnableVertexArrayAttrib(vao, 0);
+			Utils::checkError();
+			glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 0, 0);
+			Utils::checkError();
+			// --- normal ---
+			glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 1, 0);
+			Utils::checkError();
+			glEnableVertexArrayAttrib(vao, 1);
+			Utils::checkError();
+			// --- color ---
+			glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, texture_coordinate));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 2, 0);
+			Utils::checkError();
+			glEnableVertexArrayAttrib(vao, 2);
+			Utils::checkError();
 		}
 	};
 
@@ -117,16 +154,33 @@ namespace Render
 		const shader shaderFile;
 
 		const Shaders::Program program = Shaders::Program(vertexShader, shaderFile);
-		const static unsigned VAOi = 2;
-
-		unsigned getVAO() override
-		{
-			return VAOi;
-		}
 
 		Shaders::Program getProgram() override
 		{
 			return program;
+		}
+
+		/**
+		 * This function is responsible for assigning streams of vertex-attributes
+		 * location = 0, binding = 0: postition
+		 * location = 1, binding = 0: normal
+		 */
+		void assignVertexAttributes(unsigned vao) override
+		{
+			// --- postition ---
+			glEnableVertexArrayAttrib(vao, 0);
+			Utils::checkError();
+			glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 0, 0);
+			Utils::checkError();
+			// --- normal ---
+			glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 1, 0);
+			Utils::checkError();
+			glEnableVertexArrayAttrib(vao, 1);
+			Utils::checkError();
 		}
 	};
 }
