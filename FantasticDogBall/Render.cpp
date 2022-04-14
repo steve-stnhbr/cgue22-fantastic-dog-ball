@@ -1,15 +1,8 @@
 #include "Render.h"
 
-Render::Mesh::Mesh(std::vector<Vertex>& v_, std::vector<unsigned>& i_) : vertex_array(v_), index_array(i_)
+Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_array(std::move(v_)), index_array(
+	                                                                       std::move(i_))
 {
-	using indexType = std::decay_t<decltype(*index_array.begin())>;
-	glGenBuffers(1, &eboID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(index_array.size() * sizeof(indexType)), index_array.data(), GL_STATIC_DRAW);
-	using vertexType = std::decay_t<decltype(*index_array.begin())>;
-	glGenBuffers(1, &vboID);
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(index_array.size() * sizeof(vertexType)), index_array.data(), GL_STATIC_DRAW);
 }
 
 unsigned Render::loadProgram(const std::vector<GLenum>& types, const std::vector<std::string>& files)

@@ -21,4 +21,12 @@ public:
 	 * The index of the render object in the scene, set when adding object to the scene
 	 */
 	unsigned long long	index;
+	/**
+	 * unsigned 
+	 */
+	GLuint vaoID, vboID, eboID;
+
+	RenderObject(Render::Mesh, Render::Material*, const std::string&);
+
+	void buildVAO() const;
 };

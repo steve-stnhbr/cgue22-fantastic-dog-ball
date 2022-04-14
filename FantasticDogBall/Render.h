@@ -5,6 +5,7 @@
 #include <stb/stb_image.h>
 
 #include "Shaders.h"
+#include "Utils.h"
 #include "Vertex.h"
 
 namespace Render
@@ -21,10 +22,9 @@ namespace Render
 	struct Mesh
 	{
 		const std::vector<Vertex> vertex_array;
-		const std::vector<unsigned> index_array;
-		unsigned eboID, vboID;
+		const std::vector<unsigned int> index_array;
 
-		Render::Mesh(std::vector<Vertex>&, std::vector<unsigned>&);
+		Render::Mesh(std::vector<Vertex>, std::vector<unsigned>);
 	};
 	
 	struct Material
@@ -32,6 +32,7 @@ namespace Render
 		virtual unsigned getVAO() = 0;
 		virtual Shaders::Program getProgram() = 0;
 		virtual ~Material() = default;
+		virtual void assignVertexAttributes(unsigned vao) = 0;
 	};
 	// A material that is defined by constant values for material properties
 	struct StaticMaterial final : public Material
@@ -54,6 +55,41 @@ namespace Render
 		Shaders::Program getProgram() override
 		{
 			return program;
+		}
+
+		void assignVertexAttributes(unsigned vao) override
+		{
+			// position
+			// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0));
+			// glEnableVertexAttribArray(0);
+			// normal
+			// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(3));
+			// glEnableVertexAttribArray(1);
+			// color
+			// glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(8));
+			// glEnableVertexAttribArray(2);
+
+			// --- postition ---
+			glEnableVertexArrayAttrib(vao, 0);
+			Utils::checkError();
+			glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 0, 0);
+			Utils::checkError();
+			// --- normal ---
+			glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, 3);
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 1, 0);
+			Utils::checkError();
+			glEnableVertexArrayAttrib(vao, 1);
+			Utils::checkError();
+			// --- color ---
+			glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, 8);
+			Utils::checkError();
+			glVertexArrayAttribBinding(vao, 2, 0);
+			Utils::checkError();
+			glEnableVertexArrayAttrib(vao, 2);
+			Utils::checkError();
 		}
 	};
 
