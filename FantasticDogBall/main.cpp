@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
 
         /* Render here */
         glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
 
         scene.render();
@@ -175,6 +175,7 @@ void initGl()
 		glEnable(GL_DEBUG_OUTPUT);
 	#endif
 
+    glEnable(GL_DEPTH_TEST);
     glDebugMessageCallback(gl_error_callback, nullptr);
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
