@@ -8,87 +8,89 @@ Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_ar
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({
 			Vertex {
 				{
-					centerX + width/2, centerY + height/2, centerZ +depth/2
+					-1.0f, -1.0f, -1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					0.0f, 1.0f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX - width/2, centerY + height/2, centerZ +depth/2
+					 1.0f, -1.0f, -1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					1.0f, 0.5f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX + width/2, centerY - height/2, centerZ +depth/2
+					1.0f, 1.0f, -1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					1.0f, 0.0f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX - width/2, centerY - height/2, centerZ +depth/2
+					-1.0f, 1.0f, -1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					0.0f, 0.0f, 1.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX + width/2, centerY + height/2, centerZ -depth/2
+					-1.0f, -1.0f, 1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					0.0f, 1.0f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX - width/2, centerY + height/2, centerZ -depth/2
+					 1.0f, -1.0f, 1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					 1.0f, 0.5f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX + width/2, centerY - height/2, centerZ -depth/2
+					1.0f, 1.0f, 1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					1.0f, 0.0f, 0.0f, 1.0f
 				},
 			},Vertex {
 				{
-					centerX - width/2, centerY - height/2, centerZ -depth/2
+					-1.0f, 1.0f, 1.0f
 				},
 				{
 					0, 0, 0
 				},
 				{
-					1.0f, .0f, .0f, 1.0f
+					1.0f, 0.0f, 1.0f, 1.0f
 				},
 			},
 	}, {
-		0,1,2,1,2,3,3,4,5
+			5, 4, 0, 1, 5, 0, 6, 5, 1, 2, 6, 1,
+			7, 6, 2, 3, 7, 2, 4, 7, 3, 0, 4, 3,
+			6, 7, 4, 5, 6, 4, 1, 0, 3, 2, 1, 3
 	})
 {
 }
