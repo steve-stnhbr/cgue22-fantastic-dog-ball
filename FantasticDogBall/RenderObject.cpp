@@ -4,7 +4,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-RenderObject::RenderObject(Render::Mesh mesh_, Render::Material* material_, const std::string& name_): mesh(mesh_), material(material_), name(name_)
+RenderObject::RenderObject(Render::Mesh mesh_, Render::Material* material_, const std::string& name_):
+	mesh(mesh_),
+	material(material_),
+	name(name_),
+	transform(glm::mat4(1))
 {
 	buildVAO();
 }
@@ -29,3 +33,7 @@ void RenderObject::buildVAO() const
 	material->assignVertexAttributes(vaoID);
 }
 
+void RenderObject::scale(float x, float y, float z)
+{
+	
+}

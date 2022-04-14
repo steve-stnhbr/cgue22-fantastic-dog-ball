@@ -27,12 +27,18 @@ public:
 	 * unsigned 
 	 */
 	GLuint vaoID, vboID, eboID;
+	/*
+	 * matrix holding information about transforms
+	 */
+	glm::mat4 transform;
 
 	RenderObject(Render::Mesh, Render::Material*, const std::string&);
 
 	void buildVAO() const;
-
-
+	void translate(float, float, float);
+	void rotate(float, float, float);
+	void scale(float, float, float);
+	
 };
 
 class Cube : public RenderObject

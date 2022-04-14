@@ -58,7 +58,7 @@ namespace Shaders
 		void setBool(const std::string& name, bool value) const;
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
-		void setStruct(const std::string& name, unsigned binding, unsigned size, void* value) const;
+		void setUniform(const std::string& name, unsigned binding, unsigned size, GLuint bufferID) const;
 
 		void setTexture(const unsigned, const Texture& texture) const;
 	};
