@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -34,6 +35,7 @@
     <None Include="VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shaders.h" />

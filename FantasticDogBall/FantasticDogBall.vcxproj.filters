@@ -42,6 +42,9 @@
     <ClCompile Include="Render.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -72,6 +75,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
