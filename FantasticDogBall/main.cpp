@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
             {1.0f, .0f, .0f, 1.0f}
         },
         Vertex{
-            {.5f, -.5f, .0f},
+            {1.0f, -.5f, .0f},
             {.0f, .0f, .0f},
             {.0f, 1.0f, .0f, 1.0f}
         },
@@ -169,11 +169,13 @@ void processInput(GLFWwindow* window)
 
 void initGl()
 {
-    glEnable(GL_DEBUG_OUTPUT);
+	#ifdef FTB_DEBUG
+		glEnable(GL_DEBUG_OUTPUT);
+	#endif
+
     glDebugMessageCallback(gl_error_callback, nullptr);
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-
 
     // glEnable(GL_CULL_FACE);
     // glCullFace(GL_BACK);

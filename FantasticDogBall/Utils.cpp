@@ -42,7 +42,9 @@ GLenum Utils::checkError_(const char* file, int line)
         case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
         // std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-        fprintf(stderr, "%s: %s (%d)\n", error.c_str(), file, line);
+		#ifdef FTB_DEBUG
+    		fprintf(stderr, "%s: %s (%d)\n", error.c_str(), file, line);
+		#endif
     }
     return errorCode;
 }

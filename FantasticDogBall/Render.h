@@ -59,16 +59,6 @@ namespace Render
 
 		void assignVertexAttributes(unsigned vao) override
 		{
-			// position
-			// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0));
-			// glEnableVertexAttribArray(0);
-			// normal
-			// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(3));
-			// glEnableVertexAttribArray(1);
-			// color
-			// glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(8));
-			// glEnableVertexAttribArray(2);
-
 			// --- postition ---
 			glEnableVertexArrayAttrib(vao, 0);
 			Utils::checkError();
@@ -77,14 +67,14 @@ namespace Render
 			glVertexArrayAttribBinding(vao, 0, 0);
 			Utils::checkError();
 			// --- normal ---
-			glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, 3);
+			glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
 			Utils::checkError();
 			glVertexArrayAttribBinding(vao, 1, 0);
 			Utils::checkError();
 			glEnableVertexArrayAttrib(vao, 1);
 			Utils::checkError();
 			// --- color ---
-			glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, 8);
+			glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, color));
 			Utils::checkError();
 			glVertexArrayAttribBinding(vao, 2, 0);
 			Utils::checkError();

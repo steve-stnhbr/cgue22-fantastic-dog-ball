@@ -1,6 +1,8 @@
 #include "RenderObject.h"
 
 #include "Utils.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 RenderObject::RenderObject(Render::Mesh mesh_, Render::Material* material_, const std::string& name_): mesh(mesh_), material(material_), name(name_)
 {
@@ -9,11 +11,6 @@ RenderObject::RenderObject(Render::Mesh mesh_, Render::Material* material_, cons
 
 void RenderObject::buildVAO() const
 {
-	// generate and bind vao here
-	Utils::checkError();
-	// glBindVertexArray(vaoID);
-	Utils::checkError();
-
 	glCreateBuffers(1, (GLuint*) &vboID);
 	glNamedBufferStorage(vboID, mesh.vertex_array.size() * sizeof(Vertex), mesh.vertex_array.data(), GL_DYNAMIC_STORAGE_BIT);
 	Utils::checkError();

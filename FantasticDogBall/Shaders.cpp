@@ -20,7 +20,7 @@ void Shaders::cleanup()
 
 unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 {
-	unsigned int id = glCreateShader(type);
+	const unsigned int id = glCreateShader(type);
 	const char* cSrc = src.c_str();
 	glShaderSource(id, 1, &cSrc, nullptr);
 	glCompileShader(id);
