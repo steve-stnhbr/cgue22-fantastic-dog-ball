@@ -1,5 +1,5 @@
 #include "Renderer.h"
-
+#include "Camera.h"
 #include "Utils.h"
 
 unsigned long long frameCount = 0;
@@ -17,7 +17,9 @@ void Renderer::render(const std::vector<RenderObject>& objects)
 		// bind program
 		auto prog = (*element.material).getProgram();
 		prog.use();
-		// bind uniforms her
+		// bind uniforms here
+		auto camera = Camera::Data{glm::mat4(1.0f), glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f)};
+		prog.setStruct("cameraData", 1, sizeof(Camera::Data), &camera);
 
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
