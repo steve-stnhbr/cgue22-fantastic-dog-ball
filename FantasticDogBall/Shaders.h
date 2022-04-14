@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <stb/stb_image.h>
 
+#include "UniformBuffer.h"
+
 namespace Shaders
 {
 	struct Texture;
@@ -58,7 +60,7 @@ namespace Shaders
 		void setBool(const std::string& name, bool value) const;
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
-		void setUniform(const std::string& name, unsigned binding, unsigned size, GLuint bufferID) const;
+		void setUniform(const std::string& name, unsigned binding, UniformBuffer buffer) const;
 
 		void setTexture(const unsigned, const Texture& texture) const;
 	};

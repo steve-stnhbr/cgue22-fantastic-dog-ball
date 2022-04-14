@@ -1,6 +1,7 @@
 #include "Shaders.h"
 
 #include "Render.h"
+#include "UniformBuffer.h"
 #include "Utils.h"
 
 std::vector<unsigned> shaders, programs;
@@ -138,13 +139,13 @@ void Shaders::Program::setFloat(const std::string& name, const float value) cons
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shaders::Program::setUniform(const std::string& name, unsigned binding, unsigned size, GLuint bufferID) const
+void Shaders::Program::setUniform(const std::string& name, unsigned binding, UniformBuffer buffer) const
 {
 	auto ubi = glGetUniformBlockIndex(ID, name.c_str());
 	GLint blockSize;
 	glGetActiveUniformBlockiv(ID, ubi, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
 	glUniformBlockBinding(ID, ubi, binding);
-	glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
+	buffer.bind();
 }
 
 void Shaders::Program::setTexture(const unsigned location, const Shaders::Texture& texture) const
