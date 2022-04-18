@@ -22,6 +22,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Loggger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LightSource.h" />
     <ClInclude Include="Loggger.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Scene.h" />

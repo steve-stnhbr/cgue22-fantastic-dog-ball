@@ -4,6 +4,7 @@
 #include "Utils.h"
 
 unsigned long long frameCount = 0;
+float time = 0;
 
 Renderer::Renderer()
 {
@@ -23,7 +24,7 @@ void Renderer::render(const std::vector<RenderObject>& objects)
 		auto prog = element.material->getProgram();
 		prog.use();
 		// bind uniforms here
-		camera.bindCamera(prog, glm::mat4(1));
+		camera.bindCamera(prog, glm::rotate(glm::mat4(1), time, {0, 1, 0}));
 		element.material->bind(prog);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
@@ -35,5 +36,6 @@ void Renderer::render(const std::vector<RenderObject>& objects)
 		Utils::checkError();
 	}
 
+	time += .1f;
 	frameCount++; 
 }

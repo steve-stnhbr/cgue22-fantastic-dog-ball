@@ -9,6 +9,7 @@ class Scene
 {
 public:
 	std::vector<RenderObject> objects;
+	std::vector<LightSource> 
 	Renderer renderer;
 
 	void addObject(RenderObject object);
