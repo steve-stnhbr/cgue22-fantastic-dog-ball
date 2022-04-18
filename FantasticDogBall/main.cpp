@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Loggger.h"
 #include "Scene.h"
 #include "Shaders.h"
 
@@ -32,21 +33,6 @@ const float
 const char*
 NAME = "Fantastic Dog Ball";
 
-struct TestBufferData
-{
-    glm::mat4 mvp;
-    int isWireframe;
-};
-
-GLuint
-/**
- * this holds the vertexArray ID
- */
-    vao,
-    /*
-     * this holds our vertex buffer object
-     */
-    vbo;
 
 int main(int argc, char* argv[])
 {
@@ -54,7 +40,7 @@ int main(int argc, char* argv[])
 
     /* Initialize the library */
     if (!glfwInit()) {
-        fprintf(stderr, "GLFW-Error");
+        Loggger::fatal("Failed to initialize GLFW");
         return -1;
     }
 
@@ -78,11 +64,11 @@ int main(int argc, char* argv[])
     if (GLEW_OK != err)
     {
         /* Problem: glewInit failed, something is seriously wrong. */
-        fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+        Loggger::fatal("Error when initializing GLEW: %s\n", glewGetErrorString(err));
         glfwTerminate();
         return -1;
     }
-    fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+    Loggger::info("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
     initGl();
     initBullet();
@@ -93,6 +79,7 @@ int main(int argc, char* argv[])
     Scene scene = Scene();
 
     Render::StaticMaterial material = Render::StaticMaterial{};
+    material.vals.color = { 1.0, 0.0 , 0.0, 1.0 };
 
     std::vector<Vertex> vertecies = {
         Vertex{
@@ -110,10 +97,6 @@ int main(int argc, char* argv[])
             {.0f, .0f, .0f},
             {.0f, .0f, 1.0f, 1.0f}
         },
-    };
-
-    std::vector <unsigned> indices = {
-        0, 1, 2
     };
 
     scene.addObject(RenderObject{
@@ -155,11 +138,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 void error_callback(int error, const char* msg) {
-	for (auto msg : getFirstNGLMessages(10))
-	{
-        fprintf(stderr, (msg + "\n").c_str());
-	} 
-    fprintf(stderr, "(%i) %s", error, msg);
+    Loggger::error("(%i) %s", error, msg);
 }
 
 void processInput(GLFWwindow* window)
@@ -195,7 +174,7 @@ void initBullet() {
 
 void gl_error_callback(GLenum source​, GLenum type​, GLuint id​, GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam)
 {
-    fprintf(stderr, "Log (%d): %s\n", severity​, message​);
+    Loggger::error("Log (%d): %s\n", severity​, message​);
 }
 
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs)

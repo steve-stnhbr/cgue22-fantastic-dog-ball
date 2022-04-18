@@ -7,6 +7,7 @@
 #include "Shaders.h"
 #include "Utils.h"
 #include "Vertex.h"
+#include "UniformBuffer.h"
 
 namespace Render
 {
@@ -36,6 +37,8 @@ namespace Render
 	{
 		virtual Shaders::Program getProgram() = 0;
 		virtual ~Material() = default;
+		virtual UniformBuffer getBuffer() = 0;
+		virtual void* getValues() = 0;
 		/*
 		 * This function is responsible for assigning streams of vertex-attributes
 		 */
@@ -44,23 +47,61 @@ namespace Render
 	// A material that is defined by constant values for material properties
 	struct StaticMaterial final : public Material
 	{
-		const glm::vec4 color = {};
-		const float roughness = 0;
-		const float transmission = 0;
-		const float indexOfRefraction = 0;
-		const float metallic = 0;
-		const float specularity = 0;
+		struct Values
+		{
+			glm::vec4 color = {1.0f, 1.0f, 0.0f, 1.0f};
+			float roughness = 0;
+			float transmission = 0;
+			float indexOfRefraction = 0;
+			float metallic = 0;
+			float specularity = 0;
+		};
 
-		const Shaders::Program program = Shaders::Program(vertexShader, colorFragmentShader);
+		Values vals;
+
+		Shaders::Program program;
+		UniformBuffer buffer;
+
+		StaticMaterial(): program(Utils::loadProgram(vertexShader, colorFragmentShader))
+		{
+			createBuffer();
+		}
+
+		StaticMaterial(
+			const glm::vec4 color_,
+			const float roughness_,
+			const float transmission_,
+			const float indexOfRefraction_,
+			const float metallic_,
+			const float specularity_):
+			vals({color_, roughness_, transmission_, indexOfRefraction_, metallic_, specularity_}),
+			program(Utils::loadProgram(vertexShader, colorFragmentShader)                                                                                                                                                                                                                                                  )
+		{
+			createBuffer();
+			Utils::checkError();
+			program.setUniform("Material", 2, buffer);
+			Utils::checkError();
+		}
 
 		Shaders::Program getProgram() override
 		{
-			program.setFloat("roughness", roughness);
-			program.setFloat("transmission", transmission);
-			program.setFloat("indexOfRefraction", indexOfRefraction);
-			program.setFloat("metallic", metallic);
-			program.setFloat("specularity", specularity);
 			return program;
+		}
+
+		UniformBuffer getBuffer() override
+		{
+			return buffer;
+		}
+
+		void* getValues() override
+		{
+			return &vals;
+		}
+
+		void createBuffer()
+		{
+			buffer.create(sizeof(Values));
+			buffer.update(sizeof(Values), &vals);
 		}
 
 		/**

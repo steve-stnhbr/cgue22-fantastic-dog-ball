@@ -4,6 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
+#include <chrono>
+
+#include "Shaders.h"
 
 std::string Utils::readFile(const char* path)
 {
@@ -49,15 +52,34 @@ GLenum Utils::checkError_(const char* file, int line)
     return errorCode;
 }
 
-template<typename ... Args>
-std::string Utils::string_format(const std::string& format, Args ... args)
+
+
+Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
 {
-    int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-    if (size_s <= 0) { throw std::runtime_error("Error during formatting."); }
-    auto size = static_cast<size_t>(size_s);
-    std::unique_ptr<char[]> buf(new char[size]);
-    std::snprintf(buf.get(), size, format.c_str(), args ...);
-    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+	try
+	{
+        return Shaders::Program(vertex, fragment);
+	}
+	catch (Shaders::ShaderCompilationException& e)
+	{
+        fprintf(stderr, "Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
+        exit(-10);
+	}
+    catch (Shaders::ProgramLinkException& e)
+    {
+        fprintf(stderr, "Failed to link program (%d): %s", e.program, e.what());
+        exit(-11);
+    }
 }
 
+std::string Utils::getISOCurrentTimestamp()
+{
+    std::time_t time = std::time(0); // Get current time
 
+    // Construct local time
+    char loc[sizeof("2021-03-01T10:44:10Z")];
+    tm t;
+    localtime_s(&t, &time);
+    strftime(loc, sizeof(loc), "%FT%TZ", &t);
+    return loc;
+}

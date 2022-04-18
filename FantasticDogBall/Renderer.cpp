@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "Camera.h"
+#include "Loggger.h"
 #include "Utils.h"
 
 unsigned long long frameCount = 0;
@@ -15,16 +16,17 @@ Renderer::Renderer()
 void Renderer::render(const std::vector<RenderObject>& objects)
 {
 	
-	fprintf(stdout, "Rendering (%llu): \n", frameCount);
+	Loggger::info("Rendering (%llu):", frameCount);
 	for (const RenderObject element : objects)
 	{
-		fprintf(stdout, "\t%s\n", element.name.c_str());
+		Loggger::info("\t%s", element.name.c_str());
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
 		// bind uniforms here
 		camera.setData(Camera::Data{glm::mat4(1), glm::mat4(1) });
-		prog.setUniform("CameraData", 1, camera.buffer);
+		prog.setUniform("Material", 0, element.material->getBuffer());
+		element.material->getBuffer().update(sizeof(Render::StaticMaterial::Values), element.material->getValues());
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

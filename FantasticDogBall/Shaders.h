@@ -50,6 +50,7 @@ namespace Shaders
 		// the program ID
 		unsigned int ID;
 		bool linked = false;
+		unsigned binding = 20;
 
 		std::string vertexPath, fragmentPath;
 

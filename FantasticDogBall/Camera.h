@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Shaders.h"
 #include "UniformBuffer.h"
 
 class Camera
@@ -29,6 +30,11 @@ public:
 	 * Function to update the cameras data
 	 */
 	void setData(Data);
+
+	/**
+	 * Function that binds the camera to the currently active program
+	 */
+	void bindCamera(Shaders::Program) const;
 
 private:
 	/**

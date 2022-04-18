@@ -15,3 +15,9 @@ void Camera::setData(Data data_)
 	buffer.update(sizeof(data), &data);
 }
 
+void Camera::bindCamera(Shaders::Program prog) const
+{
+	prog.setUniform("CameraData", 1, buffer);
+}
+
+

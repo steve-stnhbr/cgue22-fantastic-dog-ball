@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "Utils.h"
+
 class Loggger
 {
 public:
@@ -25,23 +27,48 @@ public:
 	static void fatal(const std::string&);
 
 	template<typename ... Args>
-	static void log(Level, const std::string&, Args ... args);
+	static void log(Level level, const std::string& msg, Args ... args)
+	{
+		if (level >= Loggger::LOG_LEVEL)
+			constructMessage(level, Utils::string_format(msg, args...));
+	}
 	template<typename ... Args>
-	static void trace(const std::string&, Args ... args);
+	static void trace(const std::string& msg, Args ... args)
+	{
+		log(TRACE, msg, args...);
+	}
 	template<typename ... Args>
-	static void debug(const std::string&, Args ... args);
+	static void debug(const std::string& msg, Args ... args)
+	{
+		log(DEBUG, msg, args...);
+	}
 	template<typename ... Args>
-	static void info(const std::string&, Args ... args);
+	static void info(const std::string& msg, Args ... args)
+	{
+		log(INFO, msg, args...);
+	}
 	template<typename ... Args>
-	static void warn(const std::string&, Args ... args);
+	static void warn(const std::string& msg, Args ... args)
+	{
+		log(WARN, msg, args...);
+	}
 	template<typename ... Args>
-	static void error(const std::string&, Args ... args);
+	static void error(const std::string& msg, Args ... args)
+	{
+		log(ERROR, msg, args...);
+	}
 	template<typename ... Args>
-	static void fatal(const std::string&, Args ... args);
+	static void fatal(const std::string& msg, Args ... args)
+	{
+		log(FATAL, msg, args...);
+	}
 
 	static void setLevel(const Level);
 
 private:
-	static void constructMessage(const Level level, const std::string&);
+	static const char* color(Level);
+	static const char* name(Level);
+	static const char* timestamp();
+	static void constructMessage(const Level level, const std::string& msg);
 };
 

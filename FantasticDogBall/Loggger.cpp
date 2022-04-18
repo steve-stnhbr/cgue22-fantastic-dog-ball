@@ -58,72 +58,26 @@ void Loggger::fatal(const std::string& message)
 	log(Loggger::FATAL, message);
 }
 
-
-
-template<typename ... Args>
-void Loggger::log(Level level, const std::string& message, Args ... args)
-{
-	if (level >= Loggger::LOG_LEVEL)
-		constructMessage(level, message, Utils::string_format(message, args));
-}
-
-template<typename ... Args>
-void Loggger::trace(const std::string& message, Args ... args)
-{
-	log(Loggger::TRACE, message, args);
-}
-
-template<typename ... Args>
-void Loggger::debug(const std::string& message, Args ... args)
-{
-	log(Loggger::DEBUG, message, args);
-}
-
-template<typename ... Args>
-void Loggger::info(const std::string& message, Args ... args)
-{
-	log(Loggger::INFO, message, args);
-}
-
-template<typename ... Args>
-void Loggger::warn(const std::string& message, Args ... args)
-{
-	log(Loggger::WARN, message, args);
-}
-
-template<typename ... Args>
-void Loggger::error(const std::string& message, Args ... args)
-{
-	log(Loggger::ERROR, message, args);
-}
-
-template<typename ... Args>
-void Loggger::fatal(const std::string& message, Args ... args)
-{
-	log(Loggger::FATAL, message, args);
-}
-
-
 void Loggger::setLevel(const Loggger::Level level)
 {
 	Loggger::LOG_LEVEL = level;
 }
 
-const char* color(Loggger::Level level)
+const char* Loggger::color(Loggger::Level level)
 {
 	return colorMap[level];
 }
-const char* name(Loggger::Level level)
+const char* Loggger::name(Loggger::Level level)
 {
 	return stringMap[level];
 }
 
-const char* timestamp()
+const char* Loggger::timestamp()
 {
 	return Utils::getISOCurrentTimestamp().c_str();
 }
 
 void Loggger::constructMessage(const Level level, const std::string& msg)
 {
-	fprintf(stdout, "\x1B[%sm[%s]: (%s) %s\033[0m\n", name(level), timestamp(), color(level), msg.c_str());
+	fprintf(stdout, "\x1B[%sm[%s]: (%s) %s\033[0m\n", color(level), name(level), timestamp(), msg.c_str());
 }
