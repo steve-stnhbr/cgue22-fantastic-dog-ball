@@ -77,9 +77,12 @@ int main(int argc, char* argv[])
 
 
     Scene scene = Scene();
-
+    const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
+    const auto view = glm::lookAt<float>(glm::vec3(0, 1, -6), {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
+    scene.renderer.camera.setData(Camera::Data{view, proj});
+     
     Render::StaticMaterial material = Render::StaticMaterial{};
-    material.vals.color = { 1.0, 0.0 , 0.0, 1.0 };
+    material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
 
     std::vector<Vertex> vertecies = {
         Vertex{

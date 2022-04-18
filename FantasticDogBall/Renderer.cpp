@@ -15,7 +15,6 @@ Renderer::Renderer()
  */
 void Renderer::render(const std::vector<RenderObject>& objects)
 {
-	
 	Loggger::info("Rendering (%llu):", frameCount);
 	for (const RenderObject element : objects)
 	{
@@ -24,9 +23,8 @@ void Renderer::render(const std::vector<RenderObject>& objects)
 		auto prog = element.material->getProgram();
 		prog.use();
 		// bind uniforms here
-		camera.setData(Camera::Data{glm::mat4(1), glm::mat4(1) });
-		prog.setUniform("Material", 0, element.material->getBuffer());
-		element.material->getBuffer().update(sizeof(Render::StaticMaterial::Values), element.material->getValues());
+		camera.bindCamera(prog, glm::mat4(1));
+		element.material->bind(prog);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

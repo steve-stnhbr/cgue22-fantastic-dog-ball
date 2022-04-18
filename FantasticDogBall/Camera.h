@@ -16,6 +16,11 @@ public:
 		glm::mat4 projection;
 	};
 
+	struct ShaderData
+	{
+		glm::mat4 mvp;
+	};
+
 	/**
 	 * Default constructor
 	 */
@@ -31,10 +36,14 @@ public:
 	 */
 	void setData(Data);
 
+	void setProjection(const glm::mat4);
+
+	void setView(const glm::mat4);
+
 	/**
 	 * Function that binds the camera to the currently active program
 	 */
-	void bindCamera(Shaders::Program) const;
+	void bindCamera(Shaders::Program, glm::mat4);
 
 private:
 	/**

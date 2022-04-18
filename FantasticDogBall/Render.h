@@ -39,6 +39,7 @@ namespace Render
 		virtual ~Material() = default;
 		virtual UniformBuffer getBuffer() = 0;
 		virtual void* getValues() = 0;
+		virtual void bind(Shaders::Program) = 0;
 		/*
 		 * This function is responsible for assigning streams of vertex-attributes
 		 */
@@ -79,7 +80,7 @@ namespace Render
 		{
 			createBuffer();
 			Utils::checkError();
-			program.setUniform("Material", 2, buffer);
+			program.setUniform("Material", buffer);
 			Utils::checkError();
 		}
 
@@ -101,7 +102,12 @@ namespace Render
 		void createBuffer()
 		{
 			buffer.create(sizeof(Values));
+		}
+
+		void bind(Shaders::Program p) override
+		{
 			buffer.update(sizeof(Values), &vals);
+			p.setUniform("Material", buffer);
 		}
 
 		/**

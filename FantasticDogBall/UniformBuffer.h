@@ -6,6 +6,7 @@
 class UniformBuffer
 {
 public:
+	unsigned id = 0;
 	void create();
 	void create(unsigned);
 	void update(unsigned, void*);
@@ -14,7 +15,6 @@ public:
 
 private:
 	static const unsigned STANDARD_BUFFER_SIZE = 1024;
-	unsigned id = 0;
 	void* data;
 
 	void checkCreated_(const char* file, int line);
