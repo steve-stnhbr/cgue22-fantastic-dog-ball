@@ -23,8 +23,13 @@ void Camera::setView(const glm::mat4 mat)
 	data.view = mat;
 }
 
+void Camera::bind(Shaders::Program program)
+{
+	bindWithModel(program, glm::mat4(1));
+}
 
-void Camera::bindCamera(Shaders::Program prog, glm::mat4 model)
+
+void Camera::bindWithModel(Shaders::Program prog, glm::mat4 model)
 {
 	ShaderData d = { data.projection * data.view * model };
 	buffer.update(sizeof(glm::mat4), &d);

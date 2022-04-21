@@ -1,5 +1,7 @@
 #include "Render.h"
 
+#include <GLFW/glfw3.h>
+
 Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_array(std::move(v_)), index_array(
 	                                                                       std::move(i_))
 {
@@ -58,7 +60,7 @@ Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, flo
 				},
 			},Vertex {
 				{
-					 1.0f, -1.0f, 1.0f
+					  1.0f, -1.0f, 1.0f
 				},
 				{
 					0, 0, 0

@@ -36,8 +36,11 @@ public:
 
 	void buildVAO() const;
 	void translate(float, float, float);
+	void translate(glm::vec3);
 	void rotate(float, float, float);
+	void rotate(float, glm::vec3);
 	void scale(float, float, float);
+	void scale(glm::vec3);
 	
 };
 

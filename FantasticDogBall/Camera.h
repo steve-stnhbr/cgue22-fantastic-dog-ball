@@ -29,7 +29,7 @@ public:
 	/**
 	 * The buffer for camera data
 	 */
-	UniformBuffer buffer;
+	UncheckedUniformBuffer buffer; 
 
 	/**
 	 * Function to update the cameras data
@@ -40,10 +40,12 @@ public:
 
 	void setView(const glm::mat4);
 
+	void bind(Shaders::Program);
+
 	/**
 	 * Function that binds the camera to the currently active program
 	 */
-	void bindCamera(Shaders::Program, glm::mat4);
+	void bindWithModel(Shaders::Program, glm::mat4);
 
 private:
 	/**

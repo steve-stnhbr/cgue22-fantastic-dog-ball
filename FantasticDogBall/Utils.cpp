@@ -45,7 +45,7 @@ GLenum Utils::checkError_(const char* file, int line)
         case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
         // std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-		#ifdef FTB_DEBUG
+		#ifdef FDB_DEBUG
     		fprintf(stderr, "%s: %s (%d)\n", error.c_str(), file, line);
 		#endif
     }
@@ -70,16 +70,4 @@ Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
         fprintf(stderr, "Failed to link program (%d): %s", e.program, e.what());
         exit(-11);
     }
-}
-
-std::string Utils::getISOCurrentTimestamp()
-{
-    std::time_t time = std::time(0); // Get current time
-
-    // Construct local time
-    char loc[sizeof("2021-03-01T10:44:10Z")];
-    tm t;
-    localtime_s(&t, &time);
-    strftime(loc, sizeof(loc), "%FT%TZ", &t);
-    return loc;
 }

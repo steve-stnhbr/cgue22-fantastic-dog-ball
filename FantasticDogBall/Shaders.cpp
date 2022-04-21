@@ -1,9 +1,6 @@
 #include "Shaders.h"
 
-#include "Loggger.h"
 #include "Render.h"
-#include "UniformBuffer.h"
-#include "Utils.h"
 
 std::vector<unsigned> shaders, programs;
 
@@ -140,7 +137,8 @@ void Shaders::Program::setFloat(const std::string& name, const float value) cons
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shaders::Program::setUniform(const std::string& name, UniformBuffer buffer)
+
+void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
 {
 	auto binding_ = buffer.id + binding;
 	Loggger::debug("Binding uniform %s to program %d", name.c_str(), ID);
@@ -150,19 +148,22 @@ void Shaders::Program::setUniform(const std::string& name, UniformBuffer buffer)
 	Utils::checkError();
 }
 
-void Shaders::Program::setTexture(const unsigned location, const Shaders::Texture& texture) const
+
+void Shaders::Program::setTexture(const unsigned location, const Texture& texture) const
 {
 	if(!texture.defined)
 	{
 		this->setFloat("texture" + std::to_string(location), texture.substituteValue);
 	}
 
+	/*
 	GLuint textureHandle;
 	glCreateTextures(GL_TEXTURE_2D, 1, &textureHandle);
 	glTextureStorage2D(textureHandle, 1, GL_RGBA8, texture.width, texture.height);
 	glTextureSubImage2D(textureHandle, 0, 0, 0, texture.width, texture.height, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
 	glTextureParameteri(textureHandle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glBindTextureUnit(location, textureHandle);
+	*/
+	glBindTextureUnit(location, texture.glID);
 	Utils::checkError();
 }
 

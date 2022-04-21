@@ -3,12 +3,22 @@
 #include "Loggger.h"
 #include "Utils.h"
 
-void UniformBuffer::create()
+
+
+template<typename T>
+UniformBuffer<T>::UniformBuffer()
+{
+	create(sizeof(T));
+}
+
+template <typename T>
+void UniformBuffer<T>::create()
 {
 	create(STANDARD_BUFFER_SIZE);
 }
 
-void UniformBuffer::create(const unsigned size)
+template <typename T>
+void UniformBuffer<T>::create(const unsigned size)
 {
 	glCreateBuffers(1, &id);
 	Utils::checkError();
@@ -17,7 +27,8 @@ void UniformBuffer::create(const unsigned size)
 }
 
 
-void UniformBuffer::update(unsigned size, void* data_)
+template <typename T>
+void UniformBuffer<T>::update(unsigned size, T* data_)
 {
 	data = data_;
 	checkCreated
@@ -26,14 +37,27 @@ void UniformBuffer::update(unsigned size, void* data_)
 }
 
 
-void UniformBuffer::bind()
+template <typename T>
+void UniformBuffer<T>::update(T* data_)
+{
+	data = data_;
+	checkCreated
+		glNamedBufferSubData(id, 0, sizeof(T), data);
+	Utils::checkError();
+}
+
+
+template <typename T>
+void UniformBuffer<T>::bind()
 {
 	checkCreated
 	glBindBuffer(GL_UNIFORM_BUFFER, id);
 	Utils::checkError();
 }
 
-void UniformBuffer::bind(unsigned binding)
+
+template <typename T>
+void UniformBuffer<T>::bind(unsigned binding)
 {
 	checkCreated
 	glBindBufferBase(GL_UNIFORM_BUFFER, binding, id);
@@ -41,7 +65,8 @@ void UniformBuffer::bind(unsigned binding)
 	Utils::checkError();
 }
 
-void UniformBuffer::checkCreated_(const char* file, int line)
+template <typename T>
+void UniformBuffer<T>::checkCreated_(const char* file, int line)
 {
 	if (id == 0)
 		throw std::exception("Buffer was not created yet");

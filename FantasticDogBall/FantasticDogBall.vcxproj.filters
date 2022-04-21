@@ -60,13 +60,25 @@
     <ClCompile Include="LightSource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="UncheckedUniformBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="FragmentShader.glsl">
+    <None Include="FragmentShader_alt.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="VertexShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="FragmentShader.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -108,6 +120,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="LightSource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="UncheckedUniformBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

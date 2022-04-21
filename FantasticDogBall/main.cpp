@@ -153,7 +153,7 @@ void processInput(GLFWwindow* window)
 
 void initGl()
 {
-	#ifdef FTB_DEBUG
+	#ifdef FDB_DEBUG
 		glEnable(GL_DEBUG_OUTPUT);
 	#endif
 

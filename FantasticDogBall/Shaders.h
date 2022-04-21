@@ -1,17 +1,16 @@
-
 #pragma once
 #include <string>
 #include <vector>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <stdexcept>
-#include <stb/stb_image.h>
+#include <boost/any.hpp>
+#include <GL/glew.h>
 
 #include "UniformBuffer.h"
+#include "Texture.h"
+#include "Loggger.h"
 
 namespace Shaders
 {
-	struct Texture;
 
 	void cleanup();
 	unsigned int shaderFile(unsigned int type, const std::string& src);
@@ -62,38 +61,17 @@ namespace Shaders
 		void setBool(const std::string& name, bool value) const;
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
-		void setUniform(const std::string& name, UniformBuffer buffer);
+		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
+		template <typename V>
+		void setUniform(const std::string& name, UniformBuffer<V> buffer)
+		{
+			auto binding_ = buffer.id + binding;
+			Loggger::debug("Binding uniform %s to program %d", name.c_str(), ID);
+			const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
+			buffer.bind(binding_);
+			glUniformBlockBinding(ID, ubi, binding_);
+		}
 
 		void setTexture(const unsigned, const Texture& texture) const;
-	};
-
-	// at the moment the texture type describes the location of a bitmap
-	struct Texture
-	{
-		std::string filePath;
-		int width, height, nrChannels;
-
-		float substituteValue;
-		unsigned char* data;
-		bool defined;
-
-		Texture(std::string filePath_)
-		{
-			if (filePath_.empty())
-			{
-				defined = false;
-				substituteValue = 0;
-			}
-			else
-			{
-				filePath = filePath_;
-				data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 0);
-			}
-		}
-
-		Texture(float substituteValue_) : defined(false), substituteValue(substituteValue_)
-		{
-		}
-
 	};
 };

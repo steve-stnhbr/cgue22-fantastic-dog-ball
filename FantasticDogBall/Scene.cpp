@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+
 void Scene::addObject(RenderObject object)
 {
     object.index = objects.size();

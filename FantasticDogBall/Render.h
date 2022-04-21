@@ -37,7 +37,7 @@ namespace Render
 	{
 		virtual Shaders::Program getProgram() = 0;
 		virtual ~Material() = default;
-		virtual UniformBuffer getBuffer() = 0;
+		// virtual UncheckedUniformBuffer getBuffer() = 0;
 		virtual void* getValues() = 0;
 		virtual void bind(Shaders::Program) = 0;
 		/*
@@ -55,13 +55,13 @@ namespace Render
 			float transmission = 0;
 			float indexOfRefraction = 0;
 			float metallic = 0;
-			float specularity = 0;
+			float shininess = 0;
 		};
 
 		Values vals;
 
 		Shaders::Program program;
-		UniformBuffer buffer;
+		UncheckedUniformBuffer buffer;
 
 		StaticMaterial(): program(Utils::loadProgram(vertexShader, colorFragmentShader))
 		{
@@ -74,8 +74,8 @@ namespace Render
 			const float transmission_,
 			const float indexOfRefraction_,
 			const float metallic_,
-			const float specularity_):
-			vals({color_, roughness_, transmission_, indexOfRefraction_, metallic_, specularity_}),
+			const float shininess_):
+			vals({color_, roughness_, transmission_, indexOfRefraction_, metallic_, shininess_}),
 			program(Utils::loadProgram(vertexShader, colorFragmentShader)                                                                                                                                                                                                                                                  )
 		{
 			createBuffer();
@@ -89,7 +89,7 @@ namespace Render
 			return program;
 		}
 
-		UniformBuffer getBuffer() override
+		UncheckedUniformBuffer getBuffer() const
 		{
 			return buffer;
 		}
@@ -145,11 +145,11 @@ namespace Render
 	// A material that is defined by different textures allowing for non-static properties
 	struct TextureMaterial final : public Material
 	{
-		const Shaders::Texture color;
-		const Shaders::Texture normal;
-		const Shaders::Texture roughness;
-		const Shaders::Texture metallic;
-		const Shaders::Texture specularity;
+		const Texture color;
+		const Texture normal;
+		const Texture roughness;
+		const Texture metallic;
+		const Texture specularity;
 
 		const Shaders::Program program = Shaders::Program(vertexShader, textureFragmentShader);
 

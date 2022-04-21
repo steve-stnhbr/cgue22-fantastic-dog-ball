@@ -74,7 +74,7 @@ const char* Loggger::name(Loggger::Level level)
 
 const char* Loggger::timestamp()
 {
-	return Utils::getISOCurrentTimestamp().c_str();
+	return Loggger::getISOCurrentTimestamp().c_str();
 }
 
 void Loggger::constructMessage(const Level level, const std::string& msg)

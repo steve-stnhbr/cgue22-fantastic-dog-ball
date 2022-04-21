@@ -25,18 +25,21 @@
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Loggger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shaders.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UncheckedUniformBuffer.cpp" />
     <ClCompile Include="UniformBuffer.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="FragmentShader.glsl" />
+    <None Include="FragmentShader_alt.glsl" />
     <None Include="VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
@@ -45,14 +48,27 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Loggger.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shaders.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="UncheckedUniformBuffer.h" />
     <ClInclude Include="UniformBuffer.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderObject.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FragmentShader.glsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -150,7 +166,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;FTB_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;FDB_DEBUG;STB_IMAGE_IMPLEMENTATION;STB_IMAGE_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
