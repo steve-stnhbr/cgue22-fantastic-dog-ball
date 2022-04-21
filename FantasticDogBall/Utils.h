@@ -23,6 +23,11 @@ public:
 		return std::string(buf, buf + size - 1); // We don't want the '\0' inside
 	}
 
+	template<typename Base, typename T>
+	static bool instanceof(const T*) {
+		return std::is_base_of<Base, T>::value;
+	}
+
 
 	#define checkError() checkError_(__FILE__, __LINE__) 
 };

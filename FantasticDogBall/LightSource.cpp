@@ -1,9 +1,13 @@
 #include "LightSource.h"
 
+#include "Utils.h"
+
+
 template <typename V>
-Light::Light<V>::Light(V values_): values(values_)
+Light::Lights<V>::Lights(std::vector<V> values_) : std::vector<V>(values_)
 {
-	buffer.create(sizeof(V));
+	if (!Utils::instanceof<Light, V>())
+		throw std::exception("template to lights can only be type of Light::Light");
 }
 
 

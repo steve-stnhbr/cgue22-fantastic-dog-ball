@@ -1,5 +1,7 @@
 #include "Shaders.h"
 
+#include <iostream>
+
 #include "Render.h"
 
 std::vector<unsigned> shaders, programs;
@@ -36,7 +38,7 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 
 unsigned Shaders::shaderFile(unsigned type, const std::string& src)
 {
-	fprintf(stdout, "Creating shader(%d) from file %s\n", type, src.c_str());
+	Loggger::info( "Creating shader(%d) from file %s\n", type, src.c_str());
 	return Shaders::shaderSource(type, Utils::readFile(src.c_str()));
 }
 
@@ -68,7 +70,9 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 	}
 
 	glLinkProgram(program);
+	Utils::checkError();
 	glValidateProgram(program);
+	Utils::checkError();
 
 	int result;
 	glGetProgramiv(program, GL_LINK_STATUS, &result);
@@ -87,9 +91,10 @@ const char* Shaders::getProgramLog(const unsigned program)
 	int length;
 	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
 
-	char* message = static_cast<char*>(_malloca(length * sizeof(char)));
-	glGetProgramInfoLog(program, length, nullptr, message);
-	return message;
+	std::string message;
+	glGetProgramInfoLog(program, length, &length, &message[0]);
+	const char* c_message = message.c_str();
+	return c_message;
 }
 
 

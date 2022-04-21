@@ -1,32 +1,21 @@
 #pragma once
 #include <glm/vec3.hpp>
-
-#include "UniformBuffer.h"
+#include <vector>
 
 namespace Light
 {
-	struct Values
-	{
-		Values() = delete;
-	};
-
 	template<typename V>
-	class Light
+	class Lights : public std::vector<V>
 	{
 	public:
-		V values;
-		UniformBuffer<V> buffer;
-
-		virtual UniformBuffer<V> getBuffer() const = 0;
-		const V* getValues() const;
-
-		void update(V);
-	protected:
-		Light(V);
+		Lights() = default;
+		Lights(std::vector<V>);
 	};
 
+	struct Light
+	{};
 
-	struct DValues : Values
+	struct Directional : Light
 	{
 		glm::vec3 direction;
 
@@ -35,11 +24,7 @@ namespace Light
 		glm::vec3 specular;
 	};
 
-	class Directional : Light<DValues>
-	{
-	};
-
-	struct PValues : Values
+	struct Point : Light
 	{
 		glm::vec3 position;
 
@@ -51,11 +36,8 @@ namespace Light
 		glm::vec3 diffuse;
 		glm::vec3 specular;
 	};
-	class Point : Light<PValues>
-	{
-	};
 
-	struct SValues : Values
+	struct Spot : Light
 	{
 		glm::vec3 position;
 		glm::vec3 direction;
@@ -70,7 +52,5 @@ namespace Light
 		glm::vec3 diffuse;
 		glm::vec3 specular;
 	};
-	class Spot : Light<SValues>
-	{
-	};
 }
+

@@ -12,13 +12,10 @@ public:
 	 * Struct for representing the camera data in shaders
 	 */
 	struct Data {
+		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-	};
-
-	struct ShaderData
-	{
-		glm::mat4 mvp;
+		glm::vec3 viewPos;
 	};
 
 	/**
@@ -35,6 +32,8 @@ public:
 	 * Function to update the cameras data
 	 */
 	void setData(Data);
+
+	void setPosition(const glm::vec3);
 
 	void setProjection(const glm::mat4);
 

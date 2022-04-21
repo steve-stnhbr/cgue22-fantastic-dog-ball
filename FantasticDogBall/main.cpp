@@ -76,11 +76,13 @@ int main(int argc, char* argv[])
     constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
 
 
-    Scene scene = Scene();
+    Scene scene;
+    const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
+
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
-    const auto view = glm::lookAt<float>(glm::vec3(0, 1, -6), {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    scene.renderer.camera.setData(Camera::Data{view, proj});
-     
+    const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
+    scene.renderer.camera.setData(Camera::Data{view, proj, glm::mat4(1), cameraPos});
+
     Render::StaticMaterial material = Render::StaticMaterial{};
     material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
 

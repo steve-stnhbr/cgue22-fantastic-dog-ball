@@ -13,12 +13,19 @@ class Scene
 {
 public:
 	std::vector<RenderObject> objects;
-	std::vector<Light::Light<std::_Any_tag>> lights;
+	Light::Lights<Light::Point> pLights;
+	Light::Lights<Light::Directional> dLights;
+	Light::Lights<Light::Spot> sLights;
 	Renderer renderer;
 
-	void addObject(RenderObject object);
+	Scene() = default;
 
+	void addObject(RenderObject object);
 	void removeObject(const RenderObject& object);
+
+	void addLight(Light::Point light);
+	void addLight(Light::Directional light);
+	void addLight(Light::Spot light);
 
 	void render();
 

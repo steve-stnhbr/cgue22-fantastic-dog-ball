@@ -7,24 +7,30 @@ void Scene::addObject(RenderObject object)
 	objects.push_back(object);
 }
 
-/*
-void Scene::removeObject(const RenderObject& object)
-{
-    for (auto it = objects.begin(); it != objects.end();) {
-        if (it->index == object.index) {
-            it = objects.erase(it);
-        } 
-        else {
-            ++it;
-        }
-    }
-}
-*/
-
-
-
 void Scene::render()
 {
-    renderer.render(objects);
+    if (pLights.empty())
+        pLights.push_back(Light::Point());
+    if (dLights.empty())
+        dLights.push_back(Light::Directional());
+    if (sLights.empty())
+        sLights.push_back(Light::Spot());
+
+    renderer.render(objects, pLights, dLights, sLights);
+}
+
+void Scene::addLight(Light::Point light)
+{
+    pLights.push_back(light);
+}
+
+void Scene::addLight(Light::Directional light)
+{
+    dLights.push_back(light);
+}
+
+void Scene::addLight(Light::Spot light)
+{
+    sLights.push_back(light);
 }
 

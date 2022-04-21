@@ -57,7 +57,7 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="LightSource.cpp">
+    <ClCompile Include="LightSource_alt.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
@@ -67,6 +67,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -79,6 +82,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="FragmentShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="FragmentShader_static.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -119,7 +125,7 @@
     <ClInclude Include="InputManager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="LightSource.h">
+    <ClInclude Include="LightSource_alt.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -132,6 +138,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

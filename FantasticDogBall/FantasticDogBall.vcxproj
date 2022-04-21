@@ -23,6 +23,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightSource.cpp" />
+    <ClCompile Include="LightSource_alt.cpp" />
     <ClCompile Include="Loggger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="LightSource_alt.h" />
     <ClInclude Include="Loggger.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Render.h" />
@@ -63,6 +65,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.glsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FragmentShader_static.glsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

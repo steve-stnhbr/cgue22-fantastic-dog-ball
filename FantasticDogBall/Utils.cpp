@@ -1,10 +1,8 @@
 #include "Utils.h"
 
 #include <string>
-#include <iostream>
 #include <fstream>
 #include <GL/glew.h>
-#include <chrono>
 
 #include "Shaders.h"
 
@@ -14,7 +12,7 @@ std::string Utils::readFile(const char* path)
     std::ifstream fileStream(path, std::ios::in);
 
     if (!fileStream.is_open()) {
-        std::cerr << "Could not read file " << path << ". File does not exist." << std::endl;
+        Loggger::fatal("Could not read file %s", path);
         return "";
     }
 
@@ -44,9 +42,8 @@ GLenum Utils::checkError_(const char* file, int line)
         case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
         case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-        // std::cout << error << " | " << file << " (" << line << ")" << std::endl;
 		#ifdef FDB_DEBUG
-    		fprintf(stderr, "%s: %s (%d)\n", error.c_str(), file, line);
+			Loggger::error("%s: %s (%d)\n", error.c_str(), file, line);
 		#endif
     }
     return errorCode;
@@ -62,12 +59,14 @@ Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
 	}
 	catch (Shaders::ShaderCompilationException& e)
 	{
-        fprintf(stderr, "Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
+        Utils::checkError();
+        Loggger::error("Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
         exit(-10);
 	}
     catch (Shaders::ProgramLinkException& e)
     {
-        fprintf(stderr, "Failed to link program (%d): %s", e.program, e.what());
+        Utils::checkError();
+        Loggger::error("Failed to link program (%d): %s", e.program, e.what());
         exit(-11);
     }
 }

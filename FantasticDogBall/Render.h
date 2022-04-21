@@ -14,7 +14,7 @@ namespace Render
 	// at the moment the shader type describes the location of a source file
 	typedef std::string shader;
 	const shader vertexShader = "./VertexShader.glsl";
-	const shader colorFragmentShader = "./FragmentShader.glsl";
+	const shader colorFragmentShader = "./FragmentShader_static.glsl";
 	const shader textureFragmentShader = "./FragmentShader.glsl";
 
 	unsigned loadProgram(const std::vector<GLenum>& types, const std::vector<std::string>& files);
@@ -51,11 +51,9 @@ namespace Render
 		struct Values
 		{
 			glm::vec4 color = {1.0f, 1.0f, 0.0f, 1.0f};
-			float roughness = 0;
-			float transmission = 0;
-			float indexOfRefraction = 0;
-			float metallic = 0;
-			float shininess = 0;
+			float diffuse;
+			float specular;
+			float shininess;
 		};
 
 		Values vals;
@@ -70,12 +68,10 @@ namespace Render
 
 		StaticMaterial(
 			const glm::vec4 color_,
-			const float roughness_,
-			const float transmission_,
-			const float indexOfRefraction_,
-			const float metallic_,
+			const float diffuse_,
+			const float specular_,
 			const float shininess_):
-			vals({color_, roughness_, transmission_, indexOfRefraction_, metallic_, shininess_}),
+			vals({color_, diffuse_, specular_, shininess_}),
 			program(Utils::loadProgram(vertexShader, colorFragmentShader)                                                                                                                                                                                                                                                  )
 		{
 			createBuffer();

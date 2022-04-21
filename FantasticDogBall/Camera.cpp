@@ -13,6 +13,11 @@ void Camera::setData(Data data_)
 	// buffer.update(sizeof(data), &data);
 }
 
+void Camera::setPosition(const glm::vec3 position_)
+{
+	data.viewPos = position_;
+}
+
 void Camera::setProjection(const glm::mat4 mat)
 {
 	data.projection = mat;
@@ -31,8 +36,8 @@ void Camera::bind(Shaders::Program program)
 
 void Camera::bindWithModel(Shaders::Program prog, glm::mat4 model)
 {
-	ShaderData d = { data.projection * data.view * model };
-	buffer.update(sizeof(glm::mat4), &d);
+	data.model = model; 
+	buffer.update(sizeof(glm::mat4), &data);
 	prog.setUniform("CameraData", buffer);
 }
 
