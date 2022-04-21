@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <boost/any.hpp>
 #include <GL/glew.h>
 
 #include "UniformBuffer.h"
