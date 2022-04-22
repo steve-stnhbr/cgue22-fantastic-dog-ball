@@ -18,7 +18,6 @@ namespace Material
 
 	class Static : public Material
 	{
-		
 	};
 
 	class Texture : public Material

@@ -78,13 +78,16 @@
     <None Include="FragmentShader_alt.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VertexShader.glsl">
+    <None Include="VertexShader.vert">
       <Filter>Shaders</Filter>
     </None>
     <None Include="FragmentShader.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="FragmentShader_static.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="FragmentShader_static.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -143,5 +146,13 @@
     <ClInclude Include="LightSource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Debug.txt">
+      <Filter>Ressourcendateien</Filter>
+    </Text>
+    <Text Include="test.frag">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

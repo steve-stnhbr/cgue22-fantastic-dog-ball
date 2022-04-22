@@ -27,6 +27,9 @@ public:
 	static bool instanceof(const T*) {
 		return std::is_base_of<Base, T>::value;
 	}
+	static void CheckDebugLog();
+	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
+		unsigned int severity, const char* message);
 
 
 	#define checkError() checkError_(__FILE__, __LINE__) 

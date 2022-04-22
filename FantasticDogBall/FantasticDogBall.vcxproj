@@ -41,7 +41,8 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="FragmentShader_alt.glsl" />
-    <None Include="VertexShader.glsl" />
+    <None Include="FragmentShader_static.frag" />
+    <None Include="VertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -80,6 +81,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Debug.txt" />
+    <Text Include="test.frag" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

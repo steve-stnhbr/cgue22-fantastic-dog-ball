@@ -13,8 +13,8 @@ namespace Render
 {
 	// at the moment the shader type describes the location of a source file
 	typedef std::string shader;
-	const shader vertexShader = "./VertexShader.glsl";
-	const shader colorFragmentShader = "./FragmentShader_static.glsl";
+	const shader vertexShader = "./VertexShader.vert";
+	const shader colorFragmentShader = "./FragmentShader_static.frag";
 	const shader textureFragmentShader = "./FragmentShader.glsl";
 
 	unsigned loadProgram(const std::vector<GLenum>& types, const std::vector<std::string>& files);

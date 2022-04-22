@@ -14,6 +14,7 @@
 #include "Scene.h"
 #include "Shaders.h"
 
+#include "LightSource.h"
 #include "Render.h"
 
 void error_callback(int error, const char* msg);
@@ -60,6 +61,8 @@ int main(int argc, char* argv[])
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    glewExperimental = GL_TRUE;
+
     GLenum err = glewInit();
     if (GLEW_OK != err)
     {
@@ -81,7 +84,15 @@ int main(int argc, char* argv[])
 
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
     const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    scene.renderer.camera.setData(Camera::Data{view, proj, glm::mat4(1), cameraPos});
+    scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
+    Light::Point p = {
+        glm::vec3(1, 1, 0),
+        2.0f, 1.0f, .5f,
+        glm::vec3(1,1,1),
+        glm::vec3(1,1,1),
+        glm::vec3(1,1,1)
+    };
+    scene.lights.add(p);
 
     Render::StaticMaterial material = Render::StaticMaterial{};
     material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
@@ -157,9 +168,26 @@ void initGl()
 {
 	#ifdef FDB_DEBUG
 		glEnable(GL_DEBUG_OUTPUT);
+
+        glEnable(GL_DEBUG_OUTPUT);
+
+        if (glDebugMessageCallbackARB != nullptr) {
+            Loggger::debug("GL debug is available.\n");
+            // Enable the debug callback
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(gl_error_callback, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+            glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
+                GL_DEBUG_SEVERITY_NOTIFICATION, -1, "Started debugging");
+        }
+        else {
+            Loggger::debug("GL debug is not available.\n");
+        }
+
 	#endif
 
-    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_DEPTH_TEST);
     glDebugMessageCallback(gl_error_callback, nullptr);
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);

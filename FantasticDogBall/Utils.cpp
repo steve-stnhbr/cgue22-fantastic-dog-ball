@@ -12,7 +12,8 @@ std::string Utils::readFile(const char* path)
     std::ifstream fileStream(path, std::ios::in);
 
     if (!fileStream.is_open()) {
-        Loggger::fatal("Could not read file %s", path);
+        throw std::exception(string_format("could not read file %s", path).c_str());
+        // Loggger::fatal("Could not read file %s", path);
         return "";
     }
 
@@ -69,4 +70,88 @@ Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
         Loggger::error("Failed to link program (%d): %s", e.program, e.what());
         exit(-11);
     }
+}
+
+void Utils::CheckDebugLog()
+{
+    unsigned int count = 10; // max. num. of messages that will be read from the log
+    int bufsize = 2048;
+    unsigned int* sources = new unsigned int[count];
+    unsigned int* types = new unsigned int[count];
+    unsigned int* ids = new unsigned int[count];
+    unsigned int* severities = new unsigned int[count];
+    int* lengths = new int[count];
+    char* messageLog = new char[bufsize];
+
+    unsigned int retVal = glGetDebugMessageLogARB(count, bufsize, sources, types, ids,
+        severities, lengths, messageLog);
+
+    if (retVal > 0)
+    {
+        unsigned int pos = 0;
+        for (unsigned int i = 0; i < retVal; i++)
+        {
+            DebugOutputToFile(sources[i], types[i], ids[i], severities[i],
+            &messageLog[pos]);
+            pos += lengths[i];
+        }
+    }
+
+    delete[] sources;
+    delete[] types;
+    delete[] ids;
+    delete[] severities;
+    delete[] lengths;
+    delete[] messageLog;
+}
+
+void Utils::DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
+    unsigned int severity, const char* message)
+{
+    FILE* f;
+    fopen_s(&f, "Debug.txt", "a");
+
+    if (f)
+    {
+        char debSource[16], debType[20], debSev[5];
+        if (source == GL_DEBUG_SOURCE_API_ARB)
+            strcpy_s(debSource, "OpenGL");
+        else if (source == GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB)
+            strcpy_s(debSource, "Windows");
+        else if (source == GL_DEBUG_SOURCE_SHADER_COMPILER_ARB)
+            strcpy_s(debSource, "Shader Compiler");
+        else if (source == GL_DEBUG_SOURCE_THIRD_PARTY_ARB)
+            strcpy_s(debSource, "Third Party");
+        else if (source == GL_DEBUG_SOURCE_APPLICATION_ARB)
+            strcpy_s(debSource, "Application");
+        else if (source == GL_DEBUG_SOURCE_OTHER_ARB)
+            strcpy_s(debSource, "Other");
+        
+        if (type == GL_DEBUG_TYPE_ERROR_ARB)
+            strcpy_s(debType, "Error");
+        else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB)
+            strcpy_s(debType, "Deprecated behavior");
+        else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB)
+            strcpy_s(debType, "Undefined behavior");
+        else if (type == GL_DEBUG_TYPE_PORTABILITY_ARB)
+            strcpy_s(debType, "Portability");
+        else if (type == GL_DEBUG_TYPE_PERFORMANCE_ARB)
+            strcpy_s(debType, "Performance");
+        else if (type == GL_DEBUG_TYPE_OTHER_ARB)
+            strcpy_s(debType, "Other");
+
+        if (severity == GL_DEBUG_SEVERITY_HIGH_ARB)
+            strcpy_s(debSev, "High");
+        else if (severity == GL_DEBUG_SEVERITY_MEDIUM_ARB)
+            strcpy_s(debSev, "Medium");
+        else if (severity == GL_DEBUG_SEVERITY_LOW_ARB)
+            strcpy_s(debSev, "Low");
+
+        Loggger::debug("Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
+            debSource, debType, id, debSev, message);
+        fprintf(f, "Source:%s\tType:%s\tID:%d\tSeverity:%s\tMessage:%s\n",
+            debSource, debType, id, debSev, message);
+        fclose(f);
+    }
+
 }

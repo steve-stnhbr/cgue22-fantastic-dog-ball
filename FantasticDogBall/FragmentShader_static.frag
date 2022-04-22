@@ -1,7 +1,6 @@
 #version 460 core
 
-#define NUM_LIGHTS 1
-
+const int NUM_LIGHTS = 1;
 
 struct DirLight {
     vec3 direction;
@@ -38,25 +37,27 @@ struct SpotLight {
     vec3 specular;
 };
 
-struct Material {
+layout(std140) uniform Material {
     vec4 color;
     float diffuse;
     float specular;
     float shininess;
-};
+} material;
 
-layout(std140) uniform CameraData{
+layout(std140) uniform CameraData {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec3 viewPos;
 };
 
-uniform PointLight pLights[NUM_LIGHTS];
-uniform DirLight dLights[NUM_LIGHTS];
-uniform SpotLight sLights[NUM_LIGHTS];
+const vec3 viewPos = vec3(0, 1, -6);
 
-uniform Material material;
+
+layout(std140) uniform Lights {
+    PointLight pLights[NUM_LIGHTS];
+    DirLight dLights[NUM_LIGHTS];
+    SpotLight sLights[NUM_LIGHTS];
+};
 
 in vec4 fragColor;
 in vec3 fragPos;
@@ -81,6 +82,7 @@ void main() {
     // this fragment's final color.
     // == =====================================================
     vec3 result = vec3(0, 0, 0);
+    /*
     // phase 1: directional lighting
     for (int i = 0; i < NUM_LIGHTS; i++)
         result += CalcDirLight(dLights[i], norm, viewDir);
@@ -90,8 +92,9 @@ void main() {
     // phase 3: spot light
     for (int i = 0; i < NUM_LIGHTS; i++)
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
-
-    outColor = vec4(result, 1.0);
+      */
+    outColor = vec4(pLights[0].position, 1.0);
+    //outColor = vec4(result, 1.0);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

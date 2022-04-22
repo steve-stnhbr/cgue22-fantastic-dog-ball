@@ -9,28 +9,12 @@ void Scene::addObject(RenderObject object)
 
 void Scene::render()
 {
-    if (pLights.empty())
-        pLights.push_back(Light::Point());
-    if (dLights.empty())
-        dLights.push_back(Light::Directional());
-    if (sLights.empty())
-        sLights.push_back(Light::Spot());
+    if (lights.empty<Light::Point>())
+        lights.add(Light::Point());
+    if (lights.empty<Light::Point>())
+        lights.add(Light::Directional());
+    if (lights.empty<Light::Point>())
+        lights.add(Light::Spot());
 
-    renderer.render(objects, pLights, dLights, sLights);
+    renderer.render(objects, lights);
 }
-
-void Scene::addLight(Light::Point light)
-{
-    pLights.push_back(light);
-}
-
-void Scene::addLight(Light::Directional light)
-{
-    dLights.push_back(light);
-}
-
-void Scene::addLight(Light::Spot light)
-{
-    sLights.push_back(light);
-}
-

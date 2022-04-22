@@ -15,7 +15,7 @@ public:
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-		glm::vec3 viewPos;
+		// glm::vec3 viewPos;
 	};
 
 	/**
@@ -45,8 +45,6 @@ public:
 	 * Function that binds the camera to the currently active program
 	 */
 	void bindWithModel(Shaders::Program, glm::mat4);
-
-private:
 	/**
 	 * Struct containing current state of the camera
 	 */

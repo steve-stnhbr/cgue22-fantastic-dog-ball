@@ -4,6 +4,8 @@
 #include "Loggger.h"
 #include "Utils.h"
 
+#include <glm/gtx/string_cast.hpp>
+
 unsigned long long frameCount = 0;
 float timeF = 0;
 
@@ -15,27 +17,9 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const std::vector<RenderObject>& objects,
-	const Light::Lights<Light::Point>& pLights,
-	const Light::Lights<Light::Directional>& dLights,
-	const Light::Lights<Light::Spot>& sLights)
+void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
-
-	UncheckedUniformBuffer pBuffer;
-	pBuffer.create(sizeof(Light::Point));
-	Light::Point pFirst = pLights[0];
-	pBuffer.update(&pFirst);
-
-	UncheckedUniformBuffer dBuffer;
-	pBuffer.create(sizeof(Light::Point));
-	Light::Directional dFirst = dLights[0];
-	pBuffer.update(&dFirst);
-
-	UncheckedUniformBuffer sBuffer;
-	pBuffer.create(sizeof(Light::Point));
-	Light::Spot sFirst = sLights[0];
-	pBuffer.update(&sFirst);
 
 	for (RenderObject element : objects)
 	{
@@ -47,12 +31,14 @@ void Renderer::render(const std::vector<RenderObject>& objects,
 		auto prog = element.material->getProgram();
 		prog.use();
 
-		prog.setUniform("pLight", pBuffer);
-		prog.setUniform("dLight", dBuffer);
-		prog.setUniform("sLight", sBuffer);
+		prog.setUniform("Lights", lights.buffer);
 
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
+		Loggger::debug("Camera has data: \nm: %s, \nv: %s,\n p: %s", 
+			glm::to_string(camera.data.model).c_str(),
+			glm::to_string(camera.data.view).c_str(),
+			glm::to_string(camera.data.projection).c_str());
 		element.material->bind(prog);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);

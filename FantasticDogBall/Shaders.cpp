@@ -18,7 +18,6 @@ void Shaders::cleanup()
 	}
 }
 
-
 unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 {
 	const unsigned int id = glCreateShader(type);
@@ -33,12 +32,14 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 		throw ShaderCompilationException(getShaderLog(id), src.c_str());
 	}
 
+	Loggger::info("Created shader %d", id);
+
 	return id;
 }
 
 unsigned Shaders::shaderFile(unsigned type, const std::string& src)
 {
-	Loggger::info( "Creating shader(%d) from file %s\n", type, src.c_str());
+	Loggger::info( "Creating shader(%d) from file %s", type, src.c_str());
 	return Shaders::shaderSource(type, Utils::readFile(src.c_str()));
 }
 
@@ -62,6 +63,11 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 
 	const unsigned int program = glCreateProgram();
 
+	if(program == 0)
+	{
+		Loggger::fatal("Error creating program");
+	}
+
 	for (auto i = 0; i < size; i++)
 	{
 		const unsigned int shader = src ? Shaders::shaderSource(types[i], srcs[i]) : Shaders::shaderFile(types[i], srcs[i]);
@@ -71,8 +77,10 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 
 	glLinkProgram(program);
 	Utils::checkError();
+	Utils::CheckDebugLog();
 	glValidateProgram(program);
 	Utils::checkError();
+	Utils::CheckDebugLog();
 
 	int result;
 	glGetProgramiv(program, GL_LINK_STATUS, &result);
@@ -146,8 +154,8 @@ void Shaders::Program::setFloat(const std::string& name, const float value) cons
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
 {
 	auto binding_ = buffer.id + binding;
-	Loggger::debug("Binding uniform %s to program %d", name.c_str(), ID);
 	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
+	Loggger::debug("Binding uniform %s to program %d with index %d", name.c_str(), ID, ubi);
 	buffer.bind(binding_);
 	glUniformBlockBinding(ID, ubi, binding_);
 	Utils::checkError();
