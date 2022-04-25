@@ -41,8 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="FragmentShader_alt.glsl" />
-    <None Include="FragmentShader_static.frag" />
+    <None Include="static.frag" />
     <None Include="VertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
@@ -67,16 +66,7 @@
     <ClInclude Include="RenderObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FragmentShader.glsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FragmentShader_static.glsl">
+    <None Include="texture.frag">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

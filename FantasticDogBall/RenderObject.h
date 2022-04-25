@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+
+#include "Material.h"
 #include "Render.h"
 
 /**
@@ -14,7 +17,7 @@ public:
 	/*
 	 * A pointer to the material the RenderObject is using
 	 */
-	Render::Material*	material;
+	Material::Material*	material;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -32,15 +35,15 @@ public:
 	 */
 	glm::mat4 transform;
 
-	RenderObject(Render::Mesh, Render::Material*, const std::string&);
+	RenderObject(Render::Mesh, Material::Material*, const std::string&);
 
 	void buildVAO() const;
-	void translate(float, float, float);
-	void translate(glm::vec3);
-	void rotate(float, float, float);
-	void rotate(float, glm::vec3);
-	void scale(float, float, float);
-	void scale(glm::vec3);
+	RenderObject* translate(float, float, float);
+	RenderObject* translate(glm::vec3);
+	RenderObject* rotate(float, float, float);
+	RenderObject* rotate(float, glm::vec3);
+	RenderObject* scale(float, float, float);
+	RenderObject* scale(glm::vec3);
 	
 };
 

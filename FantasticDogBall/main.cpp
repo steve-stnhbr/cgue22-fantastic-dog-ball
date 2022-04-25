@@ -15,7 +15,7 @@
 #include "Shaders.h"
 
 #include "LightSource.h"
-#include "Render.h"
+#include "Material.h"
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -97,15 +97,17 @@ int main(int argc, char* argv[])
     scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(0, -1, 0),
-        glm::vec3(.5,.5,.5),
+        glm::vec3(0, 1, 0),
+        glm::vec3(1,1,1),
         glm::vec3(.5,.5,.5),
         glm::vec3(.5,.5,.5)
     };
 
     scene.lights.add(d);
 
-    Render::StaticMaterial material = Render::StaticMaterial{};
+    scene.lights.finalize();
+
+    Material::StaticMaterial material = Material::StaticMaterial{};
     material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
     material.vals.data = { 1.0f, 1.0f, 2, 0};
 
@@ -130,8 +132,20 @@ int main(int argc, char* argv[])
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 1, 1, 1
-		}, &material, "CUBE"
+		}, &material, "CUBE0"
     });
+
+    Material::StaticMaterial material1 = Material::StaticMaterial{};
+    material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
+    material1.vals.data = { 1.0f, 1.0f, 2, 0 };
+
+    auto cube = RenderObject{
+        Render::Cube{
+            1, 0,1, 2, 1, 2
+		}, &material1, "CUBE1"
+    };
+
+    scene.addObject((cube.scale(2, 1, 2)->translate(1, 0, 0)));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

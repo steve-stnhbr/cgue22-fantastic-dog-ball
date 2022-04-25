@@ -5,6 +5,13 @@ void Scene::addObject(RenderObject object)
 {
     object.index = objects.size();
 	objects.push_back(object);
+
+    // todo modify number óf light sources
+}
+
+void Scene::addObject(RenderObject* object)
+{
+    addObject(*object);
 }
 
 void Scene::render()

@@ -78,19 +78,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="FragmentShader_alt.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="VertexShader.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="FragmentShader.glsl">
+    <None Include="texture.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="FragmentShader_static.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="FragmentShader_static.frag">
+    <None Include="static.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

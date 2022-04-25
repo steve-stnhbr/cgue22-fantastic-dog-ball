@@ -9,6 +9,7 @@ layout(std140) uniform CameraData{
 	mat4 model;
 	mat4 view;
 	mat4 projection;
+	vec4 viewPos;
 };
 
 out vec4 fragColor;

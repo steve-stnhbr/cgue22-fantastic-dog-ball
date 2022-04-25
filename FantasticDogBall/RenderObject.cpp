@@ -1,11 +1,13 @@
 #include "RenderObject.h"
 
+#include <memory>
+
 #include "Utils.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 
-RenderObject::RenderObject(Render::Mesh mesh_, Render::Material* material_, const std::string& name_):
+RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_):
 	mesh(mesh_),
 	material(material_),
 	name(name_),
@@ -34,36 +36,42 @@ void RenderObject::buildVAO() const
 	material->assignVertexAttributes(vaoID);
 }
 
-void RenderObject::scale(float x, float y, float z)
+RenderObject* RenderObject::scale(float x, float y, float z)
 {
 	scale({ x,y,z });
+	return this;
 }
 
-void RenderObject::scale(glm::vec3 s)
+RenderObject* RenderObject::scale(glm::vec3 s)
 {
 	transform = glm::scale(transform, s);
+	return this;
 }
 
-void RenderObject::translate(float x, float y, float z)
+RenderObject* RenderObject::translate(float x, float y, float z)
 {
 	translate({ x, y, z });
+	return this;
 }
 
-void RenderObject::translate(glm::vec3 v)
+RenderObject* RenderObject::translate(glm::vec3 v)
 {
 	transform = glm::translate(transform, v);
+	return this;
 }
 
-void RenderObject::rotate(float x, float y, float z)
+RenderObject* RenderObject::rotate(float x, float y, float z)
 {
 	rotate(x, { 1, 0, 0 });
 	rotate(y, { 0, 1, 0 });
 	rotate(z, { 0, 0, 1 });
+	return this;
 }
 
-void RenderObject::rotate(float angle, glm::vec3 axes)
+RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 {
 	transform = glm::rotate(transform, angle, axes);
+	return this;
 }
 
 

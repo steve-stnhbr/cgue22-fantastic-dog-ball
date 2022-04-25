@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
+#include "Utils.h"
+
 Texture::Texture(std::string filePath_)
 {
 	if (filePath_.empty())
@@ -28,6 +30,12 @@ Texture::Texture(std::string filePath_)
 
 Texture::Texture(float substituteValue_) : defined(false), substituteValue(substituteValue_), nrChannels(0), width(0), height(0), data(nullptr)
 {
+}
+
+void Texture::bind(unsigned location) const
+{
+	glBindTextureUnit(location, glID);
+	Utils::checkError();
 }
 
 Texture::Cubemap::Cubemap(std::vector<std::string> paths)

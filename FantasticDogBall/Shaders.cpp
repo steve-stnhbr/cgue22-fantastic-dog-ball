@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "LightSource.h"
 #include "Render.h"
 
 std::vector<unsigned> shaders, programs;
@@ -20,8 +21,17 @@ void Shaders::cleanup()
 
 unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 {
+	std::string source = src;
 	const unsigned int id = glCreateShader(type);
-	const char* cSrc = src.c_str();
+	if(type == GL_FRAGMENT_SHADER)
+	{
+		const std::string lightNums =
+			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Light::Light::NUM_POINT_LIGHTS) + ";\n"
+			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Light::Light::NUM_DIRECTIONAL_LIGHTS) + ";\n"
+			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Light::Light::NUM_SPOT_LIGHTS) + ";\n";
+		source.insert(source.find_first_of("\n"), lightNums);
+	}
+	const char* cSrc = source.c_str();
 	glShaderSource(id, 1, &cSrc, nullptr);
 	glCompileShader(id);
 
@@ -29,7 +39,7 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE)
 	{
-		throw ShaderCompilationException(getShaderLog(id), src.c_str());
+		throw ShaderCompilationException(getShaderLog(id), source.c_str());
 	}
 
 	Loggger::info("Created shader %d", id);
@@ -131,11 +141,14 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
 
-Shaders::Program::Program(std::string vertexPath, std::string fragmentPath)
+Shaders::Program::Program() : binding(20)
 {
-	Program::vertexPath = vertexPath;
-	Program::fragmentPath = fragmentPath;
+}
 
+Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	binding(20),
+																				vertexPath(vertexPath),
+																				fragmentPath(fragmentPath)
+{
 	Program::ID = loadShaders(false, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER}, {vertexPath, fragmentPath});
 }
 void Shaders::Program::setBool(const std::string& name, const bool value) const
@@ -156,9 +169,10 @@ void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
 }
 
-void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer) const
+void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
 {
-	auto binding_ = buffer.id + binding;
+	binding = ++binding;
+	const unsigned binding_ = binding;
 	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
 	Loggger::debug("Binding uniform %s to program %d with index %d", name.c_str(), ID, ubi);
 	buffer.bind(binding_);
@@ -168,7 +182,7 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 
 void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buffer) const
 {
-	buffer.bind(0);
+	buffer.bind(binding);
 }
 
 
@@ -176,21 +190,26 @@ void Shaders::Program::setTexture(const unsigned location, const Texture& textur
 {
 	if(!texture.defined)
 	{
-		this->setFloat("texture" + std::to_string(location), texture.substituteValue);
+		this->setFloat("texture_" + std::to_string(location), texture.substituteValue);
 	}
-
-	/*
-	GLuint textureHandle;
-	glCreateTextures(GL_TEXTURE_2D, 1, &textureHandle);
-	glTextureStorage2D(textureHandle, 1, GL_RGBA8, texture.width, texture.height);
-	glTextureSubImage2D(textureHandle, 0, 0, 0, texture.width, texture.height, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
-	glTextureParameteri(textureHandle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	*/
-	glBindTextureUnit(location, texture.glID);
+	texture.bind(location);
 	Utils::checkError();
 }
 
-void Shaders::Program::use()
+void Shaders::Program::setTexture(const std::string& name, const Texture& texture)
+{
+	if (!texture.defined)
+	{
+		this->setFloat("texture_" + name, texture.substituteValue);
+	}
+	const unsigned binding_ = ++binding;
+	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
+	texture.bind(binding);
+	glUniformBlockBinding(ID, ubi, binding_);
+	Utils::checkError();
+}
+
+void Shaders::Program::use() const
 {
 	glUseProgram(ID);
 	Utils::checkError();

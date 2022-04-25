@@ -2,7 +2,148 @@
 #include "Material.h"
 
 
-void Material::Material::bind()
+Shaders::Program Material::StaticMaterial::program;
+Shaders::Program Material::TextureMaterial::program;
+
+Material::StaticMaterial::StaticMaterial()
 {
-	
+	createBuffer();
+}
+
+Material::StaticMaterial::StaticMaterial(const glm::vec4 color_, const float diffuse_, const float specular_, const float shininess_) :
+	vals({ color_, diffuse_, specular_, shininess_ })
+{
+	createBuffer();
+	Utils::checkError();
+}
+
+Shaders::Program Material::StaticMaterial::getProgram()
+{
+	return staticProgram;
+}
+
+void Material::StaticMaterial::createBuffer()
+{
+	buffer.create(sizeof(Values));
+}
+
+void Material::StaticMaterial::initProgram()
+{
+	program = Utils::loadProgram(vertexShader, colorFragmentShader);
+	staticProgram = Utils::loadProgram(vertexShader, colorFragmentShader);
+}
+
+
+void Material::StaticMaterial::bind(Shaders::Program* p)
+{
+	buffer.update(sizeof(Values), &vals);
+	p->setUniform("Material", buffer);
+}
+
+
+/**
+ * This function is responsible for assigning streams of vertex-attributes
+ * location = 0, binding = 0: postition
+ * location = 1, binding = 0: normal
+ * location = 2, binding = 0: color
+ */
+void Material::StaticMaterial::assignVertexAttributes(unsigned vao)
+{
+	// --- postition ---
+	glEnableVertexArrayAttrib(vao, 0);
+	Utils::checkError();
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 0, 0);
+	Utils::checkError();
+	// --- normal ---
+	glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 1, 0);
+	Utils::checkError();
+	glEnableVertexArrayAttrib(vao, 1);
+	Utils::checkError();
+	// --- color ---
+	glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, color));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 2, 0);
+	Utils::checkError();
+	glEnableVertexArrayAttrib(vao, 2);
+	Utils::checkError();
+}
+
+
+Shaders::Program Material::TextureMaterial::getProgram()
+{
+	return textureProgram;
+}
+
+void Material::TextureMaterial::bind(Shaders::Program* p)
+{
+}
+
+
+/**
+ * This function is responsible for assigning streams of vertex-attributes
+ * location = 0, binding = 0: postition
+ * location = 1, binding = 0: normal
+ * location = 2, binding = 0: texture_coordinate
+ */
+void Material::TextureMaterial::assignVertexAttributes(unsigned vao)
+{
+	// --- postition ---
+	glEnableVertexArrayAttrib(vao, 0);
+	Utils::checkError();
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 0, 0);
+	Utils::checkError();
+	// --- normal ---
+	glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 1, 0);
+	Utils::checkError();
+	glEnableVertexArrayAttrib(vao, 1);
+	Utils::checkError();
+	// --- color ---
+	glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, texture_coordinate));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 2, 0);
+	Utils::checkError();
+	glEnableVertexArrayAttrib(vao, 2);
+	Utils::checkError();
+}
+
+void Material::TextureMaterial::initProgram()
+{
+	// StaticMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
+	staticProgram = Utils::loadProgram(vertexShader, textureFragmentShader);
+}
+
+Shaders::Program Material::ProceduralMaterial::getProgram()
+{
+	return staticProgram;
+}
+
+/**
+ * This function is responsible for assigning streams of vertex-attributes
+ * location = 0, binding = 0: postition
+ * location = 1, binding = 0: normal
+ */
+void Material::ProceduralMaterial::assignVertexAttributes(unsigned vao)
+{
+	// --- postition ---
+	glEnableVertexArrayAttrib(vao, 0);
+	Utils::checkError();
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 0, 0);
+	Utils::checkError();
+	// --- normal ---
+	glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+	Utils::checkError();
+	glVertexArrayAttribBinding(vao, 1, 0);
+	Utils::checkError();
+	glEnableVertexArrayAttrib(vao, 1);
+	Utils::checkError();
 }

@@ -15,12 +15,11 @@ public:
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
+		/**
+		 * The vector describing the cameras position;
+		 */
+		glm::vec4 position;
 	};
-
-	/**
-	 * The vector describing the cameras position;
-	 */
-	glm::vec3 position;
 
 	/**
 	 * Default constructor
@@ -43,12 +42,12 @@ public:
 
 	void setView(const glm::mat4);
 
-	void bind(Shaders::Program);
+	void bind(Shaders::Program*);
 
 	/**
 	 * Function that binds the camera to the currently active program
 	 */
-	void bindWithModel(Shaders::Program, glm::mat4);
+	void bindWithModel(Shaders::Program*, glm::mat4);
 	/**
 	 * Struct containing current state of the camera
 	 */

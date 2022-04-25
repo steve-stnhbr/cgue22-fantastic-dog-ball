@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -49,20 +50,21 @@ namespace Shaders
 		// the program ID
 		unsigned int ID;
 		bool linked = false;
-		unsigned binding = 20;
+		int binding;
 
 		std::string vertexPath, fragmentPath;
 
+		Program();
 		// constructor reads and builds the shader
-		Program(std::string vertexPath, std::string fragmentPath);
+		Program(std::string& vertexPath, std::string& fragmentPath);
 		// use/activate the shader
-		void use();
+		void use() const;
 		// utility uniform functions
 		void setBool(const std::string& name, bool value) const;
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
 		void setVec3(const std::string& name, glm::vec3) const;
-		void setUniform(const std::string& name, UncheckedUniformBuffer buffer) const;
+		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
 		void setUniform(const int binding, UncheckedUniformBuffer buffer) const;
 		template <typename V>
 		void setUniform(const std::string& name, UniformBuffer<V> buffer)
@@ -75,5 +77,6 @@ namespace Shaders
 		}
 
 		void setTexture(const unsigned, const Texture& texture) const;
+		void setTexture(const std::string&, const Texture& texture);
 	};
 };

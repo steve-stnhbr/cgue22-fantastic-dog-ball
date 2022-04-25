@@ -1,33 +1,95 @@
+#pragma once
 #include "UncheckedUniformBuffer.h"
 #include "Shaders.h"
+#include "Utils.h"
+#include "Vertex.h"
 
 namespace Material
 {
+	const std::string vertexShader = "./VertexShader.vert";
+	const std::string colorFragmentShader = "./static.frag";
+	const std::string textureFragmentShader = "./texture.frag";
 
-	class Material
+	static Shaders::Program staticProgram, textureProgram;
+
+	struct Material
 	{
-	public:
+		virtual Shaders::Program getProgram() = 0;
+		virtual ~Material() = default;
+		virtual void bind(Shaders::Program*) = 0;
+		/*
+		 * This function is responsible for assigning streams of vertex-attributes
+		 */
+		virtual void assignVertexAttributes(unsigned vao) = 0;
+	};
+	// A material that is defined by constant values for material properties
+	struct StaticMaterial final : public Material
+	{
+		struct Values
+		{
+			glm::vec4 color = { 1.0f, 1.0f, 0.0f, 1.0f };
+			glm::vec4 data;
 
+			Values() = default;
+			Values(glm::vec4 color_, float diffuse_, float specular_, float shininess_) : color(color_), data(diffuse_, specular_, shininess_, 0) {}
+		};
+
+		Values vals;
+
+		static Shaders::Program program;
 		UncheckedUniformBuffer buffer;
-		Shaders::Program program;
-		
-		Material(Shaders::Program);
 
-		void bind();
+		StaticMaterial();
+
+		StaticMaterial(const glm::vec4 color_,
+			const float diffuse_,
+			const float specular_,
+			const float shininess_);
+
+		Shaders::Program getProgram() override;
+		void assignVertexAttributes(unsigned vao) override;
+		void bind(Shaders::Program*) override;
+		void createBuffer();
+
+		static void initProgram();
 	};
 
-	class Static : public Material
+	// A material that is defined by different textures allowing for non-static properties
+	struct TextureMaterial final : public Material
 	{
+		const Texture color;
+		const Texture normal;
+		const Texture roughness;
+		const Texture metallic;
+		const Texture specularity;
+
+		static Shaders::Program program;
+
+		Shaders::Program getProgram() override;
+		void assignVertexAttributes(unsigned vao) override;
+		void bind(Shaders::Program*) override; //todo
+
+		static void initProgram();
 	};
 
-	class Texture : public Material
+
+	// A Material that is defined by different shader files allowing for procedural generation of properties
+	struct ProceduralMaterial final : public Material
 	{
-		
+		static size_t numPointLights, numDirLights, numSpotLights;
+		const std::string shaderFile;
+
+		const Shaders::Program program = Utils::loadProgram(vertexShader, shaderFile);
+
+		Shaders::Program getProgram() override;
+		void assignVertexAttributes(unsigned vao) override;
+		void bind(Shaders::Program*) override; //todo
 	};
 
-	class Procedural : public Material
+	static void initPrograms()
 	{
-		
-	};
+		StaticMaterial::initProgram();
+		// TextureMaterial::initProgram();
+	}
 
 }

@@ -18,6 +18,8 @@ public:
 	Texture(std::string filePath_);
 	Texture(float substituteValue_);
 
+	void bind(unsigned location) const;
+
 
 	static class Cubemap
 	{

@@ -8,10 +8,12 @@
 
 namespace Light
 {
-	constexpr unsigned NUM_LIGHTS = 1;
 
 	struct Light
 	{
+		static unsigned NUM_POINT_LIGHTS;
+		static unsigned NUM_DIRECTIONAL_LIGHTS;
+		static unsigned NUM_SPOT_LIGHTS;
 		Light() = default;
 	};
 
@@ -109,10 +111,9 @@ namespace Light
 			return amount<T>() == 0;
 		}
 
-		void use(Shaders::Program& prog);
+		void bind(Shaders::Program*) const;
 
-	private:
-		void update();
+		void finalize();
 	};
 }
 

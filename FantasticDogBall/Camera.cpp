@@ -16,7 +16,7 @@ void Camera::setData(Data data_)
 
 void Camera::setPosition(const glm::vec3 position_)
 {
-	// data.viewPos = position_;
+	data.position = glm::vec4(position_.x, position_.y, position_.z, 0);
 }
 
 void Camera::setProjection(const glm::mat4 mat)
@@ -29,16 +29,15 @@ void Camera::setView(const glm::mat4 mat)
 	data.view = mat;
 }
 
-void Camera::bind(Shaders::Program program)
+void Camera::bind(Shaders::Program* program)
 {
 	bindWithModel(program, glm::mat4(1));
 }
 
 
-void Camera::bindWithModel(Shaders::Program prog, glm::mat4 model)
+void Camera::bindWithModel(Shaders::Program* prog, glm::mat4 model)
 {
 	data.model = model; 
 	buffer.update(sizeof(Data), &data);
-	prog.setUniform("CameraData", buffer);
-	prog.setVec3("viewPos", position);
+	prog->setUniform("CameraData", buffer);
 }

@@ -25,20 +25,16 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 	{
 		Loggger::info("\t%s", element.name.c_str());
 
-		element.rotate(0, timeF, 0);
+
+		element.rotate(timeF, 0, 0);
 
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
-		lights.use(prog);
-
+		lights.bind(&prog);
 		// bind uniforms here
-		camera.bindWithModel(prog, element.transform);
-		Loggger::debug("Camera has data: \nm: %s, \nv: %s,\n p: %s", 
-			glm::to_string(camera.data.model).c_str(),
-			glm::to_string(camera.data.view).c_str(),
-			glm::to_string(camera.data.projection).c_str());
-		element.material->bind(prog);
+		camera.bindWithModel(&prog, element.transform);
+		element.material->bind(&prog);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

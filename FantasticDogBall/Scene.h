@@ -19,6 +19,7 @@ public:
 	Scene() = default;
 
 	void addObject(RenderObject object);
+	void addObject(RenderObject* object);
 
 	void render();
 
