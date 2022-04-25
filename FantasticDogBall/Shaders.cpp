@@ -151,7 +151,12 @@ void Shaders::Program::setFloat(const std::string& name, const float value) cons
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
+void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
+{
+	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
+}
+
+void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer) const
 {
 	auto binding_ = buffer.id + binding;
 	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
@@ -159,6 +164,11 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 	buffer.bind(binding_);
 	glUniformBlockBinding(ID, ubi, binding_);
 	Utils::checkError();
+}
+
+void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buffer) const
+{
+	buffer.bind(0);
 }
 
 

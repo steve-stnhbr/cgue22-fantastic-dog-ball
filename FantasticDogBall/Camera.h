@@ -15,8 +15,12 @@ public:
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-		// glm::vec3 viewPos;
 	};
+
+	/**
+	 * The vector describing the cameras position;
+	 */
+	glm::vec3 position;
 
 	/**
 	 * Default constructor
@@ -49,6 +53,5 @@ public:
 	 * Struct containing current state of the camera
 	 */
 	Data data;
-
 };
 

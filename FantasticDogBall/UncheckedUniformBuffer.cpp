@@ -20,6 +20,7 @@ void UncheckedUniformBuffer::create(const unsigned size_)
 
 void UncheckedUniformBuffer::update(void* data_)
 {
+	Loggger::debug("Updating buffer of size %d", size);
 	update(size, data_);
 }
 

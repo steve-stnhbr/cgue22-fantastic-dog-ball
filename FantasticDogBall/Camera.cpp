@@ -40,6 +40,5 @@ void Camera::bindWithModel(Shaders::Program prog, glm::mat4 model)
 	data.model = model; 
 	buffer.update(sizeof(Data), &data);
 	prog.setUniform("CameraData", buffer);
+	prog.setVec3("viewPos", position);
 }
-
-

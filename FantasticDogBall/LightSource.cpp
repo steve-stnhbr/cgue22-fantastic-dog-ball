@@ -1,61 +1,72 @@
 #include "LightSource.h"
 
-#include "Utils.h"
-
 Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	position(position_), constant(constant_), linear(linear_), quadratic(quadratic_), ambient(ambient_), diffuse(diffuse_), specular(specular_)
+	position(position_.x, position_.y, position_.z, 0),
+	attenuation(constant_, linear_, quadratic_, 0),
+	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
+	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+	specular(specular_.x, specular_.y, specular_.z, 0)
 {
 	
 }
 
 
 Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	direction(direction_), ambient(ambient_), diffuse(diffuse_), specular(specular_)
+	direction(direction_.x, direction_.y, direction_.z, 0),
+	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
+	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+	specular(specular_.x, specular_.y, specular_.z, 0)
 {
 	
 }
 
 Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, float outerCutOff_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	position(position_), direction(direction_), cutOff(cutOff_), outerCutOff(outerCutOff_), constant(constant_), linear(linear_), quadratic(quadratic_), ambient(ambient_), diffuse(diffuse_), specular(specular_)
+	position(position_.x, position_.y, position_.z, 0),
+	direction(direction_.x, direction_.y, direction_.z, 0),
+	cutoff(cutOff_, outerCutOff_, 0, 0),
+	attenuation(constant_, linear_, quadratic_, 0),
+	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
+	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+	specular(specular_.x, specular_.y, specular_.z, 0)
 {
 	
 }
 
-
-
 Light::Lights::Lights()
 {
-	buffer.create(NUM_LIGHTS * sizeof(Point) + NUM_LIGHTS * sizeof(Directional) + NUM_LIGHTS * sizeof(Spot));
+	pBuffer.create(NUM_LIGHTS * sizeof(Point));
+	dBuffer.create(NUM_LIGHTS * sizeof(Directional));
+	sBuffer.create(NUM_LIGHTS * sizeof(Spot));
 }
 
-void Light::Lights::add(Point p)
+void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
-	update();
+	pLights.resize(NUM_LIGHTS);
+	pBuffer.update(pLights.data());
 }
 
-void Light::Lights::add(Directional d)
+void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
-	update();
+	dLights.resize(NUM_LIGHTS);
+	pBuffer.update(dLights.data());
 }
-void Light::Lights::add(Spot s)
+void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
-	update();
+	sLights.resize(NUM_LIGHTS);
+	pBuffer.update(sLights.data());
 }
 
 void Light::Lights::update()
 {
-	pLights.resize(NUM_LIGHTS);
-	dLights.resize(NUM_LIGHTS);
-	sLights.resize(NUM_LIGHTS);
 
-	data.pLights = &pLights[0];
-	data.dLights = &dLights[0];
-	data.sLights = &sLights[0];
+}
 
-	buffer.update(&data);
+void Light::Lights::use(Shaders::Program& prog)
+{
+	prog.setUniform("PointLights", pBuffer);
 }
 
 

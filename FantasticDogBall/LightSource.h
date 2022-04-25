@@ -1,8 +1,9 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include <vector>
+#include <glm/vec4.hpp>
 
-#include "Utils.h"
+#include "Shaders.h"
 #include "UncheckedUniformBuffer.h"
 
 namespace Light
@@ -16,11 +17,11 @@ namespace Light
 
 	struct Directional : Light
 	{
-		glm::vec3 direction;
+		glm::vec4 direction;
 
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		glm::vec4 ambient;
+		glm::vec4 diffuse;
+		glm::vec4 specular;
 
 		Directional() = default;
 		Directional(glm::vec3 direction,
@@ -31,15 +32,11 @@ namespace Light
 
 	struct Point : Light
 	{
-		glm::vec3 position;
-
-		float constant;
-		float linear;
-		float quadratic;
-
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		glm::vec4 position;
+		glm::vec4 attenuation;
+		glm::vec4 ambient;
+		glm::vec4 diffuse;
+		glm::vec4 specular;
 
 		Point() = default;
 		Point(glm::vec3 position,
@@ -53,18 +50,13 @@ namespace Light
 
 	struct Spot : Light
 	{
-		glm::vec3 position;
-		glm::vec3 direction;
-		float cutOff;
-		float outerCutOff;
-
-		float constant;
-		float linear;
-		float quadratic;
-
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		glm::vec4 position;
+		glm::vec4 direction;
+		glm::vec4 cutoff;
+		glm::vec4 attenuation;
+		glm::vec4 ambient;
+		glm::vec4 diffuse;
+		glm::vec4 specular;
 
 		Spot() = default;
 		Spot(glm::vec3 position,
@@ -85,14 +77,7 @@ namespace Light
 		std::vector<Point> pLights;
 		std::vector<Directional> dLights;
 		std::vector<Spot> sLights;
-		UncheckedUniformBuffer buffer;
-
-		struct Data
-		{
-			Point* pLights;
-			Directional* dLights;
-			Spot* sLights;
-		} data = {};
+		UncheckedUniformBuffer pBuffer, dBuffer, sBuffer;
 
 		Lights();
 
@@ -123,6 +108,8 @@ namespace Light
 		{
 			return amount<T>() == 0;
 		}
+
+		void use(Shaders::Program& prog);
 
 	private:
 		void update();

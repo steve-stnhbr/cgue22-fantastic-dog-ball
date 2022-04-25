@@ -30,8 +30,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
-
-		prog.setUniform("Lights", lights.buffer);
+		lights.use(prog);
 
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);

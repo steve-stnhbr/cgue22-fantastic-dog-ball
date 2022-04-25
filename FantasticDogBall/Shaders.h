@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdexcept>
 #include <GL/glew.h>
+#include <glm/vec3.hpp>
 
 #include "UniformBuffer.h"
 #include "Texture.h"
@@ -60,7 +61,9 @@ namespace Shaders
 		void setBool(const std::string& name, bool value) const;
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
-		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
+		void setVec3(const std::string& name, glm::vec3) const;
+		void setUniform(const std::string& name, UncheckedUniformBuffer buffer) const;
+		void setUniform(const int binding, UncheckedUniformBuffer buffer) const;
 		template <typename V>
 		void setUniform(const std::string& name, UniformBuffer<V> buffer)
 		{

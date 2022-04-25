@@ -51,9 +51,10 @@ namespace Render
 		struct Values
 		{
 			glm::vec4 color = {1.0f, 1.0f, 0.0f, 1.0f};
-			float diffuse;
-			float specular;
-			float shininess;
+			glm::vec4 data;
+
+			Values() = default;
+			Values(glm::vec4 color_, float diffuse_, float specular_, float shininess_) : color(color_), data(diffuse_, specular_, shininess_, 0) {}
 		};
 
 		Values vals;

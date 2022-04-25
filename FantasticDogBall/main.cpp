@@ -85,17 +85,29 @@ int main(int argc, char* argv[])
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
     const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
     scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
+
     Light::Point p = {
-        glm::vec3(1, 1, 0),
+        glm::vec3(0, 5, 1),
         2.0f, 1.0f, .5f,
-        glm::vec3(1,1,1),
-        glm::vec3(1,1,1),
-        glm::vec3(1,1,1)
+        glm::vec3(.5,.5,.5),
+        glm::vec3(.5,.5,.5),
+        glm::vec3(.5,.5,.5)
     };
+
     scene.lights.add(p);
+
+    Light::Directional d = {
+        glm::vec3(0, -1, 0),
+        glm::vec3(.5,.5,.5),
+        glm::vec3(.5,.5,.5),
+        glm::vec3(.5,.5,.5)
+    };
+
+    scene.lights.add(d);
 
     Render::StaticMaterial material = Render::StaticMaterial{};
     material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
+    material.vals.data = { 1.0f, 1.0f, 2, 0};
 
     std::vector<Vertex> vertecies = {
         Vertex{
