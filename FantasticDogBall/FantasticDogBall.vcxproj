@@ -28,6 +28,7 @@
     <ClCompile Include="Loggger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderObject.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="LightSource_alt.h" />
     <ClInclude Include="Loggger.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />

@@ -1,19 +1,28 @@
 #include "RenderObject.h"
 
 #include <memory>
+#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
+#include <bullet/LinearMath/btMotionState.h>
 
 #include "Utils.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 
-RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_):
+RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
 	material(material_),
 	name(name_),
 	transform(glm::mat4(1))
 {
 	buildVAO();
+}
+
+
+void RenderObject::add(Decoration::Decoration& decoration_)
+{
+	decoration_.bind(this);
+	decorations[typeid(decoration_)] = decoration_;
 }
 
 void RenderObject::buildVAO() const
@@ -48,6 +57,12 @@ RenderObject* RenderObject::scale(glm::vec3 s)
 	return this;
 }
 
+void RenderObject::doTransform()
+{
+
+}
+
+
 RenderObject* RenderObject::translate(float x, float y, float z)
 {
 	translate({ x, y, z });
@@ -74,5 +89,20 @@ RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 	return this;
 }
 
+
+void Decoration::Decoration::bind(RenderObject* object_)
+{
+	object = object_; 
+}
+
+Decoration::Physics::~Physics()
+{
+	// todo
+}
+
+void Decoration::Physics::update(unsigned frame, float dTime)
+{
+
+}
 
 

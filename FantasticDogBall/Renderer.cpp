@@ -23,6 +23,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 
 	for (RenderObject element : objects)
 	{
+		element.update();
+
 		Loggger::info("\t%s", element.name.c_str());
 
 		// bind program
