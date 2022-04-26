@@ -16,7 +16,6 @@ Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float q
 {
 }
 
-
 Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
 	direction(direction_.x, direction_.y, direction_.z, 0),
 	ambient(ambient_.x, ambient_.y, ambient_.z, 0),

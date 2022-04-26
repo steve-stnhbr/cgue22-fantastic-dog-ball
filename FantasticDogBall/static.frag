@@ -75,22 +75,27 @@ void main() {
     // == =====================================================
     vec3 result = vec3(0, 0, 0);
     // phase 1: directional lighting
-    for (int i = 0; i < NUM_POINT_LIGHTS; i++)
+
+    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
         result += CalcDirLight(dLights[i], norm, viewDir);
     // phase 2: point lights
-    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
+    for (int i = 0; i < NUM_POINT_LIGHTS; i++)
         result += CalcPointLight(pLights[i], norm, fragPos, viewDir);
     // phase 3: spot light
+    
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++)
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
     //outColor = vec4(pLights[0].diffuse.xyz, 1);
-    outColor = vec4(result, 1.0);
+    outColor = vec4(result * material.color.xyz, 1.0);
     //outColor = vec4(material.color.xyz, 1);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
+    if(length(light.ambient) + length(light.diffuse) + length(light.specular) <= 0)
+        return vec3(0);
+
     vec3 lightDir = normalize(-light.direction.xyz);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
@@ -106,6 +111,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    if(length(light.ambient) + length(light.diffuse) + length(light.specular) <= 0)
+        return vec3(0);
+
     vec3 lightDir = normalize(light.position.xyz - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
@@ -129,6 +137,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 // calculates the color when using a spot light.
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    if(length(light.ambient) + length(light.diffuse) + length(light.specular) <= 0)
+        return vec3(0);
+
     vec3 lightDir = normalize(light.position.xyz - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);

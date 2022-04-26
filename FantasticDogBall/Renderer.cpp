@@ -26,7 +26,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		Loggger::info("\t%s", element.name.c_str());
 
 
-		element.rotate(timeF, 0, 0);
+		element.rotate(timeF, timeF, 0);
 
 		// bind program
 		auto prog = element.material->getProgram();
@@ -45,6 +45,6 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		Utils::checkError();
 	}
 
-	timeF += .1f;
+	timeF += .01f;
 	frameCount++; 
 }
