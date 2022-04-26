@@ -14,7 +14,6 @@ Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float q
 	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
 	specular(specular_.x, specular_.y, specular_.z, 0)
 {
-	
 }
 
 
@@ -41,38 +40,37 @@ Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, floa
 
 Light::Lights::Lights()
 {
-	pBuffer.create(pLights.size() * sizeof(Point));
-	dBuffer.create(dLights.size() * sizeof(Directional));
-	sBuffer.create(sLights.size() * sizeof(Spot));
+	finalized = false;
 }
 
 void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
-	Light::NUM_POINT_LIGHTS = pLights.size();
-	// pLights.resize(NUM_LIGHTS);
-	pBuffer.update(pLights.data());
+	Light::NUM_POINT_LIGHTS++;
 }
 
 void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
-	Light::NUM_DIRECTIONAL_LIGHTS = dLights.size();
-	// dLights.resize(NUM_LIGHTS);
-	pBuffer.update(dLights.data());
+	Light::NUM_DIRECTIONAL_LIGHTS++;
 }
 void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
-	Light::NUM_SPOT_LIGHTS = pLights.size();
-	// sLights.resize(NUM_LIGHTS);
-	pBuffer.update(sLights.data());
+	Light::NUM_SPOT_LIGHTS++;
 }
 
 
-void Light::Lights::bind(Shaders::Program* prog) const
+void Light::Lights::bind(Shaders::Program& prog)
 {
-	prog->setUniform("PointLights", pBuffer);
+	if(!finalized)
+	{
+		finalize();
+	}
+
+	prog.setUniform("PointLights", pBuffer);
+	prog.setUniform("DirectionalLights", dBuffer);
+	prog.setUniform("SpotLights", sBuffer);
 }
 
 void Light::Lights::finalize()
@@ -84,7 +82,17 @@ void Light::Lights::finalize()
 	if (sLights.empty())
 		add(Spot{});
 
+	pBuffer.create(Light::NUM_POINT_LIGHTS * sizeof(Point));
+	pBuffer.update(pLights.data());
+	dBuffer.create(Light::NUM_DIRECTIONAL_LIGHTS * sizeof(Directional));
+	dBuffer.update(dLights.data());
+	sBuffer.create(Light::NUM_SPOT_LIGHTS * sizeof(Spot));
+	sBuffer.update(sLights.data());
+
+
 	Material::initPrograms();
+
+	finalized = true;
 }
 
 

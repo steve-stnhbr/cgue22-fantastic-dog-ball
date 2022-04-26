@@ -80,6 +80,7 @@ namespace Light
 		std::vector<Directional> dLights;
 		std::vector<Spot> sLights;
 		UncheckedUniformBuffer pBuffer, dBuffer, sBuffer;
+		bool finalized;
 
 		Lights();
 
@@ -111,7 +112,7 @@ namespace Light
 			return amount<T>() == 0;
 		}
 
-		void bind(Shaders::Program*) const;
+		void bind(Shaders::Program&);
 
 		void finalize();
 	};

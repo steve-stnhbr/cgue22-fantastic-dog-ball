@@ -31,10 +31,10 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
-		lights.bind(&prog);
 		// bind uniforms here
-		camera.bindWithModel(&prog, element.transform);
-		element.material->bind(&prog);
+		camera.bindWithModel(prog, element.transform);
+		lights.bind(prog);
+		element.material->bind(prog);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

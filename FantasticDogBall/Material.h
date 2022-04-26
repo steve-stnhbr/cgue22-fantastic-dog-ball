@@ -10,13 +10,11 @@ namespace Material
 	const std::string colorFragmentShader = "./static.frag";
 	const std::string textureFragmentShader = "./texture.frag";
 
-	static Shaders::Program staticProgram, textureProgram;
-
 	struct Material
 	{
 		virtual Shaders::Program getProgram() = 0;
 		virtual ~Material() = default;
-		virtual void bind(Shaders::Program*) = 0;
+		virtual void bind(Shaders::Program&) = 0;
 		/*
 		 * This function is responsible for assigning streams of vertex-attributes
 		 */
@@ -48,7 +46,7 @@ namespace Material
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
-		void bind(Shaders::Program*) override;
+		void bind(Shaders::Program&) override;
 		void createBuffer();
 
 		static void initProgram();
@@ -67,7 +65,7 @@ namespace Material
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
-		void bind(Shaders::Program*) override; //todo
+		void bind(Shaders::Program&) override; //todo
 
 		static void initProgram();
 	};
@@ -83,7 +81,7 @@ namespace Material
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
-		void bind(Shaders::Program*) override; //todo
+		void bind(Shaders::Program&) override; //todo
 	};
 
 	static void initPrograms()

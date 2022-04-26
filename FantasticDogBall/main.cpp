@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
 
     Light::Point p = {
-        glm::vec3(0, 5, 1),
+        glm::vec3(.5, .2, .8),
         2.0f, 1.0f, .5f,
         glm::vec3(.5,.5,.5),
         glm::vec3(.5,.5,.5),
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
     };
 
     scene.lights.add(d);
-
+    
     scene.lights.finalize();
 
     Material::StaticMaterial material = Material::StaticMaterial{};

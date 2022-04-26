@@ -42,12 +42,12 @@ public:
 
 	void setView(const glm::mat4);
 
-	void bind(Shaders::Program*);
+	void bind(Shaders::Program&);
 
 	/**
 	 * Function that binds the camera to the currently active program
 	 */
-	void bindWithModel(Shaders::Program*, glm::mat4);
+	void bindWithModel(Shaders::Program&, glm::mat4);
 	/**
 	 * Struct containing current state of the camera
 	 */

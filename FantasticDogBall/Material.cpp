@@ -19,7 +19,7 @@ Material::StaticMaterial::StaticMaterial(const glm::vec4 color_, const float dif
 
 Shaders::Program Material::StaticMaterial::getProgram()
 {
-	return staticProgram;
+	return program;
 }
 
 void Material::StaticMaterial::createBuffer()
@@ -30,14 +30,14 @@ void Material::StaticMaterial::createBuffer()
 void Material::StaticMaterial::initProgram()
 {
 	program = Utils::loadProgram(vertexShader, colorFragmentShader);
-	staticProgram = Utils::loadProgram(vertexShader, colorFragmentShader);
+	// staticProgram = Utils::loadProgram(vertexShader, colorFragmentShader);
 }
 
 
-void Material::StaticMaterial::bind(Shaders::Program* p)
+void Material::StaticMaterial::bind(Shaders::Program& p)
 {
 	buffer.update(sizeof(Values), &vals);
-	p->setUniform("Material", buffer);
+	p.setUniform("Material", buffer);
 }
 
 
@@ -75,10 +75,10 @@ void Material::StaticMaterial::assignVertexAttributes(unsigned vao)
 
 Shaders::Program Material::TextureMaterial::getProgram()
 {
-	return textureProgram;
+	return program;
 }
 
-void Material::TextureMaterial::bind(Shaders::Program* p)
+void Material::TextureMaterial::bind(Shaders::Program& p)
 {
 }
 
@@ -116,13 +116,12 @@ void Material::TextureMaterial::assignVertexAttributes(unsigned vao)
 
 void Material::TextureMaterial::initProgram()
 {
-	// StaticMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
-	staticProgram = Utils::loadProgram(vertexShader, textureFragmentShader);
+	StaticMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
 }
 
 Shaders::Program Material::ProceduralMaterial::getProgram()
 {
-	return staticProgram;
+	return program;
 }
 
 /**

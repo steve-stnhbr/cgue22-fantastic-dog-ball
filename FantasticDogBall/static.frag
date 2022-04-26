@@ -75,18 +75,18 @@ void main() {
     // == =====================================================
     vec3 result = vec3(0, 0, 0);
     // phase 1: directional lighting
-    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
+    for (int i = 0; i < NUM_POINT_LIGHTS; i++)
         result += CalcDirLight(dLights[i], norm, viewDir);
     // phase 2: point lights
-    for (int i = 0; i < NUM_POINT_LIGHTS; i++)
+    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
         result += CalcPointLight(pLights[i], norm, fragPos, viewDir);
     // phase 3: spot light
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++)
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
     //outColor = vec4(pLights[0].diffuse.xyz, 1);
-    //outColor = vec4(result, 1.0);
-    outColor = material.color;
+    outColor = vec4(result, 1.0);
+    //outColor = vec4(material.color.xyz, 1);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

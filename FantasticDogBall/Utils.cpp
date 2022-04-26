@@ -70,6 +70,12 @@ Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
         Loggger::error("Failed to link program (%d): %s", e.program, e.what());
         exit(-11);
     }
+    catch (std::exception& e)
+    {
+        Utils::checkError();
+        Loggger::error("Failed to link program: %s", e.what());
+        exit(-11);
+    }
 }
 
 void Utils::CheckDebugLog()
