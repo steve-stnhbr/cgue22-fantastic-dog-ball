@@ -1,8 +1,8 @@
 #include "RenderObject.h"
 
 #include <memory>
-#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
-#include <bullet/LinearMath/btMotionState.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <LinearMath/btMotionState.h>
 
 #include "Utils.h"
 #include <GL/glew.h>
@@ -18,11 +18,15 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 	buildVAO();
 }
 
+void RenderObject::update()
+{
+}
+
 
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	decorations[typeid(decoration_)] = decoration_;
+	// decorations[typeid(decoration_)] = decoration_;
 }
 
 void RenderObject::buildVAO() const
@@ -93,11 +97,6 @@ RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 void Decoration::Decoration::bind(RenderObject* object_)
 {
 	object = object_; 
-}
-
-Decoration::Physics::~Physics()
-{
-	// todo
 }
 
 void Decoration::Physics::update(unsigned frame, float dTime)

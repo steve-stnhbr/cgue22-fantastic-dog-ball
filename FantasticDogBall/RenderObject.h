@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 #include <typeindex>
-#include <bullet/BulletCollision/CollisionDispatch/btCollisionObject.h>
-#include <bullet/BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletCollision/CollisionDispatch/btCollisionObject.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
 
 #include "Material.h"
 #include "Render.h"
@@ -32,7 +32,7 @@ public:
 	/*
 	 *
 	 */
-	std::unordered_map<std::type_index, Decoration::Decoration> decorations;
+	// std::unordered_map<std::type_index, Decoration::Decoration> decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -78,7 +78,6 @@ namespace Decoration
 	protected:
 		RenderObject* object;
 	public:
-		~Decoration();
 		virtual void update(unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
@@ -92,7 +91,6 @@ namespace Decoration
 		float mass;
 		btMotionState* motionState;
 	public:
-		~Physics();
 		void update(unsigned frame, float dTime) override;
 	};
 
@@ -101,7 +99,6 @@ namespace Decoration
 	private:
 		std::vector<Render::Mesh> meshes;
 	public:
-		~Animation();
 		void update(unsigned frame, float dTime) override;
 	};
 

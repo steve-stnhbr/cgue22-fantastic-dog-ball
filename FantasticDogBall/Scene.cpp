@@ -3,7 +3,6 @@
 
 void Scene::addObject(RenderObject object)
 {
-	pWorld->addRigidBody(object.getCollision());
     object.index = objects.size();
 	objects.push_back(object);
 

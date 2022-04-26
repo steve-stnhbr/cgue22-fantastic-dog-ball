@@ -1,11 +1,11 @@
 #pragma once
-#include <bullet/btBulletDynamicsCommon.h>
-#include <bullet/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h>
-#include <bullet/BulletCollision/CollisionDispatch/btCollisionConfiguration.h>
-#include <bullet/BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
-#include <bullet/BulletDynamics/ConstraintSolver/btConstraintSolver.h>
-#include <bullet/BulletDynamics/Dynamics/btDynamicsWorld.h>
-#include <bullet/LinearMath/btQuickprof.h>
+#include <btBulletDynamicsCommon.h>
+#include <BulletCollision/BroadphaseCollision/btBroadphaseInterface.h>
+#include <BulletCollision/CollisionDispatch/btCollisionConfiguration.h>
+#include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
+#include <BulletDynamics/ConstraintSolver/btConstraintSolver.h>
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include <LinearMath/btQuickprof.h>
 
 #include "LightSource.h"
 #include "Renderer.h"
