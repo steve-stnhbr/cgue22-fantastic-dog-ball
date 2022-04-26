@@ -22,9 +22,8 @@ void main() {
 
 	fragColor = view[1];
 	fragPos = vec3(model * vec4(iPos, 1.0));
-	normal = mat3(transpose(inverse(model))) * iNormal;
+	normal = iNormal; //mat3(transpose(inverse(model))) * iNormal;
 	texCoords = iTexCoords;
 
-	//gl_Position = vec4(position, 1.0);
 	gl_Position = mvp * vec4(iPos, 1);
 }

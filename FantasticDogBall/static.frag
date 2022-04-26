@@ -82,13 +82,10 @@ void main() {
     for (int i = 0; i < NUM_POINT_LIGHTS; i++)
         result += CalcPointLight(pLights[i], norm, fragPos, viewDir);
     // phase 3: spot light
-    
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++)
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
-    //outColor = vec4(pLights[0].diffuse.xyz, 1);
     outColor = vec4(result * material.color.xyz, 1.0);
-    //outColor = vec4(material.color.xyz, 1);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

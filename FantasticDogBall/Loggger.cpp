@@ -2,7 +2,7 @@
 
 #include "Utils.h"
 
-Loggger::Level Loggger::LOG_LEVEL = Loggger::Level::DEBUG;
+Loggger::Level Loggger::LOG_LEVEL = Loggger::Level::TRACE;
 
 const char* colorMap[6] = {
 	"37",	//TRACE: white

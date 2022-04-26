@@ -17,15 +17,21 @@ namespace Render
 	// This class represents a mesh with an array of vertecies and the corresponding index array
 	struct Mesh
 	{
-		const std::vector<Vertex> vertex_array;
-		const std::vector<unsigned int> index_array;
+		std::vector<Vertex> vertex_array;
+		std::vector<unsigned int> index_array;
 
+		Render::Mesh() = default;
 		Render::Mesh(std::vector<Vertex>, std::vector<unsigned>);
 	};
 
 	struct Cube: public Mesh
 	{
 		Cube(float, float, float, float, float, float);
+	};
+
+	struct Sphere : public Mesh
+	{
+		Sphere(float radius, unsigned longitude_segments, unsigned latitude_segments);
 	};
 
 }

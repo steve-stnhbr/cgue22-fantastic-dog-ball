@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <unordered_map>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 
@@ -51,6 +52,7 @@ namespace Shaders
 		unsigned int ID;
 		bool linked = false;
 		int binding;
+		std::unordered_map<const char*, std::tuple<unsigned, unsigned>> binding_map;
 
 		std::string vertexPath, fragmentPath;
 

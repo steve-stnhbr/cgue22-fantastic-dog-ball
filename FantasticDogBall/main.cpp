@@ -87,20 +87,20 @@ int main(int argc, char* argv[])
     scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
 
     Light::Point p = {
-        glm::vec3(0, -3, 0),
+        glm::vec3(0, 1, 0),
         2.0f, 1.0f, .5f,
         glm::vec3(.5,.5,.5),
-        glm::vec3(.5,.5,.5),
-        glm::vec3(.5,.5,.5)
+        glm::vec3(5,5,5),
+        glm::vec3(2,2,2)
     };
 
     scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(1, 1, 0),
-        glm::vec3(.8,.8,.8),
-        glm::vec3(.5,.5,.5),
-        glm::vec3(.5,.5,.5)
+        glm::vec3(1, 0, 0),
+        glm::vec3(0,0,0),
+        glm::vec3(5,5,5),
+        glm::vec3(1,1,1)
     };
 
     scene.lights.add(d);
@@ -109,35 +109,23 @@ int main(int argc, char* argv[])
 
     Material::StaticMaterial material = Material::StaticMaterial{};
     material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
-    material.vals.data = { 1.0f, 1.0f, 2, 0};
-
-    std::vector<Vertex> vertecies = {
-        Vertex{
-            {.5f, .5f, .0f},
-            {.0f, .0f, .0f},
-            {1.0f, .0f, .0f, 1.0f}
-        },
-        Vertex{
-            {1.0f, -.5f, .0f},
-            {.0f, .0f, .0f},
-            {.0f, 1.0f, .0f, 1.0f}
-        },
-        Vertex{
-            {-.5f, .5f, .0f},
-            {.0f, .0f, .0f},
-            {.0f, .0f, 1.0f, 1.0f}
-        },
-    };
+    material.vals.data = { 1.0f, 5.0f, 10, 0};
 
     scene.addObject(RenderObject{
         Render::Cube{
-            0, 0, 0, 1, 1, 1
+            0, 0, 0, 100, .2f, 100
 		}, &material, "CUBE0"
     });
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
     material1.vals.data = { 1.0f, 1.0f, 2, 0 };
+
+    scene.addObject(RenderObject{
+        Render::Sphere {
+            .4f, 16, 32
+        }, &material1, "Sphere"
+        }.translate(0, 3, 5));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

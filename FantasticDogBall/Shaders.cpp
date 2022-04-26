@@ -7,6 +7,7 @@
 
 std::vector<unsigned> shaders, programs;
 
+
 void Shaders::cleanup()
 {
 	for (const unsigned element : programs)
@@ -141,7 +142,7 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
 
-Shaders::Program::Program() : binding(20)
+Shaders::Program::Program() : binding(20), ID(0)
 {
 }
 
@@ -171,13 +172,30 @@ void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
 {
-	binding = ++binding;
-	const unsigned binding_ = binding;
-	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
-	Loggger::debug("Binding uniform %s to program %d with index %d", name.c_str(), ID, ubi);
-	buffer.bind(binding_);
+	unsigned binding_ = 0;
+	unsigned ubi = 0;
+
+	const auto c_name = name.c_str();
+	if(true)
+	{
+		binding = ++binding;
+		binding_ = binding;
+		ubi = glGetUniformBlockIndex(ID, c_name);
+		Utils::checkError();
+		Loggger::debug("Binding uniform %s to program %d with index %d", name.c_str(), ID, ubi);
+
+		binding_map[c_name] = std::make_tuple(binding_, ubi);
+	} else
+	{
+		auto tup = binding_map.at(c_name);
+		binding_ = std::get<0, unsigned, unsigned>(tup);
+		ubi = std::get<1, unsigned, unsigned>(tup);
+		Loggger::fatal("Read binding for %s from map", c_name);
+	}
+
 	glUniformBlockBinding(ID, ubi, binding_);
 	Utils::checkError();
+	buffer.bind(binding_);
 }
 
 void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buffer) const

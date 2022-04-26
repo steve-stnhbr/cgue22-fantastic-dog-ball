@@ -64,7 +64,7 @@ void Material::StaticMaterial::assignVertexAttributes(unsigned vao)
 	glEnableVertexArrayAttrib(vao, 1);
 	Utils::checkError();
 	// --- color ---
-	glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, color));
+	glVertexArrayAttribFormat(vao, 2, 4, GL_FLOAT, GL_FALSE, offsetof(Vertex, texture_coordinate));
 	Utils::checkError();
 	glVertexArrayAttribBinding(vao, 2, 0);
 	Utils::checkError();
