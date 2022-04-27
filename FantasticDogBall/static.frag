@@ -40,16 +40,19 @@ layout(std140) uniform CameraData {
 };
 
 layout(std140) uniform PointLights {
-    PointLight pLights[NUM_POINT_LIGHTS];
+    PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 };
 
 layout(std140) uniform DirectionalLights {
-    DirLight dLights[NUM_DIRECTIONAL_LIGHTS];
+    DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
 };
 
 layout(std140) uniform SpotLights {
-    SpotLight sLights[NUM_SPOT_LIGHTS];
+    SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 };
+
+uniform samplerCube cubemap;
+uniform int s_cubemap = 1;
 
 in vec4 fragColor;
 in vec3 fragPos;
@@ -58,6 +61,7 @@ in vec2 texCoords;
 
 out vec4 outColor;
 
+vec3 CubemapReflection(vec3 normal, vec3 directionToCam);
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -76,16 +80,24 @@ void main() {
     vec3 result = vec3(0, 0, 0);
     // phase 1: directional lighting
 
-    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
+    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
         result += CalcDirLight(dLights[i], norm, viewDir);
     // phase 2: point lights
-    for (int i = 0; i < NUM_POINT_LIGHTS; i++)
+    for (int i = 0; i < NUM_POINT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
         result += CalcPointLight(pLights[i], norm, fragPos, viewDir);
     // phase 3: spot light
-    for (int i = 0; i < NUM_SPOT_LIGHTS; i++)
+    for (int i = 0; i < NUM_SPOT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
+    result += s_cubemap * CubemapReflection(norm, viewDir);
+
     outColor = vec4(result * material.color.xyz, 1.0);
+}
+
+
+vec3 CubemapReflection(vec3 normal, vec3 directionToCam) {
+	vec3 reflectDir = reflect(directionToCam, normal);
+	return vec3(texture(cubemap, -reflectDir));
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

@@ -52,6 +52,7 @@ namespace Shaders
 		unsigned int ID;
 		bool linked = false;
 		int binding;
+		int location;
 		std::unordered_map<const char*, std::tuple<unsigned, unsigned>> binding_map;
 
 		std::string vertexPath, fragmentPath;
@@ -78,7 +79,7 @@ namespace Shaders
 			glUniformBlockBinding(ID, ubi, binding_);
 		}
 
-		void setTexture(const unsigned, const Texture& texture) const;
-		void setTexture(const std::string&, const Texture& texture);
+		void setTexture(const unsigned, const Texture::Texture& texture) const;
+		void setTexture(const std::string&, const Texture::Texture& texture);
 	};
 };

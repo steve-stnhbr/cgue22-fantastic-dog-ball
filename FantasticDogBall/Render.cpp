@@ -8,135 +8,140 @@ Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_ar
 {
 }
 
+Render::Mesh Render::Mesh::fromFile(std::string path)
+{
+
+}
+
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({
-			// front
-			Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 0, 1),
-		{1,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 0, 1),
-		{0,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 0, 1),
-		{0,1},
-			},Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 0, 1),
-		{1,1},
-			},
-			// back
-			Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 0, -1),
-		{1,0},
-			},Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 0, -1),
-		{0,0},
-			},Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 0, -1),
-		{0,1},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 0, -1),
-		{1,1},
-			},
-			//right
-			Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(1, 0, 0),
-		{1,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(1, 0, 0),
-		{0,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(1, 0, 0),
-		{0,1},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(1, 0, 0),
-		{1,1},
-			},
-			//left
-			Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(-1, 0, 0),
-		{1,0},
-			},Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(-1, 0, 0),
-		{0,0},
-			},Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(-1, 0, 0),
-		{0,1},
-			},Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(-1, 0, 0),
-		{1,1},
-			},
-			//top
-			Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 1, 0),
-		{1,0},
-			},Vertex {
-		glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 1, 0),
-		{0,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, 1, 0),
-		{0,1},
-			},Vertex {
-		glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, 1, 0),
-		{1,1},
-			},
-			//bottom
-			Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, -1, 0),
-		{1,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
-		glm::vec3(0, -1, 0),
-		{0,0},
-			},Vertex {
-		glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, -1, 0),
-		{0,1},
-			},Vertex {
-		glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
-		glm::vec3(0, -1, 0),
-		{1,1},
-			},
-	}, {
-		// front
-		0, 1, 2,
-		2, 3, 0,
-		// back
-		4, 5, 6,
-		6, 7, 4,
-		// right
-		8, 9, 10,
-		10, 11, 8,
-		// left
-		12, 13, 14,
-		14, 15, 12,
-		// top
-		16, 17, 18,
-		18, 19, 16,
-		// bottom
-		20, 21, 22,
-		22, 23, 20
-	})
+	                                                                                                               // front
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, 1),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, 1),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, 1),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, 1),
+		                                                                                                               {1,1},
+	                                                                                                               },
+	                                                                                                               // back
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, -1),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, -1),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, -1),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 0, -1),
+		                                                                                                               {1,1},
+	                                                                                                               },
+	                                                                                                               //right
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(1, 0, 0),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(1, 0, 0),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(1, 0, 0),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(1, 0, 0),
+		                                                                                                               {1,1},
+	                                                                                                               },
+	                                                                                                               //left
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(-1, 0, 0),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(-1, 0, 0),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(-1, 0, 0),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(-1, 0, 0),
+		                                                                                                               {1,1},
+	                                                                                                               },
+	                                                                                                               //top
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 1, 0),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 1, 0),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, 1, 0),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, 1, 0),
+		                                                                                                               {1,1},
+	                                                                                                               },
+	                                                                                                               //bottom
+	                                                                                                               Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, -1, 0),
+		                                                                                                               {1,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  -depth / 2.0f),
+		                                                                                                               glm::vec3(0, -1, 0),
+		                                                                                                               {0,0},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, -1, 0),
+		                                                                                                               {0,1},
+	                                                                                                               },Vertex {
+		                                                                                                               glm::vec3(-width / 2.0f, -height / 2.0f,  depth / 2.0f),
+		                                                                                                               glm::vec3(0, -1, 0),
+		                                                                                                               {1,1},
+	                                                                                                               },
+                                                                                                               }, {
+	                                                                                                               // front
+	                                                                                                               0, 1, 2,
+	                                                                                                               2, 3, 0,
+	                                                                                                               // back
+	                                                                                                               4, 5, 6,
+	                                                                                                               6, 7, 4,
+	                                                                                                               // right
+	                                                                                                               8, 9, 10,
+	                                                                                                               10, 11, 8,
+	                                                                                                               // left
+	                                                                                                               12, 13, 14,
+	                                                                                                               14, 15, 12,
+	                                                                                                               // top
+	                                                                                                               16, 17, 18,
+	                                                                                                               18, 19, 16,
+	                                                                                                               // bottom
+	                                                                                                               20, 21, 22,
+	                                                                                                               22, 23, 20
+                                                                                                               })
 {
 }
 

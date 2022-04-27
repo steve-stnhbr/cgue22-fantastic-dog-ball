@@ -142,11 +142,12 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
 
-Shaders::Program::Program() : binding(20), ID(0)
+Shaders::Program::Program() : location(10), binding(20), ID(0)
 {
 }
 
-Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	binding(20),
+Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	location(10),
+																				binding(20),
 																				vertexPath(vertexPath),
 																				fragmentPath(fragmentPath)
 {
@@ -204,7 +205,7 @@ void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buff
 }
 
 
-void Shaders::Program::setTexture(const unsigned location, const Texture& texture) const
+void Shaders::Program::setTexture(const unsigned location, const Texture::Texture& texture) const
 {
 	if(!texture.defined)
 	{
@@ -214,16 +215,18 @@ void Shaders::Program::setTexture(const unsigned location, const Texture& textur
 	Utils::checkError();
 }
 
-void Shaders::Program::setTexture(const std::string& name, const Texture& texture)
+void Shaders::Program::setTexture(const std::string& name, const Texture::Texture& texture)
 {
 	if (!texture.defined)
 	{
+		this->setInt("s_" + name, 0);
 		this->setFloat("texture_" + name, texture.substituteValue);
+		return;
 	}
-	const unsigned binding_ = ++binding;
-	const auto ubi = glGetUniformBlockIndex(ID, name.c_str());
+	const unsigned location_ = ++location;
+	const auto ul = glGetUniformLocation(ID, name.c_str());
+	glUniform1i(ul, location);
 	texture.bind(binding);
-	glUniformBlockBinding(ID, ubi, binding_);
 	Utils::checkError();
 }
 

@@ -117,6 +117,9 @@ int main(int argc, char* argv[])
 		}, &material, "CUBE0"
     });
 
+    Material::TextureMaterial texture = Material::TextureMaterial{};
+    texture.color = { "../res/texture-liso-b.jpg" };
+
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
     material1.vals.data = { 1.0f, 1.0f, 2, 0 };
@@ -200,6 +203,7 @@ void initGl()
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void initBullet() {

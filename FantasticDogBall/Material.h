@@ -55,11 +55,12 @@ namespace Material
 	// A material that is defined by different textures allowing for non-static properties
 	struct TextureMaterial final : public Material
 	{
-		const Texture color;
-		const Texture normal;
-		const Texture roughness;
-		const Texture metallic;
-		const Texture specularity;
+		Texture::Texture color;
+		Texture::Texture normal;
+		Texture::Texture diffuse;
+		Texture::Texture specular;
+		Texture::Texture shininess;
+		Texture::Texture reflectiveness;
 
 		static Shaders::Program program;
 
