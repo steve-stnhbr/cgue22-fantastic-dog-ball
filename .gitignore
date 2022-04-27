@@ -368,4 +368,5 @@ FodyWeavers.xsd
 !external/*
 !external/lib/Debug
 !external/lib/Release
+!external/include
 external/*doc
