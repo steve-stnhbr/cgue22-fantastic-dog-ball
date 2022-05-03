@@ -58,8 +58,7 @@ void Texture::Cubemap::initGL()
 
 	for (const auto e : textures)
 	{
-		glTextureStorageSparseAMD
-		glTextureStorage(glID, 1, GL_RGB, width, height);
+		glTextureStorage2D(glID, 1, GL_RGB, width, height);
 	}
 
 	glTextureParameteri(glID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
