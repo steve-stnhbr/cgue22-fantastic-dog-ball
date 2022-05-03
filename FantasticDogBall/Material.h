@@ -88,7 +88,7 @@ namespace Material
 	static void initPrograms()
 	{
 		StaticMaterial::initProgram();
-		// TextureMaterial::initProgram();
+		TextureMaterial::initProgram();
 	}
 
 }

@@ -66,7 +66,6 @@ void RenderObject::doTransform()
 
 }
 
-
 RenderObject* RenderObject::translate(float x, float y, float z)
 {
 	translate({ x, y, z });

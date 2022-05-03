@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <unordered_map>
+#include <map>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 
@@ -53,7 +53,7 @@ namespace Shaders
 		bool linked = false;
 		int binding;
 		int location;
-		std::unordered_map<const char*, std::tuple<unsigned, unsigned>> binding_map;
+		std::map<const char*, std::pair<unsigned, unsigned>> binding_map;
 
 		std::string vertexPath, fragmentPath;
 
