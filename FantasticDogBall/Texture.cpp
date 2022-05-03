@@ -13,7 +13,6 @@ Texture::Texture::Texture() : Texture("")
 }
 
 
-
 Texture::Texture::Texture(std::string filePath_)
 {
 	if (filePath_.empty())
@@ -23,8 +22,9 @@ Texture::Texture::Texture(std::string filePath_)
 	}
 	else
 	{
+		int comp;
 		filePath = filePath_;
-		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
+		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 4);
 
 		if(data == nullptr)
 		{
@@ -63,6 +63,7 @@ void Texture::Cubemap::initGL()
 
 	for (const auto e : textures)
 	{
+		glTextureStorage2D(glID, 1, GL_RGB, width, height);
 	}
 
 	glTextureParameteri(glID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -76,7 +77,7 @@ void Texture::Cubemap::initGL()
 
 Texture::Cubemap::Cubemap(std::string& path)
 {
-	int width, height, nrChannels;
+	int width, height, nrChannels; 
 
 	data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 	if (data == nullptr) {

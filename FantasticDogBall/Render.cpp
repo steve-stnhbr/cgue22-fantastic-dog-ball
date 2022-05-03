@@ -2,15 +2,62 @@
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/scalar_constants.hpp>
+#include <assimp/Importer.hpp>        // Plain-C interface
+#include <assimp/scene.h>          // Output data structure
+#include <assimp/postprocess.h>    // Post processing flags
 
 Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_array(std::move(v_)), index_array(
 	                                                                       std::move(i_))
 {
 }
 
-Render::Mesh Render::Mesh::fromFile(std::string path)
+std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 {
+	return fromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
+}
 
+std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const unsigned flags)
+{
+	std::vector<Mesh> meshes;
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
+
+	if (nullptr != scene) {
+		Loggger::error(importer.GetErrorString());
+		meshes.push_back({});
+		return meshes;
+	}
+
+	for(unsigned i = 0; i < scene->mNumMeshes; i++)
+	{
+		Mesh m;
+		const aiMesh* mesh = scene->mMeshes[i];
+		for (unsigned j = 0; j < mesh->mNumVertices; ++j)
+		{
+			const aiVector3D v = mesh->mVertices[j];
+			const aiVector3D n = mesh->HasNormals() ? mesh->mNormals[j] : aiVector3D {0};
+			const aiVector3D t = mesh->HasTextureCoords(0) ? mesh->mTextureCoords[0][j] : aiVector3D{ 0 };
+
+			m.vertex_array.push_back({
+				{v.x, v.y, v.z},
+				{n.x, n.y, n.z},
+				{t.x, t.y}
+			});
+		}
+
+		for (unsigned j = 0; j < mesh->mNumFaces; ++j)
+		{
+			const aiFace face = mesh->mFaces[j];
+			for (unsigned k = 0; k < face.mNumIndices; ++k)
+			{
+				m.index_array.push_back(face.mIndices[k]);
+			}
+		}
+
+		meshes.push_back(m);
+	}
+
+	return meshes;
 }
 
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({

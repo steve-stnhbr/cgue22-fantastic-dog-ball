@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
 
     Material::TextureMaterial texture = Material::TextureMaterial{};
     texture.color = { "../res/texture-liso-b.jpg" };
-
+     
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     material1.vals.data = { 1.0f, 1.0f, 2, 0 };
 
     scene.addObject(RenderObject{
-        Render::Mesh::fromFile("../res/duck.obj"),& material1, "Sphere"
+        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Sphere"
     }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
 
     /* Loop until the user closes the window */
