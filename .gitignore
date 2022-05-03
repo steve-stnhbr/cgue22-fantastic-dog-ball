@@ -370,3 +370,4 @@ FodyWeavers.xsd
 !external/lib/Release
 !external/include
 external/*doc
+!*.dll
