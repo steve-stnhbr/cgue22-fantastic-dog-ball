@@ -22,7 +22,7 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
 
-	if (nullptr != scene) {
+	if (scene == nullptr) {
 		Loggger::error(importer.GetErrorString());
 		meshes.push_back({});
 		return meshes;

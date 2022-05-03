@@ -371,3 +371,6 @@ FodyWeavers.xsd
 !external/include
 external/*doc
 !*.dll
+
+*.rar
+*.zip
