@@ -117,7 +117,7 @@ void Material::TextureMaterial::assignVertexAttributes(unsigned vao)
 
 void Material::TextureMaterial::initProgram()
 {
-	StaticMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
+	TextureMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
 }
 
 Shaders::Program Material::ProceduralMaterial::getProgram()

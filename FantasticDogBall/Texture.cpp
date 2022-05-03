@@ -13,7 +13,6 @@ Texture::Texture::Texture() : Texture("")
 }
 
 
-
 Texture::Texture::Texture(std::string filePath_)
 {
 	if (filePath_.empty())
@@ -23,20 +22,26 @@ Texture::Texture::Texture(std::string filePath_)
 	}
 	else
 	{
+		int comp;
 		filePath = filePath_;
-		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 0);
+		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, 4);
 
 		if(data == nullptr)
 		{
 			throw std::runtime_error(Utils::string_format("Failed to load image %s", filePath.c_str()));
 		}
 
+		Loggger::debug("Read image %s", filePath.c_str());
 		glCreateTextures(GL_TEXTURE_2D, 1, &glID);
+		Utils::checkError();
+		glTextureStorage2D(glID, 1, GL_RGBA8, width, height);
+		glTextureSubImage2D(glID, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		Utils::checkError();
+		glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		//glGenerateTextureMipmap(glID);
+		Utils::checkError();
 
-		glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTextureParameteri(glID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//stbi_image_free(data);
 	}
 }
 
@@ -65,12 +70,14 @@ void Texture::Cubemap::initGL()
 	glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTextureParameteri(glID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+	glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 1);
+	glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, 1);
 }
 
 Texture::Cubemap::Cubemap(std::string& path)
 {
-	int width, height, nrChannels;
+	int width, height, nrChannels; 
 
 	data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 	if (data == nullptr) {
@@ -80,9 +87,6 @@ Texture::Cubemap::Cubemap(std::string& path)
 	textures = loadCubemap(data, width, height);
 
 	initGL();
-
-
-
 }
 
 Texture::Cubemap::Cubemap(std::vector<std::string> paths)

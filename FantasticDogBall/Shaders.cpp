@@ -177,21 +177,21 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 	unsigned ubi = 0;
 
 	const auto c_name = name.c_str();
+	auto map_val = binding_map.find(c_name);
 	if(true)
 	{
 		binding = ++binding;
 		binding_ = binding;
 		ubi = glGetUniformBlockIndex(ID, c_name);
 		Utils::checkError();
-		Loggger::debug("Binding uniform %s to program %d with index %d", name.c_str(), ID, ubi);
+		Loggger::debug("Binding uniform %s to program %d with index %d", c_name, ID, ubi);
 
-		binding_map[c_name] = std::make_tuple(binding_, ubi);
+		binding_map.insert(std::pair<const char*, std::pair<unsigned, unsigned>>(c_name, std::pair<unsigned, unsigned>(binding_, ubi)));
 	} else
 	{
-		auto tup = binding_map.at(c_name);
-		binding_ = std::get<0, unsigned, unsigned>(tup);
-		ubi = std::get<1, unsigned, unsigned>(tup);
-		Loggger::fatal("Read binding for %s from map", c_name);
+		binding_ = map_val->second.first;
+		ubi = map_val->second.second;
+		Loggger::fatal("Read binding for %s from map: %u", c_name, binding_);
 	}
 
 	glUniformBlockBinding(ID, ubi, binding_);
@@ -223,10 +223,12 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 		this->setFloat("texture_" + name, texture.substituteValue);
 		return;
 	}
+	
 	const unsigned location_ = ++location;
-	const auto ul = glGetUniformLocation(ID, name.c_str());
-	glUniform1i(ul, location);
-	texture.bind(binding);
+	const auto ul = glGetUniformLocation(ID, name.c_str());	
+	Loggger::debug("Binding texture %s to location %u", name.c_str(), location_);
+	glUniform1i(ul, location_);
+	texture.bind(location_);
 	Utils::checkError();
 }
 
