@@ -100,7 +100,6 @@ void Decoration::Decoration::bind(RenderObject* object_)
 
 void Decoration::Physics::update(unsigned frame, float dTime)
 {
-
 }
 
 

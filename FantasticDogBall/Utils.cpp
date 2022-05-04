@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 #include "Shaders.h"
+#include <algorithm>
 
 std::string Utils::readFile(const char* path)
 {
@@ -76,6 +77,17 @@ Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
         Loggger::error("Failed to link program: %s", e.what());
         exit(-11);
     }
+}
+
+char asciitolower(char in) {
+    if (in <= 'Z' && in >= 'A')
+        return in - ('Z' - 'z');
+    return in;
+}
+
+void Utils::strToLower(std::string data)
+{
+    std::transform(data.begin(), data.end(), data.begin(), asciitolower);
 }
 
 void Utils::CheckDebugLog()

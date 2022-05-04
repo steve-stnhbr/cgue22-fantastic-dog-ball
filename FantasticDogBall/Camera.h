@@ -4,6 +4,7 @@
 
 #include "Shaders.h"
 #include "UniformBuffer.h"
+#include <glm/fwd.hpp>
 
 class Camera
 {

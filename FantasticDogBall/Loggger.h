@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdexcept>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 class Loggger
 {
@@ -20,6 +22,8 @@ public:
 	static Level LOG_LEVEL;
 
 	static void log(Level, const std::string&);
+	static void log(GLenum, const std::string&);
+
 	static void trace(const std::string&);
 	static void debug(const std::string&);
 	static void info(const std::string&);
@@ -27,11 +31,18 @@ public:
 	static void error(const std::string&);
 	static void fatal(const std::string&);
 
+	static Level severityToLevel(GLenum);
+
 	template<typename ... Args>
 	static void log(Level level, const std::string& msg, Args ... args)
 	{
 		if (level >= Loggger::LOG_LEVEL)
 			constructMessage(level, string_format(msg, args...));
+	}
+	template<typename ... Args>
+	static void log(GLenum severity, const std::string& msg, Args ... args)
+	{
+		log(severityToLevel(severity), msg, args...);
 	}
 	template<typename ... Args>
 	static void trace(const std::string& msg, Args ... args)

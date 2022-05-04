@@ -100,6 +100,12 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 		throw ProgramLinkException(getProgramLog(program), program);
 	}
 	
+
+	Loggger::debug("Created program %u the following shaders: ", program);
+	for (auto i = 0; i < srcs.size(); i++) {
+		Loggger::debug("%u : %s", types[i], srcs[i].c_str());
+	}
+
 	programs.push_back(program);
 	return program;
 }
@@ -151,8 +157,80 @@ Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	
 																				vertexPath(vertexPath),
 																				fragmentPath(fragmentPath)
 {
-	Program::ID = loadShaders(false, {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER}, {vertexPath, fragmentPath});
+	try
+	{
+		Program::ID = loadShaders(false, { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER }, { vertexPath, fragmentPath });
+	}
+	catch (Shaders::ShaderCompilationException& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
+		exit(-10);
+	}
+	catch (Shaders::ProgramLinkException& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to link program (%d): %s", e.program, e.what());
+		exit(-11);
+	}
+	catch (std::exception& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to link program: %s", e.what());
+		exit(-12);
+	}
 }
+
+Shaders::Program::Program(std::vector<std::string> paths) : binding(20), location(30)
+{
+	std::vector<GLenum> types;
+	for (std::string s : paths) {
+		GLenum type = 0;
+		const auto index = s.find_last_of(".");
+		const auto extension = s.substr(index + 1, s.length() -1);
+		Utils::strToLower(extension);
+		if (extension == "frag" || extension == "fragment")
+			type = GL_FRAGMENT_SHADER;
+		else if (extension == "vert" || extension == "vertex")
+			type = GL_VERTEX_SHADER;
+		else if (extension == "geo" || extension == "geometry")
+			type = GL_TESS_CONTROL_SHADER;
+		else if (extension == "tes")
+			type = GL_TESS_EVALUATION_SHADER;
+		else if (extension == "tcs")
+			type = GL_TESS_CONTROL_SHADER;
+		else {
+			Loggger::fatal("Could not read shader type %s from file %s\nValid extensions are .frag, .fragment, .vert, .vertex, .tcs, .tes, .geo, .geometry", extension.c_str(), s.c_str());
+			exit(-13);
+			//throw new ShaderFileExtensionException("could not read shader type from file", s.c_str(), extension);
+		}
+
+		types.push_back(type);
+	}
+	try
+	{
+		Program::ID = loadShaders(false, types, paths);
+	}
+	catch (Shaders::ShaderCompilationException& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
+		exit(-10);
+	}
+	catch (Shaders::ProgramLinkException& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to link program (%d): %s", e.program, e.what());
+		exit(-11);
+	}
+	catch (std::exception& e)
+	{
+		Utils::checkError();
+		Loggger::error("Failed to link program: %s", e.what());
+		exit(-12);
+	}
+}
+
 void Shaders::Program::setBool(const std::string& name, const bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
@@ -220,20 +298,36 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	if (!texture.defined)
 	{
 		this->setInt("s_" + name, 0);
-		this->setFloat("texture_" + name, texture.substituteValue);
+		this->setFloat("value_" + name, texture.substituteValue);
 		return;
 	}
+	this->setInt("s_" + name, 1);
 	
 	const unsigned location_ = ++location;
-	const auto ul = glGetUniformLocation(ID, name.c_str());	
-	Loggger::debug("Binding texture %s to location %u", name.c_str(), location_);
-	glUniform1i(ul, location_);
-	texture.bind(location_);
+	const auto ul = glGetUniformLocation(ID, name.c_str());
+	Utils::checkError();
+	Loggger::debug("Binding texture %s to location %u", name.c_str(), location);
+	glUniform1i(ul, location);
+	Utils::checkError();
+	texture.bind(location);
 	Utils::checkError();
 }
 
 void Shaders::Program::use() const
 {
+	Loggger::debug("Using program %u", ID);
 	glUseProgram(ID);
 	Utils::checkError();
+}
+
+Shaders::ShaderFileExtensionException::ShaderFileExtensionException() : base(""), file(""), extension("")
+{
+}
+
+Shaders::ShaderFileExtensionException::ShaderFileExtensionException(const char* const message) : base(message)
+{
+}
+
+Shaders::ShaderFileExtensionException::ShaderFileExtensionException(const char* const message, const char* const file_, const char* const extension_) : base (message), file(file_), extension(extension_)
+{
 }

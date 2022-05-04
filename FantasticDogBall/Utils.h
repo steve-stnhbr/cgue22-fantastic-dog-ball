@@ -11,6 +11,12 @@ public:
 	static GLenum checkError_(const char* file, int line);
 	static Shaders::Program loadProgram(std::string, std::string);
 	static std::string getISOCurrentTimestamp();
+	static inline constexpr unsigned int str2int(const char* str, int h = 0)
+	{
+		return !str[h] ? 5381 : (str2int(str, h + 1) * 33) ^ str[h];
+	}
+
+	static void strToLower(std::string);
 
 	template<typename ... Args>
 	static std::string string_format(const std::string& format, Args ... args)
