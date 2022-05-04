@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{da2bafbe-f113-4996-96a0-5c6ecf67c657}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,15 +78,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="VertexShader.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="texture.frag">
-      <Filter>Shaders</Filter>
+    <None Include="..\x64\Debug\assimp-vc143-mtd.dll">
+      <Filter>Ressourcendateien</Filter>
     </None>
     <None Include="static.frag">
-      <Filter>Shaders</Filter>
+      <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="texture.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="VertexShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">
@@ -152,13 +153,5 @@
     <ClInclude Include="Physics.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Debug.txt">
-      <Filter>Ressourcendateien</Filter>
-    </Text>
-    <Text Include="test.frag">
-      <Filter>Shaders</Filter>
-    </Text>
   </ItemGroup>
 </Project>

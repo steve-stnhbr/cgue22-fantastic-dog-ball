@@ -28,6 +28,11 @@ void Loggger::log(Level level, const std::string& message)
 		constructMessage(level, message);
 }
 
+void Loggger::log(GLenum severity, const std::string& message)
+{
+	log(severityToLevel(severity), message);
+}
+
 void Loggger::trace(const std::string& message)
 {
 	log(Loggger::TRACE, message);
@@ -56,6 +61,21 @@ void Loggger::error(const std::string& message)
 void Loggger::fatal(const std::string& message)
 {
 	log(Loggger::FATAL, message);
+}
+
+Loggger::Level Loggger::severityToLevel(GLenum s)
+{
+	switch (s) {
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		return DEBUG;
+	case GL_DEBUG_SEVERITY_LOW:
+		return INFO;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		return WARN;
+	case GL_DEBUG_SEVERITY_HIGH:
+		return ERROR;
+	}
+	return INFO;
 }
 
 void Loggger::setLevel(const Loggger::Level level)

@@ -40,6 +40,16 @@ namespace Shaders
 		ProgramLinkException(const char* const message);
 		ProgramLinkException(const char* const message, int program);
 	};
+
+	class ShaderFileExtensionException : public std::logic_error
+	{
+	public:
+		using base = std::logic_error;
+		std::string file, extension;
+		ShaderFileExtensionException();
+		ShaderFileExtensionException(const char* const message);
+		ShaderFileExtensionException(const char* const message, const char* const file, const char* const extension);
+	};
 	
 	unsigned int loadShaders(const bool src, const std::vector<unsigned int>& types, const std::vector<std::string>& srcs);
 	const char* getProgramLog(const unsigned int);
@@ -60,6 +70,7 @@ namespace Shaders
 		Program();
 		// constructor reads and builds the shader
 		Program(std::string& vertexPath, std::string& fragmentPath);
+		Program(std::vector<std::string> paths);
 		// use/activate the shader
 		void use() const;
 		// utility uniform functions

@@ -59,14 +59,14 @@ namespace Material
 		Texture::Texture normal;
 		Texture::Texture diffuse;
 		Texture::Texture specular;
-		Texture::Texture shininess;
+		float shininess;
 		Texture::Texture reflectiveness;
 
 		static Shaders::Program program;
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
-		void bind(Shaders::Program&) override; //todo
+		void bind(Shaders::Program&) override;
 
 		static void initProgram();
 	};

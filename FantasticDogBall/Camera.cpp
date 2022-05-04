@@ -34,7 +34,6 @@ void Camera::bind(Shaders::Program& program)
 	bindWithModel(program, glm::mat4(1));
 }
 
-
 void Camera::bindWithModel(Shaders::Program& prog, glm::mat4 model)
 {
 	data.model = model; 
