@@ -309,8 +309,8 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	
 	const unsigned location_ = ++location;
 	const auto ul = glGetUniformLocation(ID, name.c_str());
-	if (ul < 0)
-		Loggger::error("The location for %s was not found in shader %u", name.c_str(), ID);
+	//if (ul < 0)
+		//Loggger::error("The location for %s was not found in shader %u", name.c_str(), ID);
 		
 	Utils::checkError();
 	Loggger::debug("Binding texture %s to location %u", name.c_str(), location);

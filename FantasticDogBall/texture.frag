@@ -31,7 +31,7 @@ uniform int s_color;
 uniform float value_color;
 uniform sampler2D color;
 uniform int s_normal;
-uniform sampler2D sNormal;
+uniform sampler2D normal;
 uniform int s_diffuse;
 uniform float value_diffuse;
 uniform sampler2D diffuse;
@@ -61,7 +61,7 @@ layout(std140) uniform SpotLights {
 
 in vec4 fragColor;
 in vec3 fragPos;
-in vec3 normal;
+in vec3 fragNormal;
 in vec2 texCoords;
 
 out vec4 outColor;
@@ -72,7 +72,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {
     // properties
-    vec3 norm = normalize(s_normal == 0 ? normal : vec3(texture(sNormal, texCoords)));
+    vec3 norm = normalize(s_normal == 0 ? fragNormal : vec3(texture(normal, texCoords)));
     vec3 viewDir = normalize(viewPos.xyz - fragPos);
 
     // == =====================================================

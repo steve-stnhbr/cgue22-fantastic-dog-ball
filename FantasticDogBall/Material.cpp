@@ -81,9 +81,9 @@ void Material::TextureMaterial::bind(Shaders::Program& p)
 {
 
 	p.setTexture("color", color);
+	p.setTexture("normal", normal);
 	p.setTexture("diffuse", diffuse);
 	p.setTexture("specular", specular);
-	p.setTexture("normal", normal);
 	p.setFloat("shininess", shininess);
 }
 

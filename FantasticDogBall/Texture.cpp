@@ -19,6 +19,7 @@ Texture::Texture::Texture(std::string filePath_)
 	{
 		defined = false;
 		substituteValue = 0.8f;
+		Loggger::info("Setting substitute value");
 	}
 	else
 	{
@@ -32,6 +33,8 @@ Texture::Texture::Texture(std::string filePath_)
 			Loggger::error("failed to load image %s\nReason: %s", filePath.c_str(), stbi_failure_reason());
 			defined = false;
 			substituteValue = .8f;
+
+			Loggger::info("Setting substitute value");
 			/*
 			unsigned char data0 = 0.8;
 			data = &data0;
@@ -54,7 +57,7 @@ Texture::Texture::Texture(std::string filePath_)
 		glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 		glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 0);
 		glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, 6);
-		//glGenerateTextureMipmap(glID);
+		glGenerateTextureMipmap(glID);
 		Utils::checkError();
 
 		stbi_image_free(data);
@@ -63,6 +66,7 @@ Texture::Texture::Texture(std::string filePath_)
 
 Texture::Texture::Texture(float substituteValue_) : defined(false), substituteValue(substituteValue_), nrChannels(0), width(0), height(0), data(nullptr)
 {
+	Loggger::info("Setting substitute value");
 }
 
 void Texture::Texture::bind(unsigned location) const

@@ -56,7 +56,7 @@ uniform int s_cubemap = 1;
 
 in vec4 fragColor;
 in vec3 fragPos;
-in vec3 normal;
+in vec3 fragNormal;
 in vec2 texCoords;
 
 out vec4 outColor;
@@ -68,7 +68,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {
     // properties
-    vec3 norm = normalize(normal);
+    vec3 norm = normalize(fragNormal);
     vec3 viewDir = normalize(viewPos.xyz - fragPos);
 
     // == =====================================================

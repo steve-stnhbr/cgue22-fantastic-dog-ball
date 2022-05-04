@@ -99,8 +99,8 @@ int main(int argc, char* argv[])
     Light::Directional d = {
         glm::vec3(1,-.1,-.4),
         glm::vec3(0,0,0),
-        glm::vec3(5,5,5),
-        glm::vec3(1,1,1)
+        glm::vec3(.8,.8,.8),
+        glm::vec3(.4,.4,.4)
     };
 
     scene.lights.add(d);
@@ -112,15 +112,16 @@ int main(int argc, char* argv[])
     material.vals.data = { 1.0f, 5.0f, 1, 0};
 
     Material::TextureMaterial texture = Material::TextureMaterial{};
-    texture.color = { "../res/grass.jpg" };
+    texture.color = { "../res/concrete.jpg" };
+    texture.normal = { "../res/concrete_norm.jpg" };
     texture.diffuse = { .8 };
     texture.specular = { 2 };
-    texture.shininess = 5;
+    texture.shininess = 1;
      
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
-		}, &texture, "CUBE0"
+		}, &texture, "Cube"
     }.translate(0, -4, 0));
     /*
     scene.addObject(RenderObject{
@@ -132,7 +133,7 @@ int main(int argc, char* argv[])
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
-    material1.vals.data = { 1.0f, 1.0f, 2, 0 };
+    material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
     scene.addObject(RenderObject{
         Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
