@@ -3,6 +3,14 @@
 #include <typeindex>
 #include <BulletCollision/CollisionDispatch/btCollisionObject.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include <BulletCollision/BroadphaseCollision/btBroadphaseInterface.h>
+#include <BulletCollision/CollisionDispatch/btCollisionConfiguration.h>
+#include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
+#include <btBulletDynamicsCommon.h>
+#include <LinearMath/btQuickprof.h>
+
+#include <unordered_map>
 
 #include "Material.h"
 #include "Render.h"
@@ -32,7 +40,7 @@ public:
 	/*
 	 *
 	 */
-	// std::unordered_map<std::type_index, Decoration::Decoration> decorations;
+	std::unordered_map<const char*, Decoration::Decoration*> decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -49,10 +57,14 @@ public:
 	 * matrix holding information about transforms
 	 */
 	glm::mat4 transform;
+	btMatrix3x3 pRotate;
+	btVector3 pTranslate;
+	btVector3 pScale;
 
 	RenderObject(Render::Mesh, Material::Material*, const std::string&);
 	
-	void update();
+	void init();
+	void update(unsigned long frame, float dTime);
 	void add(Decoration::Decoration&);
 	void buildVAO() const;
 	RenderObject* translate(float, float, float);
@@ -78,9 +90,12 @@ namespace Decoration
 	protected:
 		RenderObject* object;
 	public:
+		virtual void init() = 0;
 		virtual void update(unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
+
+		Decoration() = default;
 	};
 
 
@@ -88,10 +103,17 @@ namespace Decoration
 	{
 	private:
 		btCollisionShape* pShape;
-		float mass;
-		btMotionState* motionState;
+		float pMass;
+		btMotionState* pTransform;
+		btDynamicsWorld* pWorld;
+
+		btRigidBody* pBody;
 	public:
+		void init() override;
+		void bind(RenderObject*);
 		void update(unsigned frame, float dTime) override;
+
+		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass);
 	};
 
 	class Animation : public Decoration
@@ -99,6 +121,7 @@ namespace Decoration
 	private:
 		std::vector<Render::Mesh> meshes;
 	public:
+		void init() override;
 		void update(unsigned frame, float dTime) override;
 	};
 

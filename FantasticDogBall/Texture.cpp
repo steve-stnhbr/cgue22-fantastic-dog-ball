@@ -7,6 +7,7 @@
 #include <stb/stb_image_resize.h>
 
 #include "Utils.h"
+#include "Loggger.h"
 
 Texture::Texture::Texture() : Texture("")
 {

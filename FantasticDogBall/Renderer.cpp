@@ -17,13 +17,13 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights)
+void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
 	for (RenderObject element : objects)
 	{
-		element.update();
+		element.update(frameCount, dTime);
 
 		Loggger::info("\t%s", element.name.c_str());
 

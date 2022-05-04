@@ -3,11 +3,14 @@
 #include <memory>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <LinearMath/btMotionState.h>
-
-#include "Utils.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <ranges>
+#include <glm/gtx/string_cast.hpp>
+
+#include "Utils.h"
 
 RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
@@ -18,15 +21,27 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 	buildVAO();
 }
 
-void RenderObject::update()
+void RenderObject::init()
 {
+	
+}
+
+void RenderObject::update(unsigned long frame, float dTime)
+{
+	for (auto pair : decorations) {
+		pair.second->update(frame, dTime);
+	}
+
+
+	Loggger::fatal("Transform: %s", glm::to_string(transform).c_str());
 }
 
 
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	// decorations[typeid(decoration_)] = decoration_;
+	//decorations.insert({ typeid(decoration_).name(), std::make_unique<Decoration::Decoration>(decoration_) });
+	decorations[typeid(decoration_).name()] = &decoration_;
 }
 
 void RenderObject::buildVAO() const
@@ -58,12 +73,12 @@ RenderObject* RenderObject::scale(float x, float y, float z)
 RenderObject* RenderObject::scale(glm::vec3 s)
 {
 	transform = glm::scale(transform, s);
+	pScale += {s.x, s.y, s.z};
 	return this;
 }
 
 void RenderObject::doTransform()
 {
-
 }
 
 RenderObject* RenderObject::translate(float x, float y, float z)
@@ -75,6 +90,7 @@ RenderObject* RenderObject::translate(float x, float y, float z)
 RenderObject* RenderObject::translate(glm::vec3 v)
 {
 	transform = glm::translate(transform, v);
+	pTranslate += btVector3(v.x, v.y, v.z);
 	return this;
 }
 
@@ -89,16 +105,45 @@ RenderObject* RenderObject::rotate(float x, float y, float z)
 RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 {
 	transform = glm::rotate(transform, angle, axes);
+	pRotate = Utils::toBT(glm::rotate(glm::mat4(Utils::toGLM(pRotate)), angle, axes));
 	return this;
 }
 
 
 void Decoration::Decoration::bind(RenderObject* object_)
 {
-	object = object_; 
+	object = object_;
+	init();
+}
+
+void Decoration::Physics::init()
+{
+	if (object == nullptr) throw new std::logic_error("");
+
+	pTransform = new btDefaultMotionState(btTransform(object->pRotate, object->pTranslate));
+	pShape->setLocalScaling(object->pScale);
+
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
+		pMass,              // mass, in kg. 
+		pTransform,
+		pShape,				// collision shape of body
+		btVector3(0, 0, 0)	// local inertia
+	);
+	pBody = new btRigidBody(rigidBodyCI);
+
+	pWorld->addRigidBody(pBody);
 }
 
 void Decoration::Physics::update(unsigned frame, float dTime)
+{
+	btTransform transform;
+	pBody->getMotionState()->getWorldTransform(transform);
+	glm::mat4 mat;
+	transform.getOpenGLMatrix(glm::value_ptr(mat));
+	object->transform = mat;
+}
+
+Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_)
 {
 }
 

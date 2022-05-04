@@ -16,6 +16,8 @@
 
 #include "LightSource.h"
 #include "Material.h"
+#include "Level.h"
+#include "RenderObject.h"
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -79,12 +81,12 @@ int main(int argc, char* argv[])
     constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
 
 
-    Scene scene;
+    Level level;
     const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
 
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
     const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
+    level.scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
 
     Light::Point p = {
         glm::vec3(0, 1, 0),
@@ -94,7 +96,7 @@ int main(int argc, char* argv[])
         glm::vec3(2,2,2)
     };
 
-    scene.lights.add(p);
+    level.scene.lights.add(p);
 
     Light::Directional d = {
         glm::vec3(1,-.1,-.4),
@@ -103,9 +105,9 @@ int main(int argc, char* argv[])
         glm::vec3(.4,.4,.4)
     };
 
-    scene.lights.add(d);
+    level.scene.lights.add(d);
     
-    scene.lights.finalize();
+    level.scene.lights.finalize();
 
     Material::StaticMaterial material = Material::StaticMaterial{};
     material.vals.color = { .0, 0.5 , 0.0, 1.0 };
@@ -118,11 +120,16 @@ int main(int argc, char* argv[])
     texture.specular = { 2 };
     texture.shininess = 1;
      
-    scene.addObject(RenderObject{
+    auto cube = RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
-		}, &texture, "Cube"
-    }.translate(0, -4, 0));
+        }, &texture, "Cube"
+    };
+    cube.translate(0, -4, 0);
+    Decoration::Physics physx = Decoration::Physics(level.pWorld, new btSphereShape(2), 1.0f);
+    cube.add(physx);
+
+    level.scene.addObject(cube);
     /*
     scene.addObject(RenderObject{
         Render::Sphere {
@@ -135,7 +142,7 @@ int main(int argc, char* argv[])
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
-    scene.addObject(RenderObject{
+    level.scene.addObject(RenderObject{
         Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
     }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
 
@@ -149,7 +156,7 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
 
-        scene.render();
+        level.render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
