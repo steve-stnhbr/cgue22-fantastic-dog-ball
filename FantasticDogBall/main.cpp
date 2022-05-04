@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(0,1,0),
+        glm::vec3(1,-.1,-.4),
         glm::vec3(0,0,0),
         glm::vec3(5,5,5),
         glm::vec3(1,1,1)
@@ -113,7 +113,9 @@ int main(int argc, char* argv[])
 
     Material::TextureMaterial texture = Material::TextureMaterial{};
     texture.color = { "../res/grass.jpg" };
-    texture.diffuse = { 10 };
+    texture.diffuse = { .8 };
+    texture.specular = { 2 };
+    texture.shininess = 5;
      
     scene.addObject(RenderObject{
         Render::Cube{

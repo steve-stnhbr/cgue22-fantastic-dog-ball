@@ -78,8 +78,11 @@ void Light::Lights::finalize()
 		add(Point{});
 	if (dLights.empty())
 		add(Directional{});
-	if (sLights.empty())
-		add(Spot{});
+	if (sLights.empty()) {
+		Spot spot;
+		spot.position = { -1000, -1000, -1000, 1 };
+		add(spot);
+	}
 
 	pBuffer.create(Light::NUM_POINT_LIGHTS * sizeof(Point));
 	pBuffer.update(pLights.data());

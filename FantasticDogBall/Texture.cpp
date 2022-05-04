@@ -54,7 +54,7 @@ Texture::Texture::Texture(std::string filePath_)
 		glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 		glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 0);
 		glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, 6);
-		glGenerateTextureMipmap(glID);
+		//glGenerateTextureMipmap(glID);
 		Utils::checkError();
 
 		stbi_image_free(data);

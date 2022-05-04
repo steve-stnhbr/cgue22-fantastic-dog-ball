@@ -233,19 +233,23 @@ Shaders::Program::Program(std::vector<std::string> paths) : binding(20), locatio
 
 void Shaders::Program::setBool(const std::string& name, const bool value) const
 {
+	Loggger::debug("Setting %s to %b", name.c_str(), value);
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
 }
 void Shaders::Program::setInt(const std::string& name, const int value) const
 {
+	Loggger::debug("Setting %s to %i", name.c_str(), value);
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 void Shaders::Program::setFloat(const std::string& name, const float value) const
 {
+	Loggger::debug("Setting %s to %f", name.c_str(), value);
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 {
+	Loggger::debug("Setting %s to (%f, %f, %f)", name.c_str(), v.x, v.y, v.z);
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
 }
 
@@ -305,6 +309,9 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	
 	const unsigned location_ = ++location;
 	const auto ul = glGetUniformLocation(ID, name.c_str());
+	if (ul < 0)
+		Loggger::error("The location for %s was not found in shader %u", name.c_str(), ID);
+		
 	Utils::checkError();
 	Loggger::debug("Binding texture %s to location %u", name.c_str(), location);
 	glUniform1i(ul, location);
