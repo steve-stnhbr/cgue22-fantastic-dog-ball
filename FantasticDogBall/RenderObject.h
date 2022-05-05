@@ -71,16 +71,12 @@ public:
 	RenderObject* translate(glm::vec3);
 	RenderObject* rotate(float, float, float);
 	RenderObject* rotate(float, glm::vec3);
+	RenderObject* scale(float);
 	RenderObject* scale(float, float, float);
 	RenderObject* scale(glm::vec3);
 
 private:
 	void doTransform();
-};
-
-class Cube : public RenderObject
-{
-	Cube(float centerX, float centerY, float centerZ, float width, float height, float depth);
 };
 
 namespace Decoration
@@ -90,8 +86,8 @@ namespace Decoration
 	protected:
 		RenderObject* object;
 	public:
-		virtual void init() = 0;
-		virtual void update(unsigned frame, float dTime) = 0;
+		virtual void init(RenderObject*) = 0;
+		virtual void update(RenderObject* object, unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
 
@@ -109,10 +105,13 @@ namespace Decoration
 
 		btRigidBody* pBody;
 	public:
-		void init() override;
+		void init(RenderObject*) override;
 		void bind(RenderObject*);
-		void update(unsigned frame, float dTime) override;
+		void update(RenderObject* object, unsigned frame, float dTime) override;
 
+		/*
+		 *	if pShape is nullptr the mesh of the object bound will be used
+		 */
 		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass);
 	};
 
@@ -121,8 +120,8 @@ namespace Decoration
 	private:
 		std::vector<Render::Mesh> meshes;
 	public:
-		void init() override;
-		void update(unsigned frame, float dTime) override;
+		void init(RenderObject*) override;
+		void update(RenderObject* object, unsigned frame, float dTime) override;
 	};
 
 }

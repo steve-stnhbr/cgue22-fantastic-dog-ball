@@ -121,30 +121,39 @@ int main(int argc, char* argv[])
     texture.shininess = 1;
      
     auto cube = RenderObject{
-        Render::Cube{
-            0, 0, 0, 100, .2f, 100
+        Render::Plane{
+           100, 100
         }, &texture, "Cube"
     };
-    cube.translate(0, -4, 0);
-    Decoration::Physics physx = Decoration::Physics(level.pWorld, new btSphereShape(2), 1.0f);
+    //cube.translate(0, -4, 0);
+    cube.rotate(0, 0, .3);
+    //Decoration::Physics physx = Decoration::Physics(level.pWorld, new btBoxShape({ 50, 2, 50 }), 0);
+    Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
     cube.add(physx);
-
-    level.scene.addObject(cube);
-    /*
-    scene.addObject(RenderObject{
-        Render::Sphere {
-            1, 16, 32
-        }, &texture, "Sphere1"
-    }.translate(0, 1, 0));
-    */
+    //level.add(cube);
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
-    level.scene.addObject(RenderObject{
-        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
-    }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
+    auto sphere = RenderObject{
+        Render::Sphere(1, 32, 16), &material1, "Sphere"
+    };
+
+    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, new btSphereShape(1), 1.0);
+    sphere.add(phys0);
+    //level.add(sphere);
+    
+    auto treat = RenderObject{
+        Render::Mesh::fromFile("../res/DogTreat.obj")[0],&material1, "Treat"
+    };
+    treat.rotate(0, glm::half_pi<float>(), 0)->scale(.5);
+
+    Decoration::Physics phys1 = Decoration::Physics(level.pWorld, new btSphereShape(2), 0);
+    treat.add(phys1);
+
+    level.add(treat);
+    
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

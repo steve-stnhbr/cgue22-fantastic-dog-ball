@@ -23,9 +23,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 
 	for (RenderObject element : objects)
 	{
-		element.update(frameCount, dTime);
-
 		Loggger::info("\t%s", element.name.c_str());
+		element.update(frameCount, dTime);
 
 		// bind program
 		auto prog = element.material->getProgram();

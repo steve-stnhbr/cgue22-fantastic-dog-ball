@@ -283,3 +283,25 @@ unsigned Render::loadProgram(const std::vector<GLenum>& types, const std::vector
 		exit(-13);
 	}
 }
+
+Render::Plane::Plane(float width, float depth) : Mesh({
+		{
+			{width / 2, 0, depth / 2},
+			{0, 1, 0},
+			{1, 1}
+		},{
+			{width / 2, 0, -depth / 2},
+			{0, 1, 0},
+			{1, 0}
+		},{
+			{-width / 2, 0, -depth / 2},
+			{0, 1, 0},
+			{0, 0}
+		},{
+			{-width / 2, 0, depth / 2},
+			{0, 1, 0},
+			{0, 1}
+		},
+	}, {0,1,2,0,2,3})
+{
+}

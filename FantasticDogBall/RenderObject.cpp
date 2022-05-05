@@ -16,31 +16,30 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 	mesh(mesh_),
 	material(material_),
 	name(name_),
-	transform(glm::mat4(1))
+	transform(glm::mat4(1)),
+	pScale({1, 1, 1})
 {
 	buildVAO();
 }
 
 void RenderObject::init()
 {
-	
+	for (auto pair : decorations) {
+		pair.second->init(this);
+	}
 }
 
 void RenderObject::update(unsigned long frame, float dTime)
 {
 	for (auto pair : decorations) {
-		pair.second->update(frame, dTime);
+		pair.second->update(this, frame, dTime);
 	}
-
-
-	Loggger::fatal("Transform: %s", glm::to_string(transform).c_str());
 }
 
 
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	//decorations.insert({ typeid(decoration_).name(), std::make_unique<Decoration::Decoration>(decoration_) });
 	decorations[typeid(decoration_).name()] = &decoration_;
 }
 
@@ -77,10 +76,6 @@ RenderObject* RenderObject::scale(glm::vec3 s)
 	return this;
 }
 
-void RenderObject::doTransform()
-{
-}
-
 RenderObject* RenderObject::translate(float x, float y, float z)
 {
 	translate({ x, y, z });
@@ -90,7 +85,6 @@ RenderObject* RenderObject::translate(float x, float y, float z)
 RenderObject* RenderObject::translate(glm::vec3 v)
 {
 	transform = glm::translate(transform, v);
-	pTranslate += btVector3(v.x, v.y, v.z);
 	return this;
 }
 
@@ -105,42 +99,65 @@ RenderObject* RenderObject::rotate(float x, float y, float z)
 RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 {
 	transform = glm::rotate(transform, angle, axes);
-	pRotate = Utils::toBT(glm::rotate(glm::mat4(Utils::toGLM(pRotate)), angle, axes));
+	return this;
+}
+
+RenderObject* RenderObject::scale(float s)
+{
+	scale(s, s, s);
 	return this;
 }
 
 
 void Decoration::Decoration::bind(RenderObject* object_)
 {
-	object = object_;
-	init();
 }
 
-void Decoration::Physics::init()
+void Decoration::Physics::init(RenderObject* object)
 {
-	if (object == nullptr) throw new std::logic_error("");
+	if (object == nullptr) {
+		Loggger::fatal("Object was somehow not yet initialized in init of Decoration");
+		exit(-15);
+	}
 
-	pTransform = new btDefaultMotionState(btTransform(object->pRotate, object->pTranslate));
+	if (pShape == nullptr) {
+		Loggger::trace("Using Convex hull of mesh for %s", object->name.c_str());
+		pShape = new btConvexHullShape();
+		for (int i = 0; i < object->mesh.vertex_array.size(); i++)
+		{
+			Vertex v = object->mesh.vertex_array[i];
+			btVector3 btv = btVector3(v.position.x, v.position.y, v.position.z);
+			((btConvexHullShape*)pShape)->addPoint(btv);
+		}
+	}
+
+	btTransform t;
+	t.setFromOpenGLMatrix(glm::value_ptr(object->transform));
+
+	pTransform = new btDefaultMotionState(t);
 	pShape->setLocalScaling(object->pScale);
-
+	
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
 		pMass,              // mass, in kg. 
 		pTransform,
 		pShape,				// collision shape of body
 		btVector3(0, 0, 0)	// local inertia
 	);
+	rigidBodyCI.m_restitution = 1;
+
 	pBody = new btRigidBody(rigidBodyCI);
 
 	pWorld->addRigidBody(pBody);
 }
 
-void Decoration::Physics::update(unsigned frame, float dTime)
+void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 {
 	btTransform transform;
 	pBody->getMotionState()->getWorldTransform(transform);
 	glm::mat4 mat;
 	transform.getOpenGLMatrix(glm::value_ptr(mat));
-	object->transform = mat;
+	Loggger::trace("Bullet: Updating transform of %s to %s", obj->name.c_str(), glm::to_string(mat).c_str());
+	(*obj).transform = (pMass == 0.0f ? glm::mat4(1) : glm::mat4(0)) + mat;
 }
 
 Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_)

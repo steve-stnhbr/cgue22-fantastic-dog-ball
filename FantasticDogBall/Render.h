@@ -38,5 +38,9 @@ namespace Render
 		Sphere(float radius, unsigned longitude_segments, unsigned latitude_segments);
 	};
 
+	struct Plane : public Mesh {
+		Plane(float widht, float depth);
+	};
+
 }
 

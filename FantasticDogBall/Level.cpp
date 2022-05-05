@@ -6,6 +6,15 @@ Level::Level() : scene()
 	setupPhysics();
 }
 
+Level::~Level()
+{
+	delete pWorld;
+	delete pBroadphase;
+	delete pCollisionConfiguration;
+	delete pDispatcher;
+	delete pSolver;
+}
+
 void Level::render()
 {
 	float dt = clock.getTimeMilliseconds();
@@ -33,6 +42,9 @@ void Level::setupPhysics()
 	// create the world
 	pWorld = new btDiscreteDynamicsWorld(pDispatcher, pBroadphase, pSolver, pCollisionConfiguration); 
 	pWorld->setGravity(btVector3(0, -9.81f, 0));
+
+	
+
 }
 
 void Level::add(RenderObject obj)

@@ -16,6 +16,7 @@ public:
 	btDynamicsWorld* pWorld;
 	
 	Level();
+	~Level();
 	
 	void render();
 
