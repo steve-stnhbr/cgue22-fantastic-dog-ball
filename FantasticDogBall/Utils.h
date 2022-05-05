@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <vector >
 
 class Utils
 {
@@ -54,4 +55,42 @@ public:
 
 
 	#define checkError() checkError_(__FILE__, __LINE__) 
+	
+	template <typename K, typename V>
+	struct Map {
+		std::vector<K> keys;
+		std::vector<V> vals;
+
+		size_t insert(K key, V val) {
+			size_t index = keys.size();
+
+			auto find = std::find(keys.begin(), keys.end(), key);
+
+			if (find != keys.end()) {
+				index = find - keys.begin();
+				vals[index] = (val);
+			}
+			else {
+				keys.push_back(key);
+				vals.push_back(val);
+			}
+			return index;
+		}
+
+		V get(K key) const {
+			for (auto i = 0; i < keys.size(); i++) {
+				if (keys[i] == key)
+					return vals[i];
+			}
+			return NULL;
+		}
+
+		bool contains(K key) {
+			return std::count(keys.begin(), keys.end(), key);
+		}
+
+		bool contains(V val) {
+			return std::count(vals.begin(), vals.end(), val);
+		}
+	};
 };

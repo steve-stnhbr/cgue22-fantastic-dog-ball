@@ -109,6 +109,8 @@ int main(int argc, char* argv[])
     
     level.scene.lights.finalize();
 
+    typeid(Decoration::Physics);
+
     Material::StaticMaterial material = Material::StaticMaterial{};
     material.vals.color = { .0, 0.5 , 0.0, 1.0 };
     material.vals.data = { 1.0f, 5.0f, 1, 0};
@@ -125,12 +127,12 @@ int main(int argc, char* argv[])
            100, 100
         }, &texture, "Cube"
     };
-    //cube.translate(0, -4, 0);
+    cube.translate(0, -4, 0);
     cube.rotate(0, 0, .3);
-    //Decoration::Physics physx = Decoration::Physics(level.pWorld, new btBoxShape({ 50, 2, 50 }), 0);
-    Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
+    Decoration::Physics physx = Decoration::Physics(level.pWorld, new btBoxShape({ 50, 2, 50 }), 0);
+    //Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
     cube.add(physx);
-    //level.add(cube);
+    level.add(cube);
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
@@ -142,7 +144,7 @@ int main(int argc, char* argv[])
 
     Decoration::Physics phys0 = Decoration::Physics(level.pWorld, new btSphereShape(1), 1.0);
     sphere.add(phys0);
-    //level.add(sphere);
+    level.add(sphere);
     
     auto treat = RenderObject{
         Render::Mesh::fromFile("../res/DogTreat.obj")[0],&material1, "Treat"
@@ -152,7 +154,7 @@ int main(int argc, char* argv[])
     Decoration::Physics phys1 = Decoration::Physics(level.pWorld, new btSphereShape(2), 0);
     treat.add(phys1);
 
-    level.add(treat);
+    //level.add(treat);
     
 
     /* Loop until the user closes the window */

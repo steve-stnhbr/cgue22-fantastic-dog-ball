@@ -24,15 +24,15 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 
 void RenderObject::init()
 {
-	for (auto pair : decorations) {
-		pair.second->init(this);
+	for (auto val : decorations.vals) {
+		val->init(this);
 	}
 }
 
 void RenderObject::update(unsigned long frame, float dTime)
 {
-	for (auto pair : decorations) {
-		pair.second->update(this, frame, dTime);
+	for (auto val : decorations.vals) {
+		val->update(this, frame, dTime);
 	}
 }
 
@@ -40,7 +40,7 @@ void RenderObject::update(unsigned long frame, float dTime)
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	decorations[typeid(decoration_).name()] = &decoration_;
+	decorations.insert(typeid(decoration_).hash_code(), &decoration_);
 }
 
 void RenderObject::buildVAO() const
@@ -146,6 +146,7 @@ void Decoration::Physics::init(RenderObject* object)
 	rigidBodyCI.m_restitution = 1;
 
 	pBody = new btRigidBody(rigidBodyCI);
+	pBody->setUserPointer(object);
 
 	pWorld->addRigidBody(pBody);
 }
@@ -158,6 +159,10 @@ void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 	transform.getOpenGLMatrix(glm::value_ptr(mat));
 	Loggger::trace("Bullet: Updating transform of %s to %s", obj->name.c_str(), glm::to_string(mat).c_str());
 	(*obj).transform = (pMass == 0.0f ? glm::mat4(1) : glm::mat4(0)) + mat;
+}
+
+void Decoration::Physics::onCollide(RenderObject* other)
+{
 }
 
 Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_)

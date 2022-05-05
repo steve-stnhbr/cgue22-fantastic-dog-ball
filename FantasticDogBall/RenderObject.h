@@ -40,7 +40,7 @@ public:
 	/*
 	 *
 	 */
-	std::unordered_map<const char*, Decoration::Decoration*> decorations;
+	Utils::Map<size_t, Decoration::Decoration*> decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -75,8 +75,14 @@ public:
 	RenderObject* scale(float, float, float);
 	RenderObject* scale(glm::vec3);
 
-private:
-	void doTransform();
+	template <class T>
+	inline T* getDecoration() const {
+		auto& type = typeid(T);
+		auto name = type.name();
+		auto f = decorations.get(type.hash_code());
+		if (f == NULL) return nullptr;
+		return static_cast<T*>(f);
+	}
 };
 
 namespace Decoration
@@ -108,6 +114,8 @@ namespace Decoration
 		void init(RenderObject*) override;
 		void bind(RenderObject*);
 		void update(RenderObject* object, unsigned frame, float dTime) override;
+
+		void onCollide(RenderObject* other);
 
 		/*
 		 *	if pShape is nullptr the mesh of the object bound will be used
