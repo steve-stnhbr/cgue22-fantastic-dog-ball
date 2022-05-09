@@ -20,18 +20,19 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 	pScale({1, 1, 1})
 {
 	buildVAO();
+	decorations = new Utils::Map<size_t, Decoration::Decoration*>();
 }
 
 void RenderObject::init()
 {
-	for (auto val : decorations.vals) {
+	for (auto val : decorations->vals) {
 		val->init(this);
 	}
 }
 
 void RenderObject::update(unsigned long frame, float dTime)
 {
-	for (auto val : decorations.vals) {
+	for (auto val : decorations->vals) {
 		val->update(this, frame, dTime);
 	}
 }
@@ -40,7 +41,7 @@ void RenderObject::update(unsigned long frame, float dTime)
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	decorations.insert(typeid(decoration_).hash_code(), &decoration_);
+	decorations->insert(typeid(decoration_).hash_code(), &decoration_);
 }
 
 void RenderObject::buildVAO() const

@@ -40,7 +40,7 @@ public:
 	/*
 	 *
 	 */
-	Utils::Map<size_t, Decoration::Decoration*> decorations;
+	Utils::Map<size_t, Decoration::Decoration*>* decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -79,7 +79,7 @@ public:
 	inline T* getDecoration() const {
 		auto& type = typeid(T);
 		auto name = type.name();
-		auto f = decorations.get(type.hash_code());
+		auto f = decorations->get(type.hash_code());
 		if (f == NULL) return nullptr;
 		return static_cast<T*>(f);
 	}
