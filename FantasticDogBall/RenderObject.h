@@ -9,6 +9,7 @@
 #include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
 #include <btBulletDynamicsCommon.h>
 #include <LinearMath/btQuickprof.h>
+#include <functional>
 
 #include <unordered_map>
 
@@ -28,6 +29,8 @@ namespace Decoration
  */
 class RenderObject
 {
+private:
+	void applyToPhysics();
 public:
 	/**
 	 * The Mesh containing the vertecies and indices used to draw
@@ -89,15 +92,16 @@ namespace Decoration
 {
 	class Decoration
 	{
-	protected:
-		RenderObject* object;
 	public:
+		RenderObject* object;
+		std::function<void(RenderObject*, unsigned long, float)> onUpdate;
 		virtual void init(RenderObject*) = 0;
 		virtual void update(RenderObject* object, unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
 
 		Decoration() = default;
+		Decoration(RenderObject*);
 	};
 
 
@@ -107,10 +111,11 @@ namespace Decoration
 		btCollisionShape* pShape;
 		float pMass;
 		btMotionState* pTransform;
+
+	public:
+		btRigidBody* pBody;
 		btDynamicsWorld* pWorld;
 
-		btRigidBody* pBody;
-	public:
 		void init(RenderObject*) override;
 		void bind(RenderObject*);
 		void update(RenderObject* object, unsigned frame, float dTime) override;

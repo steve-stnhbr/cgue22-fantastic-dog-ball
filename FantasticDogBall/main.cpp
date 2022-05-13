@@ -128,9 +128,12 @@ int main(int argc, char* argv[])
         }, &texture, "Cube"
     };
     cube.translate(0, -4, 0);
-    cube.rotate(0, 0, .3);
-    Decoration::Physics physx = Decoration::Physics(level.pWorld, new btBoxShape({ 50, 2, 50 }), 0);
-    //Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
+    //cube.rotate(.3, { 0, 0, 1 });
+    Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
+    physx.onUpdate = [cube = &cube](RenderObject* obj, unsigned long frame, float) {
+        cube->rotate(.1 * frame, { 0, 0, 1 });
+        obj->rotate(.1 * frame, { 0, 0, 1 });
+    };
     cube.add(physx);
     level.add(cube);
 
@@ -142,7 +145,11 @@ int main(int argc, char* argv[])
         Render::Sphere(1, 32, 16), &material1, "Sphere"
     };
 
-    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, new btSphereShape(1), 1.0);
+    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, new btSphereShape(3), 1.0);
+    phys0.onUpdate = [](RenderObject* obj_, unsigned long, float)
+    {
+        obj_->getDecoration<Decoration::Physics>()->pBody->applyCentralForce({ 0, 0, 10 });
+    };
     sphere.add(phys0);
     level.add(sphere);
     

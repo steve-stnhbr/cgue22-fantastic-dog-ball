@@ -74,6 +74,8 @@ RenderObject* RenderObject::scale(glm::vec3 s)
 {
 	transform = glm::scale(transform, s);
 	pScale += {s.x, s.y, s.z};
+
+	applyToPhysics();
 	return this;
 }
 
@@ -86,6 +88,7 @@ RenderObject* RenderObject::translate(float x, float y, float z)
 RenderObject* RenderObject::translate(glm::vec3 v)
 {
 	transform = glm::translate(transform, v);
+	applyToPhysics();
 	return this;
 }
 
@@ -100,17 +103,32 @@ RenderObject* RenderObject::rotate(float x, float y, float z)
 RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 {
 	transform = glm::rotate(transform, angle, axes);
+	applyToPhysics();
 	return this;
 }
 
 RenderObject* RenderObject::scale(float s)
 {
 	scale(s, s, s);
+	applyToPhysics();
 	return this;
+}
+
+void RenderObject::applyToPhysics() {
+	return;
+	if (auto p = getDecoration<Decoration::Physics>()) {
+		p->pBody->getWorldTransform().setFromOpenGLMatrix(glm::value_ptr(transform));
+	}
+	
 }
 
 
 void Decoration::Decoration::bind(RenderObject* object_)
+{
+	object = object_;
+}
+
+Decoration::Decoration::Decoration(RenderObject* obj_): object(obj_)
 {
 }
 
@@ -128,7 +146,7 @@ void Decoration::Physics::init(RenderObject* object)
 		{
 			Vertex v = object->mesh.vertex_array[i];
 			btVector3 btv = btVector3(v.position.x, v.position.y, v.position.z);
-			((btConvexHullShape*)pShape)->addPoint(btv);
+			((btConvexHullShape*) pShape)->addPoint(btv);
 		}
 	}
 
@@ -144,7 +162,7 @@ void Decoration::Physics::init(RenderObject* object)
 		pShape,				// collision shape of body
 		btVector3(0, 0, 0)	// local inertia
 	);
-	rigidBodyCI.m_restitution = 1;
+	rigidBodyCI.m_restitution = .7;
 
 	pBody = new btRigidBody(rigidBodyCI);
 	pBody->setUserPointer(object);
@@ -154,13 +172,16 @@ void Decoration::Physics::init(RenderObject* object)
 
 void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 {
+	if(onUpdate)
+		onUpdate(obj, frame, dTime);
+
 	btTransform transform;
 	pBody->getMotionState()->getWorldTransform(transform);
 	glm::mat4 mat;
 	transform.getOpenGLMatrix(glm::value_ptr(mat));
 	Loggger::trace("Bullet: Updating transform of %s to %s", obj->name.c_str(), glm::to_string(mat).c_str());
 	(*obj).transform = (pMass == 0.0f ? glm::mat4(1) : glm::mat4(0)) + mat;
-}
+} 
 
 void Decoration::Physics::onCollide(RenderObject* other)
 {
