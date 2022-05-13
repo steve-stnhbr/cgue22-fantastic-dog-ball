@@ -4,6 +4,11 @@
 
 #include "Shaders.h"
 
+namespace Globals {
+	static unsigned NUM_POINT_LIGHTS;
+	static unsigned NUM_DIRECTIONAL_LIGHTS;
+	static unsigned NUM_SPOT_LIGHTS;
+}
 class Utils
 {
 public:

@@ -2,19 +2,28 @@
 #include <glm/vec3.hpp>
 #include <vector>
 #include <glm/vec4.hpp>
+#include <glm/glm.hpp>
 
-#include "Shaders.h"
 #include "UncheckedUniformBuffer.h"
+#include "Utils.h"
 
 namespace Light
 {
 
 	struct Light
 	{
-		static unsigned NUM_POINT_LIGHTS;
-		static unsigned NUM_DIRECTIONAL_LIGHTS;
-		static unsigned NUM_SPOT_LIGHTS;
-		Light() = default;
+		static unsigned SHADOW_MAP_RESOLUTION;
+		static unsigned SHADOW_FRAMEBUFFER;
+		static Shaders::Program SHADOW_PROGRAM;
+
+		Texture::Texture shadowMap;
+
+		Light();
+		Light(bool useShadowMap);
+
+		void generateShadowMap();
+
+		virtual glm::mat4 getLightSpace() = 0;
 	};
 
 	struct Directional : Light
@@ -30,6 +39,8 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
+
+		glm::mat4 getLightSpace() override;
 	};
 
 	struct Point : Light
@@ -48,6 +59,7 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
+		glm::mat4 getLightSpace() override;
 	};
 
 	struct Spot : Light
@@ -71,6 +83,7 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
+		glm::mat4 getLightSpace() override;
 	};
 	
 	class Lights

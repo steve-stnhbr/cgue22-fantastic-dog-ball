@@ -3,9 +3,10 @@
 #include "Material.h"
 #include "Render.h"
 
-unsigned Light::Light::NUM_SPOT_LIGHTS = 0;
-unsigned Light::Light::NUM_DIRECTIONAL_LIGHTS = 0;
-unsigned Light::Light::NUM_POINT_LIGHTS = 0;
+unsigned Light::Light::SHADOW_MAP_RESOLUTION = 1024;
+unsigned Light::Light::SHADOW_FRAMEBUFFER = 0;
+Shaders::Program Light::Light::SHADOW_PROGRAM = std::vector<std::string>{ "./shadow.vert", "./shadow.frag" };
+
 
 Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
 	position(position_.x, position_.y, position_.z, 0),
@@ -23,6 +24,12 @@ Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::v
 	specular(specular_.x, specular_.y, specular_.z, 0)
 {
 	
+}
+
+glm::mat4 Light::Directional::getLightSpace()
+{
+	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
+	glm::mat4 depthViewMatrix = glm::lookAt(glm::inverse<float>(direction), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, float outerCutOff_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
@@ -45,18 +52,18 @@ Light::Lights::Lights()
 void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
-	Light::NUM_POINT_LIGHTS++;
+	Globals::NUM_POINT_LIGHTS++;
 }
 
 void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
-	Light::NUM_DIRECTIONAL_LIGHTS++;
+	Globals::NUM_DIRECTIONAL_LIGHTS++;
 }
 void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
-	Light::NUM_SPOT_LIGHTS++;
+	Globals::NUM_SPOT_LIGHTS++;
 }
 
 
@@ -84,25 +91,42 @@ void Light::Lights::finalize()
 		add(spot);
 	}
 
-	pBuffer.create(Light::NUM_POINT_LIGHTS * sizeof(Point));
+	pBuffer.create(Globals::NUM_POINT_LIGHTS * sizeof(Point));
 	pBuffer.update(pLights.data());
-	dBuffer.create(Light::NUM_DIRECTIONAL_LIGHTS * sizeof(Directional));
+	dBuffer.create(Globals::NUM_DIRECTIONAL_LIGHTS * sizeof(Directional));
 	dBuffer.update(dLights.data());
-	sBuffer.create(Light::NUM_SPOT_LIGHTS * sizeof(Spot));
+	sBuffer.create(Globals::NUM_SPOT_LIGHTS * sizeof(Spot));
 	sBuffer.update(sLights.data());
-
 
 	Material::initPrograms();
 
 	finalized = true;
 }
 
+Light::Light::Light() : Light(true)
+{
+}
 
+Light::Light::Light(bool useShadowMap)
+{
+	shadowMap = 0;
+	if (useShadowMap) {
+		if (SHADOW_FRAMEBUFFER == 0) {
+			glCreateFramebuffers(1, &SHADOW_FRAMEBUFFER);
+			glNamedFramebufferTexture(SHADOW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID);
+		}
+		
+		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_FLOAT, 1 };
+	}
+}
 
-
-
-
-
-
-
-
+void Light::Light::generateShadowMap()
+{
+	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
+	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	SHADOW_PROGRAM.use();
+	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
+	glNamedFramebufferDrawBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}

@@ -1,8 +1,8 @@
 #include "Shaders.h"
 
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "LightSource.h"
 #include "Render.h"
 
 std::vector<unsigned> shaders, programs;
@@ -27,9 +27,9 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 	if(type == GL_FRAGMENT_SHADER)
 	{
 		const std::string lightNums =
-			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Light::Light::NUM_POINT_LIGHTS) + ";\n"
-			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Light::Light::NUM_DIRECTIONAL_LIGHTS) + ";\n"
-			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Light::Light::NUM_SPOT_LIGHTS) + ";\n";
+			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Globals::NUM_POINT_LIGHTS) + ";\n"
+			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Globals::NUM_DIRECTIONAL_LIGHTS) + ";\n"
+			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Globals::NUM_SPOT_LIGHTS) + ";\n";
 		source.insert(source.find_first_of("\n"), lightNums);
 	}
 	const char* cSrc = source.c_str();
@@ -251,6 +251,11 @@ void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 {
 	Loggger::debug("Setting %s to (%f, %f, %f)", name.c_str(), v.x, v.y, v.z);
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
+}
+
+void Shaders::Program::setMatrix4(const std::string& name, glm::mat4 v) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(v));
 }
 
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)

@@ -44,21 +44,9 @@ Texture::Texture::Texture(std::string filePath_)
 			//throw std::runtime_error(Utils::string_format("Failed to load image %s", filePath.c_str()));
 		}
 
-		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels);
+		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
 		
-		glCreateTextures(GL_TEXTURE_2D, 1, &glID);
-		Utils::checkError();
-		glTextureStorage2D(glID, 1, GL_RGB8, width, height); 
-		glTextureSubImage2D(glID, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-		Utils::checkError();
-
-		glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-		glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 0);
-		glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, 6);
-		glGenerateTextureMipmap(glID);
-		Utils::checkError();
+		Texture(width, height, GL_RGBA8, 6);
 
 		stbi_image_free(data);
 	}
@@ -67,6 +55,23 @@ Texture::Texture::Texture(std::string filePath_)
 Texture::Texture::Texture(float substituteValue_) : defined(false), substituteValue(substituteValue_), nrChannels(0), width(0), height(0), data(nullptr)
 {
 	Loggger::info("Setting substitute value");
+}
+
+Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum format, unsigned mipmapLevels): width(width_), height(height_)
+{
+	glCreateTextures(GL_TEXTURE_2D, 1, &glID);
+	Utils::checkError();
+	glTextureStorage2D(glID, 1, format, width, height);
+	glTextureSubImage2D(glID, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+	Utils::checkError();
+
+	glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 0);
+	glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
+	glGenerateTextureMipmap(glID);
+	Utils::checkError();
 }
 
 void Texture::Texture::bind(unsigned location) const
