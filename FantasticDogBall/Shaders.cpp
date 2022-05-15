@@ -4,6 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Render.h"
+#include "Utils.h"
 
 std::vector<unsigned> shaders, programs;
 
@@ -73,6 +74,7 @@ unsigned int Shaders::loadShaders(const bool src, const std::vector<unsigned>& t
 		throw std::length_error("the sizes of types and src-strings is not equal");
 
 	const unsigned int program = glCreateProgram();
+	Utils::checkError();
 
 	if(program == 0)
 	{

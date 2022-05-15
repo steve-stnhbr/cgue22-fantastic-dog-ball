@@ -54,6 +54,8 @@ layout(std140) uniform SpotLights {
 uniform samplerCube cubemap;
 uniform int s_cubemap = 1;
 
+uniform sampler2D shadowMap;
+
 in vec4 fragColor;
 in vec3 fragPos;
 in vec3 fragNormal;
@@ -92,6 +94,7 @@ void main() {
     result += s_cubemap * CubemapReflection(norm, viewDir);
 
     outColor = vec4(result * material.color.xyz, 1.0);
+    outColor = texture(shadowMap, vec2(.5, .5));
 }
 
 

@@ -21,7 +21,7 @@ namespace Texture
 		Texture();
 		Texture(std::string filePath_);
 		Texture(float substituteValue_);
-		Texture(unsigned width, unsigned height, GLenum format, unsigned levels);
+		Texture(unsigned width, unsigned height, GLenum colorFormat, GLenum internalFormat, unsigned levels);
 
 		void bind(unsigned location) const;
 	};

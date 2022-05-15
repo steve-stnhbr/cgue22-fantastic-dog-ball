@@ -3,6 +3,7 @@
 #include <vector>
 #include <glm/vec4.hpp>
 #include <glm/glm.hpp>
+#include <glm/trigonometric.hpp>
 
 #include "UncheckedUniformBuffer.h"
 #include "Utils.h"
@@ -21,7 +22,7 @@ namespace Light
 		Light();
 		Light(bool useShadowMap);
 
-		void generateShadowMap();
+		Texture::Texture generateShadowMap();
 
 		virtual glm::mat4 getLightSpace() = 0;
 	};

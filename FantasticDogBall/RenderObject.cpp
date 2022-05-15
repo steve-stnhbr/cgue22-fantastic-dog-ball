@@ -44,7 +44,7 @@ void RenderObject::buildVAO() const
 
 	glCreateVertexArrays(1, (GLuint*)&vaoID);
 	glVertexArrayVertexBuffer(vaoID, 0, vboID, 0, sizeof(vertexType));
-	glVertexArrayElementBuffer(vaoID, eboID);
+	glVertexArrayElementBuffer(vaoID, eboID); 
 	
 	material->assignVertexAttributes(vaoID);
 }

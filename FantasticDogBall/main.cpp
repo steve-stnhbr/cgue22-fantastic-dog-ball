@@ -17,6 +17,7 @@
 #include "LightSource.h"
 #include "Material.h"
 
+
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);

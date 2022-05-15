@@ -21,6 +21,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
+	Texture::Texture shadowMap = lights.dLights[0].generateShadowMap();
+
 	for (RenderObject element : objects)
 	{
 		element.update();
@@ -30,6 +32,9 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
+
+		prog.setTexture("shadowMap", shadowMap);
+
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
 		lights.bind(prog);

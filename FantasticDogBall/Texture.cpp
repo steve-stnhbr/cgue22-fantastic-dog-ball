@@ -46,30 +46,30 @@ Texture::Texture::Texture(std::string filePath_)
 
 		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
 		
-		Texture(width, height, GL_RGBA8, 6);
+		Texture(width, height, GL_RGBA8, GL_UNSIGNED_BYTE, 6);
 
 		stbi_image_free(data);
 	}
 }
 
-Texture::Texture::Texture(float substituteValue_) : defined(false), substituteValue(substituteValue_), nrChannels(0), width(0), height(0), data(nullptr)
+Texture::Texture::Texture(float substituteValue_) : glID(0), defined(false), substituteValue(substituteValue_), nrChannels(0), width(0), height(0), data(nullptr)
 {
 	Loggger::info("Setting substitute value");
 }
 
-Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum format, unsigned mipmapLevels): width(width_), height(height_)
+Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum colorFormat, GLenum internalFormat, unsigned mipmapLevels): width(width_), height(height_), defined(true)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &glID);
 	Utils::checkError();
-	glTextureStorage2D(glID, 1, format, width, height);
-	glTextureSubImage2D(glID, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+	glTextureStorage2D(glID, 1, colorFormat, width, height);
+	glTextureSubImage2D(glID, 0, 0, 0, width, height, colorFormat, internalFormat, data);
 	Utils::checkError();
 
 	glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTextureParameteri(glID, GL_TEXTURE_BASE_LEVEL, 0);
-	glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, mipmapLevels);
+	glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, mipmapLevels - 1);
 	glGenerateTextureMipmap(glID);
 	Utils::checkError();
 }

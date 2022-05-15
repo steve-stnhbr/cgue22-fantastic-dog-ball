@@ -40,6 +40,8 @@ uniform float value_specular;
 uniform sampler2D specular;
 uniform float shininess;
 
+uniform sampler2D shadowMap;
+
 layout(std140) uniform CameraData{
     mat4 model;
     mat4 view;
@@ -93,6 +95,7 @@ void main() {
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
     outColor = vec4(vec3(texture(color, texCoords)) * result, 1.0);
+    //outColor = texture(shadowMap, vec2(.5, .5));
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
