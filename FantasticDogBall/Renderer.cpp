@@ -20,8 +20,16 @@ Renderer::Renderer()
 void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
+	std::vector<Vertex> allMeshes;
 
-	Texture::Texture shadowMap = lights.dLights[0].generateShadowMap();
+	for (RenderObject e : objects) {
+		allMeshes.insert(allMeshes.end(),
+			e.mesh.vertex_array.begin(),
+			e.mesh.vertex_array.end());
+	}
+
+
+	Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
 
 	for (RenderObject element : objects)
 	{

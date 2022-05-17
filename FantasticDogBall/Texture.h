@@ -21,9 +21,11 @@ namespace Texture
 		Texture();
 		Texture(std::string filePath_);
 		Texture(float substituteValue_);
-		Texture(unsigned width, unsigned height, GLenum colorFormat, GLenum internalFormat, unsigned levels);
+		Texture(unsigned width, unsigned height, GLenum colorFormat, GLenum internalFormat, GLenum type, unsigned levels);
 
 		void bind(unsigned location) const;
+	private:
+		void createTexture(unsigned width_, unsigned height_, GLenum colorFormat, GLenum internalFormat, GLenum type, unsigned mipmapLevels);
 	};
 
 

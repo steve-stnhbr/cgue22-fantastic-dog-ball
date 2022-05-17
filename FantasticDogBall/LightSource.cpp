@@ -2,6 +2,7 @@
 
 #include "Material.h"
 #include "Render.h"
+#include "RenderObject.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -20,7 +21,7 @@ Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float q
 {
 }
 
-glm::mat4 Light::Point::getLightSpace() {
+glm::mat4 Light::Point::getLightSpace() const {
 	return glm::mat4(1);
 }
 
@@ -33,7 +34,7 @@ Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::v
 	
 }
 
-glm::mat4 Light::Directional::getLightSpace()
+glm::mat4 Light::Directional::getLightSpace() const
 {
 	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
 	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(direction * glm::vec4(-1)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -53,7 +54,7 @@ Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, floa
 	
 }
 
-glm::mat4 Light::Spot::getLightSpace() {
+glm::mat4 Light::Spot::getLightSpace() const {
 	return glm::mat4(1);
 }
 
@@ -141,28 +142,37 @@ Light::Light::Light(bool useShadowMap)
 			}
 		}
 		
-		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT16, GL_FLOAT, 1 };
+		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 1 };
 	}
 }
 
-Texture::Texture Light::Light::generateShadowMap()
+Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>& obj) const
 {
-	// --- postition ---
-	glEnableVertexArrayAttrib(vao, 0);
-	Utils::checkError();
-	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
-	Utils::checkError();
-	glVertexArrayAttribBinding(vao, 0, 0);
-	Utils::checkError();
-
-
 	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
 	glNamedFramebufferTexture(SHADOW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID);
-	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	SHADOW_PROGRAM.use();
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
-	glNamedFramebufferDrawBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	GLenum status = glCheckNamedFramebufferStatus(SHADOW_FRAMEBUFFER, GL_FRAMEBUFFER);
+
+	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		Loggger::error("FB error, status: 0x%x\n", status);
+		return false;
+	}
+
+	for (auto element : obj) {
+		glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
+		glBindVertexArray(element.vaoID);
+		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.eboID);
+		Utils::checkError();
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glNamedFramebufferDrawBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+		glNamedFramebufferReadBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+
 	return shadowMap;
 }

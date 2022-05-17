@@ -7,6 +7,7 @@
 
 #include "UncheckedUniformBuffer.h"
 #include "Utils.h"
+#include "RenderObject.h"
 
 namespace Light
 {
@@ -22,9 +23,9 @@ namespace Light
 		Light();
 		Light(bool useShadowMap);
 
-		Texture::Texture generateShadowMap();
+		Texture::Texture generateShadowMap(const std::vector<RenderObject>&) const;
 
-		virtual glm::mat4 getLightSpace() = 0;
+		virtual glm::mat4 getLightSpace() const = 0;
 	};
 
 	struct Directional : Light
@@ -41,7 +42,7 @@ namespace Light
 			glm::vec3 diffuse,
 			glm::vec3 specular);
 
-		glm::mat4 getLightSpace() override;
+		glm::mat4 getLightSpace() const override;
 	};
 
 	struct Point : Light
@@ -60,7 +61,7 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
-		glm::mat4 getLightSpace() override;
+		glm::mat4 getLightSpace() const override;
 	};
 
 	struct Spot : Light
@@ -84,7 +85,7 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
-		glm::mat4 getLightSpace() override;
+		glm::mat4 getLightSpace() const override;
 	};
 	
 	class Lights
