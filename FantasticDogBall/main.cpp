@@ -27,9 +27,6 @@ void gl_error_callback(GLenum source​, GLenum type​, GLuint id​,
     GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam);
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs);
 
-const int
-	WINDOW_WIDTH = 1920,
-	WINDOW_HEIGHT = 1080;
 const float
 	FOV = 45.0f;
 const char*
@@ -77,8 +74,7 @@ int main(int argc, char* argv[])
     initGl();
     initBullet();
 
-    constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
-
+    const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
 
     Scene scene;
     const glm::vec3 cameraPos = glm::vec3(0, 1, -6);

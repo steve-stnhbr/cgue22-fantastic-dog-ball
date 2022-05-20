@@ -152,8 +152,10 @@ Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>
 	Utils::checkError();
 	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
+	//glDrawBuffer(GL_NONE);
+	//glReadBuffer(GL_NONE);
+	glNamedFramebufferDrawBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+	glNamedFramebufferReadBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Utils::checkError();
 	glClear(GL_DEPTH_BUFFER_BIT);

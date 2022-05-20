@@ -29,7 +29,9 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 	}
 
 
-	//Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
+	//Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);s
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
 	for (RenderObject element : objects)
 	{

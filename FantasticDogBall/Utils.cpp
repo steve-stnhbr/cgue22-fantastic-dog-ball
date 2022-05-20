@@ -6,10 +6,11 @@
 
 #include <algorithm>
 
-
 unsigned Globals::NUM_DIRECTIONAL_LIGHTS = 0;
 unsigned Globals::NUM_POINT_LIGHTS = 0;
 unsigned Globals::NUM_SPOT_LIGHTS = 0;
+unsigned Globals::WINDOW_WIDTH = 1920;
+unsigned Globals::WINDOW_HEIGHT = 1080;
 
 std::string Utils::readFile(const char* path)
 {

@@ -94,7 +94,7 @@ void main() {
     result += s_cubemap * CubemapReflection(norm, viewDir);
 
     outColor = vec4(result * material.color.xyz, 1.0);
-    //outColor = texture(shadowMap, vec2(.5, .5));
+    //<outColor = texture(shadowMap, vec2(.5, .5));
 }
 
 
