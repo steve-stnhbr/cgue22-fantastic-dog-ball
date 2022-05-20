@@ -29,7 +29,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 	}
 
 
-	Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
+	//Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
 
 	for (RenderObject element : objects)
 	{
@@ -41,7 +41,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		auto prog = element.material->getProgram();
 		prog.use();
 
-		prog.setTexture("shadowMap", shadowMap);
+		//prog.setTexture("shadowMap", shadowMap);
 
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
@@ -55,6 +55,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// draw
 		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
 		Utils::checkError();
+		glUseProgram(0);
 	}
 
 	timeF += .01f;

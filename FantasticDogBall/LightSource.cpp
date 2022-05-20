@@ -149,8 +149,15 @@ Light::Light::Light(bool useShadowMap)
 Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>& obj) const
 {
 	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
-	glNamedFramebufferTexture(SHADOW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID);
+	Utils::checkError();
+	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	Utils::checkError();
 	glClear(GL_DEPTH_BUFFER_BIT);
+	Utils::checkError();
 	SHADOW_PROGRAM.use();
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
 	GLenum status = glCheckNamedFramebufferStatus(SHADOW_FRAMEBUFFER, GL_FRAMEBUFFER);
