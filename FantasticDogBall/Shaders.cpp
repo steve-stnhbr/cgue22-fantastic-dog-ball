@@ -235,33 +235,39 @@ Shaders::Program::Program(std::vector<std::string> paths) : binding(20), locatio
 
 void Shaders::Program::setBool(const std::string& name, const bool value) const
 {
+	use();
 	Loggger::debug("Setting %s to %b", name.c_str(), value);
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
 }
 void Shaders::Program::setInt(const std::string& name, const int value) const
 {
+	use();
 	Loggger::debug("Setting %s to %i", name.c_str(), value);
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 void Shaders::Program::setFloat(const std::string& name, const float value) const
 {
+	use();
 	Loggger::debug("Setting %s to %f", name.c_str(), value);
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 {
+	use();
 	Loggger::debug("Setting %s to (%f, %f, %f)", name.c_str(), v.x, v.y, v.z);
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
 }
 
 void Shaders::Program::setMatrix4(const std::string& name, glm::mat4 v) const
 {
+	use();
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(v));
 }
 
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
 {
+	use();
 	unsigned binding_ = 0;
 	unsigned ubi = 0;
 
@@ -290,12 +296,14 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 
 void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buffer) const
 {
+	use();
 	buffer.bind(binding);
 }
 
 
 void Shaders::Program::setTexture(const unsigned location, const Texture::Texture& texture) const
 {
+	use();
 	if(!texture.defined)
 	{
 		this->setFloat("texture_" + std::to_string(location), texture.substituteValue);
@@ -306,6 +314,7 @@ void Shaders::Program::setTexture(const unsigned location, const Texture::Textur
 
 void Shaders::Program::setTexture(const std::string& name, const Texture::Texture& texture)
 {
+	use();
 	if (!texture.defined)
 	{
 		this->setInt("s_" + name, 0);
