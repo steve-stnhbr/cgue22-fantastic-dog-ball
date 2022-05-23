@@ -63,7 +63,6 @@ Texture::Texture::~Texture()
 
 void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels)
 {
-	/*
 	glCreateTextures(GL_TEXTURE_2D, 1, &glID);
 	Utils::checkError();
 	glTextureStorage2D(glID, 1, internalFormat, width, height);
@@ -76,10 +75,10 @@ void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum i
 	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glGenerateTextureMipmap(glID);
 	Utils::checkError();
-	*/
+	
 
 	//todo for some reason dsa is not working with depth_components so we need to use bound configuration
-
+	/*
 	glGenTextures(1, &glID);
 	glBindTexture(GL_TEXTURE_2D, glID);
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, colorFormat, type, NULL);
@@ -92,6 +91,8 @@ void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum i
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels - 1);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Utils::checkError();
+	*/
+	
 }
 
 void Texture::Texture::bind(unsigned location) const

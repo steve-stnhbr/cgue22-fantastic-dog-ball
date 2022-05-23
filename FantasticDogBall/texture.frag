@@ -94,7 +94,7 @@ void main() {
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
-    outColor = texture(color, texCoords) * vec4(result, result);
+    outColor = texture(color, texCoords) * vec4(result, 1);
     //outColor = vec4(result, 1);
     //outColor = texture(shadowMap, vec2(.5, .5));
 }

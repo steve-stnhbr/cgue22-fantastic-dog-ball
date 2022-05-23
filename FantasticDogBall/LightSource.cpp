@@ -154,7 +154,6 @@ Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
 }
 
 void Light::Light::initProgram() {
-	shadowMap = 0;
 	if (castShadow) {
 		if (SHADOW_FRAMEBUFFER == 0) {
 			glCreateFramebuffers(1, &SHADOW_FRAMEBUFFER);
