@@ -27,9 +27,9 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 	if(type == GL_FRAGMENT_SHADER)
 	{
 		const std::string lightNums =
-			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Light::Light::NUM_POINT_LIGHTS) + ";\n"
-			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Light::Light::NUM_DIRECTIONAL_LIGHTS) + ";\n"
-			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Light::Light::NUM_SPOT_LIGHTS) + ";\n";
+			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Globals::NUM_POINT_LIGHTS) + ";\n"
+			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Globals::NUM_DIRECTIONAL_LIGHTS) + ";\n"
+			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Globals::NUM_SPOT_LIGHTS) + ";\n";
 		source.insert(source.find_first_of("\n"), lightNums);
 	}
 	const char* cSrc = source.c_str();

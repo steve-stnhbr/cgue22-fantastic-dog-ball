@@ -5,40 +5,53 @@
 
 #include "Shaders.h"
 #include "UncheckedUniformBuffer.h"
+#include "RenderObject.h"
 
 namespace Light
 {
 
 	struct Light
 	{
-		static unsigned NUM_POINT_LIGHTS;
-		static unsigned NUM_DIRECTIONAL_LIGHTS;
-		static unsigned NUM_SPOT_LIGHTS;
+		static Shaders::Program* SHADOW_PROGRAM_2D
+
+
+		Texture::Texture* shadowMap;
+		virtual Texture::Texture* generateShadowMap(const std::vector<RenderObject>& objects) = 0;
+
 		Light() = default;
 	};
 
 	struct Directional : Light
 	{
-		glm::vec4 direction;
+		struct Data {
+			glm::vec4 direction;
 
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+
+		} data;
 
 		Directional() = default;
 		Directional(glm::vec3 direction,
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
+
+		Texture::Texture* generateShadowMap(const std::vector<RenderObject>& objects) override;
 	};
 
 	struct Point : Light
 	{
-		glm::vec4 position;
-		glm::vec4 attenuation;
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+		Texture::Cubemap* shadowMap;
+
+		struct Data {
+			glm::vec4 position;
+			glm::vec4 attenuation;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+		} data;
 
 		Point() = default;
 		Point(glm::vec3 position,
@@ -47,18 +60,22 @@ namespace Light
 			float quadratic,
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
-			glm::vec3 specular);
+			glm::vec3 specular); 
+
+		Texture::Cubemap* generateShadowMap(const std::vector<RenderObject>& objects) override;
 	};
 
 	struct Spot : Light
 	{
-		glm::vec4 position;
-		glm::vec4 direction;
-		glm::vec4 cutoff;
-		glm::vec4 attenuation;
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+		struct Data {
+			glm::vec4 position;
+			glm::vec4 direction;
+			glm::vec4 cutoff;
+			glm::vec4 attenuation;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+		} data;
 
 		Spot() = default;
 		Spot(glm::vec3 position,
@@ -71,14 +88,16 @@ namespace Light
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
 			glm::vec3 specular);
+
+		Texture::Texture* generateShadowMap(const std::vector<RenderObject>& objects) override;
 	};
 	
 	class Lights
 	{
 	public:
-		std::vector<Point> pLights;
-		std::vector<Directional> dLights;
-		std::vector<Spot> sLights;
+		std::vector<Point::Data> pLights;
+		std::vector<Directional::Data> dLights;
+		std::vector<Spot::Data> sLights;
 		UncheckedUniformBuffer pBuffer, dBuffer, sBuffer;
 		bool finalized;
 
