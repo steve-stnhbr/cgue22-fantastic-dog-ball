@@ -71,6 +71,7 @@ void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
 	pData.push_back(p.data);
+	allLights.push_back(&p);
 	Globals::NUM_POINT_LIGHTS++;
 }
 
@@ -78,12 +79,14 @@ void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
 	dData.push_back(d.data);
+	allLights.push_back(&d);
 	Globals::NUM_DIRECTIONAL_LIGHTS++;
 }
 void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
 	sData.push_back(s.data);
+	allLights.push_back(&s);
 	Globals::NUM_SPOT_LIGHTS++;
 }
 
@@ -95,9 +98,57 @@ void Light::Lights::bind(Shaders::Program& prog)
 		finalize();
 	}
 
+	/*
 	prog.setUniform("PointLights", pBuffer);
 	prog.setUniform("DirectionalLights", dBuffer);
 	prog.setUniform("SpotLights", sBuffer);
+	*/
+
+
+	for (auto i = 0; i < pLights.size(); i++) {
+		prog.setVector4(Utils::string_format("pLights[%i].position", i), pLights[i].data.position);
+		prog.setVector4(Utils::string_format("pLights[%i].attenuation", i), pLights[i].data.attenuation);
+		prog.setVector4(Utils::string_format("pLights[%i].ambient", i), pLights[i].data.ambient);
+		prog.setVector4(Utils::string_format("pLights[%i].diffuse", i), pLights[i].data.diffuse);
+		prog.setVector4(Utils::string_format("pLights[%i].specular", i), pLights[i].data.specular);
+
+		prog.setBool(Utils::string_format("pLights[%i].castsShadow", i), pLights[i].castShadow);
+
+		if(pLights[i].castShadow)
+			prog.setTexture(Utils::string_format("pLights[%i].shadowMap", i), pLights[i].shadowMap);
+	}
+
+	for (auto i = 0; i < dLights.size(); i++) {
+		prog.setVector4(Utils::string_format("dLights[%i].direction", i), dLights[i].data.direction);
+		prog.setVector4(Utils::string_format("dLights[%i].ambient", i), dLights[i].data.ambient);
+		prog.setVector4(Utils::string_format("dLights[%i].diffuse", i), dLights[i].data.diffuse);
+		prog.setVector4(Utils::string_format("dLights[%i].specular", i), dLights[i].data.specular);
+
+		prog.setBool(Utils::string_format("dLights[%i].castsShadow", i), dLights[i].castShadow);
+
+		if (dLights[i].castShadow)
+			prog.setTexture(Utils::string_format("dLights[%i].shadowMap", i), dLights[i].shadowMap);
+	}
+	for (auto i = 0; i < sLights.size(); i++) {
+		prog.setVector4(Utils::string_format("sLights[%i].position", i), sLights[i].data.position);
+		prog.setVector4(Utils::string_format("sLights[%i].direction", i), sLights[i].data.direction);
+		prog.setVector4(Utils::string_format("sLights[%i].cutoff", i), sLights[i].data.cutoff);
+		prog.setVector4(Utils::string_format("sLights[%i].attenuation", i), sLights[i].data.attenuation);
+		prog.setVector4(Utils::string_format("sLights[%i].ambient", i), sLights[i].data.ambient);
+		prog.setVector4(Utils::string_format("sLights[%i].diffuse", i), sLights[i].data.diffuse);
+		prog.setVector4(Utils::string_format("sLights[%i].specular", i), sLights[i].data.specular);
+		prog.setBool(Utils::string_format("sLights[%i].castsShadow", i), sLights[i].castShadow);
+
+		if (sLights[i].castShadow)
+			prog.setTexture(Utils::string_format("sLights[%i].shadowMap", i), sLights[i].shadowMap);
+	}
+
+
+}
+
+std::vector<const Light::Light*> Light::Lights::all()
+{
+	return allLights;
 }
 
 void Light::Lights::finalize()
@@ -191,6 +242,7 @@ Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>
 	}
 
 	for (auto element : obj) {
+		SHADOW_PROGRAM.setMatrix4("model", element.transform);
 		glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 		glBindVertexArray(element.vaoID);
 		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));

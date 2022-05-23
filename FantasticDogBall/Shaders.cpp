@@ -30,7 +30,9 @@ unsigned int Shaders::shaderSource(unsigned type, const std::string& src)
 		const std::string lightNums =
 			"\nconst int NUM_POINT_LIGHTS = " + std::to_string(Globals::NUM_POINT_LIGHTS) + ";\n"
 			+ "const int NUM_DIRECTIONAL_LIGHTS = " + std::to_string(Globals::NUM_DIRECTIONAL_LIGHTS) + ";\n"
-			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Globals::NUM_SPOT_LIGHTS) + ";\n";
+			+ "const int NUM_SPOT_LIGHTS = " + std::to_string(Globals::NUM_SPOT_LIGHTS) + ";\n"
+			+ "const int NUM_SHADOW_MAPS = " + std::to_string(Globals::NUM_SHADOW_MAPS) + ";\n"
+			+ "const int NUM_SHADOW_CUBEMAPS = " + std::to_string(Globals::NUM_SHADOW_CUBEMAPS) + ";\n";
 		source.insert(source.find_first_of("\n"), lightNums);
 	}
 	const char* cSrc = source.c_str();
@@ -257,6 +259,12 @@ void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 	use();
 	Loggger::debug("Setting %s to (%f, %f, %f)", name.c_str(), v.x, v.y, v.z);
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
+}
+
+void Shaders::Program::setVector4(const std::string& name, glm::vec4 v) const {
+	use();
+	Loggger::debug("Setting %s to (%f, %f, %f, %f)", name.c_str(), v.x, v.y, v.z, v.w);
+	glUniform4f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z, v.w);
 }
 
 void Shaders::Program::setMatrix4(const std::string& name, glm::mat4 v) const

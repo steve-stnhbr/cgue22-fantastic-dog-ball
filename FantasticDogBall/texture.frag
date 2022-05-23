@@ -2,11 +2,22 @@
 
 const int NUM_LIGHTS = 1;
 
+struct Light {
+    vec3 lightPos;
+    vec3 lightColor;
+    mat4 lightSpace;
+    sampler2D shadowMap;
+    bool enabled;
+};
+
 struct DirLight {
     vec4 direction;
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    mat4 lightSpace;
+    sampler2D shadowMap;
 };
 
 struct PointLight {
@@ -15,8 +26,11 @@ struct PointLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    mat4 lightSpace;
+    sampler2D shadowMap;
 };
-
+ 
 struct SpotLight {
     vec4 position;
     vec4 direction;
@@ -25,6 +39,9 @@ struct SpotLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    mat4 lightSpace;
+    sampler2D shadowMap;
 };
 
 uniform int s_color;
@@ -40,7 +57,10 @@ uniform float value_specular;
 uniform sampler2D specular;
 uniform float shininess;
 
-uniform sampler2D shadowMap;
+/*
+uniform int shadowIndices2D[NUM_SHADOW_MAPS];
+uniform sampler2D shadowMap2D[NUM_SHADOW_MAPS];
+*/
 
 layout(std140) uniform CameraData{
     mat4 model;
@@ -49,17 +69,16 @@ layout(std140) uniform CameraData{
     vec4 viewPos;
 };
 
+/*
 layout(std140) uniform PointLights {
     PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 };
+*/
+uniform PointLight pLights[NUM_POINT_LIGHTS];
 
-layout(std140) uniform DirectionalLights {
-    DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
+uniform DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
 
-layout(std140) uniform SpotLights {
-    SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
+uniform SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 
 in vec4 fragColor;
 in vec3 fragPos;

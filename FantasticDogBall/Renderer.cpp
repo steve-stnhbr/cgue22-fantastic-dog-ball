@@ -25,6 +25,12 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
+	/*
+	for (auto light : lights.all()) {
+		light->generateShadowMap(objects);
+	}
+	*/
+
 	for (RenderObject element : objects)
 	{
 		element.update();
@@ -34,8 +40,6 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
-
-		prog.setTexture("shadowMap", shadowMap);
 
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);

@@ -99,6 +99,7 @@ namespace Light
 	class Lights
 	{
 	public:
+		std::vector<const Light*> allLights;
 		std::vector<Point> pLights;
 		std::vector<Directional> dLights;
 		std::vector<Spot> sLights;
@@ -139,6 +140,8 @@ namespace Light
 		}
 
 		void bind(Shaders::Program&);
+
+		std::vector<const Light*> all();
 
 		void finalize();
 	};
