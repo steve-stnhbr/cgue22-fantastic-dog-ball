@@ -12,46 +12,50 @@ unsigned Light::Light::SHADOW_MAP_RESOLUTION = 1024;
 unsigned Light::Light::SHADOW_FRAMEBUFFER = 0;
 Shaders::Program Light::Light::SHADOW_PROGRAM;
 
-Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	position(position_.x, position_.y, position_.z, 0),
-	attenuation(constant_, linear_, quadratic_, 0),
-	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
-	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
-	specular(specular_.x, specular_.y, specular_.z, 0)
+Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_)
 {
+	data = {
+		glm::vec4(position_.x, position_.y, position_.z, 0),
+		glm::vec4(constant_, linear_, quadratic_, 0),
+		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
+		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
+	};
 }
 
 glm::mat4 Light::Point::getLightSpace() const {
 	return glm::mat4(1);
 }
 
-Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	direction(direction_.x, direction_.y, direction_.z, 0),
-	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
-	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
-	specular(specular_.x, specular_.y, specular_.z, 0)
+Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_)
 {
-	
+	data = {
+		glm::vec4(direction_.x, direction_.y, direction_.z, 0),
+		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
+		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
+	};
 }
 
 glm::mat4 Light::Directional::getLightSpace() const
 {
 	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(direction * glm::vec4(-1)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(data.direction * glm::vec4(-1)), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
 	return depthProjectionMatrix * depthViewMatrix;
 }
 
-Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, float outerCutOff_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_) :
-	position(position_.x, position_.y, position_.z, 0),
-	direction(direction_.x, direction_.y, direction_.z, 0),
-	cutoff(cutOff_, outerCutOff_, 0, 0),
-	attenuation(constant_, linear_, quadratic_, 0),
-	ambient(ambient_.x, ambient_.y, ambient_.z, 0),
-	diffuse(diffuse_.x, diffuse_.y, diffuse_.z, 0),
-	specular(specular_.x, specular_.y, specular_.z, 0)
+Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, float outerCutOff_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_)
 {
-	
+	data = {
+		glm::vec4(position_.x, position_.y, position_.z, 0),
+		glm::vec4(direction_.x, direction_.y, direction_.z, 0),
+		glm::vec4(cutOff_, outerCutOff_, 0, 0),
+		glm::vec4(constant_, linear_, quadratic_, 0),
+		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
+		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
+		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
+	};
 }
 
 glm::mat4 Light::Spot::getLightSpace() const {
@@ -66,17 +70,20 @@ Light::Lights::Lights()
 void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
+	pData.push_back(p.data);
 	Globals::NUM_POINT_LIGHTS++;
 }
 
 void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
+	dData.push_back(d.data);
 	Globals::NUM_DIRECTIONAL_LIGHTS++;
 }
 void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
+	sData.push_back(s.data);
 	Globals::NUM_SPOT_LIGHTS++;
 }
 
@@ -97,48 +104,34 @@ void Light::Lights::finalize()
 {
 	if (pLights.empty()) {
 		Point p;
-		p.diffuse = { .1, .1, .1, 0 };
+		p.data.diffuse = { .1, .1, .1, 0 };
 		add(p);
 	}
 	if (dLights.empty()) {
 		Directional d;
-		d.diffuse = { .1, .1, .1, 0 };
+		d.data.diffuse = { .1, .1, .1, 0 };
 		add(d);
 	}
 	if (sLights.empty()) {
 		Spot spot;
-		spot.diffuse = {.1, .1, .1, 0};
-		spot.position = { -1000, -1000, -1000, 1 };
+		spot.data.diffuse = {.1, .1, .1, 0};
+		spot.data.position = { -1000, -1000, -1000, 1 };
 		add(spot);
 	}
 
-	/*
-	for (Point p : pLights)
-	{
-		p.initProgram();
-	}
-
-	for (Directional d : dLights)
-	{
-		d.initProgram();
-	}
-
-	for (Spot s : sLights)
-	{
-		s.initProgram();
-	}
-	*/
+	Light::Light::initProgram();
+	
 
 	Globals::NUM_POINT_LIGHTS = pLights.size();
 	Globals::NUM_DIRECTIONAL_LIGHTS = dLights.size();
 	Globals::NUM_SPOT_LIGHTS = sLights.size();
 
-	pBuffer.create(Globals::NUM_POINT_LIGHTS * sizeof(Point));
-	pBuffer.update(pLights.data());
-	dBuffer.create(Globals::NUM_DIRECTIONAL_LIGHTS * sizeof(Directional));
-	dBuffer.update(dLights.data());
-	sBuffer.create(Globals::NUM_SPOT_LIGHTS * sizeof(Spot));
-	sBuffer.update(sLights.data());
+	pBuffer.create(Globals::NUM_POINT_LIGHTS * sizeof(Point::Data));
+	pBuffer.update(pData.data());
+	dBuffer.create(Globals::NUM_DIRECTIONAL_LIGHTS * sizeof(Directional::Data));
+	dBuffer.update(dData.data());
+	sBuffer.create(Globals::NUM_SPOT_LIGHTS * sizeof(Spot::Data));
+	sBuffer.update(sData.data());
 
 	Material::initPrograms();
 
@@ -151,35 +144,39 @@ Light::Light::Light() : Light(true)
 
 Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
 {
+	if (useShadowMap) {
+		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 1, false };
+	}
 }
 
 void Light::Light::initProgram() {
-	if (castShadow) {
-		if (SHADOW_FRAMEBUFFER == 0) {
-			glCreateFramebuffers(1, &SHADOW_FRAMEBUFFER);
-		}
+	if (SHADOW_FRAMEBUFFER == 0) {
+		glCreateFramebuffers(1, &SHADOW_FRAMEBUFFER);
+	}
 
-		if (SHADOW_PROGRAM.ID == 0) {
-			try {
-				SHADOW_PROGRAM = { std::vector<std::string>{ "./shadow.vert", "./shadow.frag" } };
-			}
-			catch (std::exception e) {
-				Loggger::error(e.what());
-			}
+	if (SHADOW_PROGRAM.ID == 0) {
+		try {
+			SHADOW_PROGRAM = { std::vector<std::string>{ "./shadow.vert", "./shadow.frag" } };
 		}
-
-		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 1 };
+		catch (std::exception e) {
+			Loggger::error(e.what());
+		}
 	}
 }
 
 Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>& obj) const
 {
+	if (!castShadow) return false;
 	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
 	Utils::checkError();
 	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
+	Utils::checkError();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap.glID, 0);
+	Utils::checkError();
 	glNamedFramebufferDrawBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+	Utils::checkError();
 	glNamedFramebufferReadBuffer(SHADOW_FRAMEBUFFER, GL_NONE);
+	Utils::checkError();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Utils::checkError();
 	glClear(GL_DEPTH_BUFFER_BIT);

@@ -17,6 +17,7 @@ namespace Light
 		static unsigned SHADOW_MAP_RESOLUTION;
 		static unsigned SHADOW_FRAMEBUFFER;
 		static Shaders::Program SHADOW_PROGRAM;
+		static void initProgram();
 
 		bool castShadow;
 		Texture::Texture shadowMap;
@@ -24,7 +25,6 @@ namespace Light
 		Light();
 		Light(bool useShadowMap);
 
-		void initProgram();
 		Texture::Texture generateShadowMap(const std::vector<RenderObject>&) const;
 
 		virtual glm::mat4 getLightSpace() const = 0;
@@ -32,11 +32,13 @@ namespace Light
 
 	struct Directional : Light
 	{
-		glm::vec4 direction;
+		struct Data {
+			glm::vec4 direction;
 
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+		} data;
 
 		Directional() = default;
 		Directional(glm::vec3 direction,
@@ -49,11 +51,13 @@ namespace Light
 
 	struct Point : Light
 	{
-		glm::vec4 position;
-		glm::vec4 attenuation;
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+		struct Data {
+			glm::vec4 position;
+			glm::vec4 attenuation;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+		} data;
 
 		Point() = default;
 		Point(glm::vec3 position,
@@ -68,13 +72,15 @@ namespace Light
 
 	struct Spot : Light
 	{
-		glm::vec4 position;
-		glm::vec4 direction;
-		glm::vec4 cutoff;
-		glm::vec4 attenuation;
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
+		struct Data {
+			glm::vec4 position;
+			glm::vec4 direction;
+			glm::vec4 cutoff;
+			glm::vec4 attenuation;
+			glm::vec4 ambient;
+			glm::vec4 diffuse;
+			glm::vec4 specular;
+		} data;
 
 		Spot() = default;
 		Spot(glm::vec3 position,
@@ -96,6 +102,9 @@ namespace Light
 		std::vector<Point> pLights;
 		std::vector<Directional> dLights;
 		std::vector<Spot> sLights;
+		std::vector<Point::Data> pData;
+		std::vector<Directional::Data> dData;
+		std::vector<Spot::Data> sData;
 		UncheckedUniformBuffer pBuffer, dBuffer, sBuffer;
 		bool finalized;
 

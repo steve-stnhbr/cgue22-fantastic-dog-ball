@@ -39,7 +39,7 @@ Texture::Texture::Texture(std::string filePath_)
 
 		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
 		
-		createTexture(width, height, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 6);
+		createTexture(width, height, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 3);
 
 		stbi_image_free(data);
 	}
@@ -50,9 +50,9 @@ Texture::Texture::Texture(float substituteValue_) : glID(0), defined(false), sub
 	Loggger::info("Setting substitute value");
 }
 
-Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels): width(width_), height(height_), defined(true), data(nullptr)
+Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels, bool dsa): width(width_), height(height_), defined(true), data(nullptr)
 {
-	createTexture(width_, height_, internalFormat, colorFormat, type, mipmapLevels);
+	createTexture(width_, height_, internalFormat, colorFormat, type, mipmapLevels, dsa);
 }
 
 Texture::Texture::~Texture()
@@ -61,38 +61,37 @@ Texture::Texture::~Texture()
 	//glDeleteTextures(1, &glID);
 }
 
-void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels)
+void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels, bool dsa)
 {
-	glCreateTextures(GL_TEXTURE_2D, 1, &glID);
-	Utils::checkError();
-	glTextureStorage2D(glID, 1, internalFormat, width, height);
-	Utils::checkError();
-	glTextureSubImage2D(glID, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), colorFormat, type, data);
-	Utils::checkError();
+	if (dsa) {
+		glCreateTextures(GL_TEXTURE_2D, 1, &glID);
+		Utils::checkError();
+		glTextureStorage2D(glID, mipmapLevels, internalFormat, width_, height_);
+		Utils::checkError();
+		glTextureSubImage2D(glID, 0, 0, 0, width_, height_, colorFormat, type, data);
+		Utils::checkError();
 
-	glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	glGenerateTextureMipmap(glID);
-	Utils::checkError();
-	
-
-	//todo for some reason dsa is not working with depth_components so we need to use bound configuration
-	/*
-	glGenTextures(1, &glID);
-	glBindTexture(GL_TEXTURE_2D, glID);
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, colorFormat, type, NULL);
-	Utils::checkError();
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels - 1);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	Utils::checkError();
-	*/
-	
+		glTextureParameteri(glID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(glID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTextureParameteri(glID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glGenerateTextureMipmap(glID);
+		Utils::checkError();
+	}
+	else {
+		glGenTextures(1, &glID);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, glID);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width_, height_, 0, colorFormat, type, data);
+		Utils::checkError();
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapLevels - 1);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		Utils::checkError();
+	}
 }
 
 void Texture::Texture::bind(unsigned location) const
