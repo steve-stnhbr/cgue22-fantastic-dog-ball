@@ -3,6 +3,7 @@
 #include "Loggger.h"
 #include "Utils.h"
 
+
 void UncheckedUniformBuffer::create()
 {
 	size = STANDARD_BUFFER_SIZE;

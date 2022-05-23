@@ -29,8 +29,7 @@ void Material::StaticMaterial::createBuffer()
 
 void Material::StaticMaterial::initProgram()
 {
-	program = Utils::loadProgram(vertexShader, colorFragmentShader);
-	// staticProgram = Utils::loadProgram(vertexShader, colorFragmentShader);
+	program = Shaders::Program( { vertexShader, colorFragmentShader } );
 }
 
 
@@ -80,9 +79,13 @@ Shaders::Program Material::TextureMaterial::getProgram()
 
 void Material::TextureMaterial::bind(Shaders::Program& p)
 {
-	program.setTexture("color", color);
-}
 
+	p.setTexture("color", color);
+	p.setTexture("normal", normal);
+	p.setTexture("diffuse", diffuse);
+	p.setTexture("specular", specular);
+	p.setFloat("shininess", shininess);
+}
 
 /**
  * This function is responsible for assigning streams of vertex-attributes
@@ -117,7 +120,7 @@ void Material::TextureMaterial::assignVertexAttributes(unsigned vao)
 
 void Material::TextureMaterial::initProgram()
 {
-	TextureMaterial::program = Utils::loadProgram(vertexShader, textureFragmentShader);
+	TextureMaterial::program = Shaders::Program({ vertexShader, textureFragmentShader });
 }
 
 Shaders::Program Material::ProceduralMaterial::getProgram()

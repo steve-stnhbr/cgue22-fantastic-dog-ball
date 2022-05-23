@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     Light::Point p = {
         glm::vec3(0, 1, 0),
         2.0f, 1.0f, .5f,
-        glm::vec3(.5,.5,.5),
+        glm::vec3(1.5,1.5,1.5),
         glm::vec3(5,5,5),
         glm::vec3(2,2,2)
     };
@@ -97,10 +97,10 @@ int main(int argc, char* argv[])
     scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(1, 0, 0),
+        glm::vec3(1,-.1,-.4),
         glm::vec3(0,0,0),
-        glm::vec3(5,5,5),
-        glm::vec3(1,1,1)
+        glm::vec3(.8,.8,.8),
+        glm::vec3(.4,.4,.4)
     };
 
     scene.lights.add(d);
@@ -108,25 +108,35 @@ int main(int argc, char* argv[])
     scene.lights.finalize();
 
     Material::StaticMaterial material = Material::StaticMaterial{};
-    material.vals.color = { 1.0, 0.5 , 0.0, 1.0 };
-    material.vals.data = { 1.0f, 5.0f, 10, 0};
+    material.vals.color = { .0, 0.5 , 0.0, 1.0 };
+    material.vals.data = { 1.0f, 5.0f, 1, 0};
 
     Material::TextureMaterial texture = Material::TextureMaterial{};
-    texture.color = { "../res/texture-liso-b.jpg" };
+    texture.color = { "../res/concrete.jpg" };
+    texture.normal = { "../res/concrete_norm.jpg" };
+    texture.diffuse = { .8 };
+    texture.specular = { 2 };
+    texture.shininess = 1;
      
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
-		}, &texture, "CUBE0"
+		}, &texture, "Cube"
     }.translate(0, -4, 0));
-
+    /*
+    scene.addObject(RenderObject{
+        Render::Sphere {
+            1, 16, 32
+        }, &texture, "Sphere1"
+    }.translate(0, 1, 0));
+    */
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
-    material1.vals.data = { 1.0f, 1.0f, 2, 0 };
+    material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
     scene.addObject(RenderObject{
-        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Sphere"
+        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
     }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
 
     /* Loop until the user closes the window */
@@ -214,9 +224,9 @@ void initBullet() {
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
 }
 
-void gl_error_callback(GLenum source​, GLenum type​, GLuint id​, GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam)
+void gl_error_callback(GLenum source​, GLenum type​, GLuint id​_, GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam)
 {
-    Loggger::error("Log (%d): %s\n", severity​, message​);
+    Loggger::log(severity​, "OpenGL-Log (%d): %s", id​_, message​);
 }
 
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs)
