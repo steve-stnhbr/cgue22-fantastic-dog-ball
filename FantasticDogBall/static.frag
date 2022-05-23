@@ -7,6 +7,10 @@ struct DirLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    sampler2DShadow shadowMap;
 };
 
 struct PointLight {
@@ -15,8 +19,12 @@ struct PointLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    samplerCubeShadow shadowMap;
 };
-
+ 
 struct SpotLight {
     vec4 position;
     vec4 direction;
@@ -25,12 +33,17 @@ struct SpotLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    sampler2DShadow shadowMap;
 };
 
-layout(std140) uniform Material {
-    vec4 color;
-    vec4 data;          //0: diffuse, 1: specular, 2: shininess
-} material;
+uniform PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
+
+uniform DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
+
+uniform SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 
 layout(std140) uniform CameraData {
     mat4 model;
@@ -39,17 +52,10 @@ layout(std140) uniform CameraData {
     vec4 viewPos;
 };
 
-layout(std140) uniform PointLights {
-    PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
-
-layout(std140) uniform DirectionalLights {
-    DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
-
-layout(std140) uniform SpotLights {
-    SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
+layout(std140) uniform Material {
+    vec4 color;
+    vec4 data;          //0: diffuse, 1: specular, 2: shininess
+} material;
 
 uniform samplerCube cubemap;
 uniform int s_cubemap = 1;
@@ -95,7 +101,7 @@ void main() {
 
     outColor = vec4(result * material.color.xyz, 1.0);
     //outColor = vec4(result, 1);
-    outColor = texture(shadowMap, vec2(0, 0));
+    //outColor = texture(shadowMap, vec2(0, 0));
 }
 
 
