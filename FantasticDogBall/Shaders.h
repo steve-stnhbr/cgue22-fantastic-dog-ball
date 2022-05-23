@@ -64,6 +64,8 @@ namespace Shaders
 		bool linked = false;
 		int binding;
 		int location;
+
+		std::vector<std::string> paths;
 		std::map<const char*, std::pair<unsigned, unsigned>> binding_map;
 
 		std::string vertexPath, fragmentPath;
@@ -94,5 +96,8 @@ namespace Shaders
 
 		void setTexture(const unsigned, const Texture::Texture& texture) const;
 		void setTexture(const std::string&, const Texture::Texture& texture);
+
+
+		std::string getLog();
 	};
 };

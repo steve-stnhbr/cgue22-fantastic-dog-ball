@@ -56,3 +56,9 @@ void UncheckedUniformBuffer::checkCreated_(const char* file, int line) const
 	if (id == 0)
 		throw std::exception("Buffer was not created yet");
 }
+
+UncheckedUniformBuffer::~UncheckedUniformBuffer()
+{
+	Loggger::trace("Buffer %l deleted", id);
+	//glDeleteBuffers(1, &id);
+}

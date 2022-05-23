@@ -183,7 +183,7 @@ Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	
 	}
 }
 
-Shaders::Program::Program(std::vector<std::string> paths) : binding(20), location(30)
+Shaders::Program::Program(std::vector<std::string> paths) : binding(20), location(30), paths(paths)
 {
 	std::vector<GLenum> types;
 	for (std::string s : paths) {
@@ -334,6 +334,11 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	Utils::checkError();
 	texture.bind(location);
 	Utils::checkError();
+}
+
+std::string Shaders::Program::getLog()
+{
+	return Shaders::getProgramLog(ID);
 }
 
 void Shaders::Program::use() const

@@ -34,9 +34,8 @@ Texture::Texture::Texture(std::string filePath_)
 			defined = false;
 			substituteValue = .8f;
 
-			Loggger::info("Setting substitute value because of an error");
-			//throw std::runtime_error(Utils::string_format("Failed to load image %s", filePath.c_str()));
-		}
+			Loggger::error("Setting substitute value because of an error");
+		} 
 
 		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
 		
@@ -54,6 +53,12 @@ Texture::Texture::Texture(float substituteValue_) : glID(0), defined(false), sub
 Texture::Texture::Texture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels): width(width_), height(height_), defined(true), data(nullptr)
 {
 	createTexture(width_, height_, internalFormat, colorFormat, type, mipmapLevels);
+}
+
+Texture::Texture::~Texture()
+{
+	Loggger::trace("Deleting Texture %l", glID);
+	//glDeleteTextures(1, &glID);
 }
 
 void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum internalFormat, GLenum colorFormat, GLenum type, unsigned mipmapLevels)

@@ -20,17 +20,9 @@ Renderer::Renderer()
 void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
-	std::vector<Vertex> allMeshes;
 
-	for (RenderObject e : objects) {
-		allMeshes.insert(allMeshes.end(),
-			e.mesh.vertex_array.begin(),
-			e.mesh.vertex_array.end());
-	}
-
-
-	Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
 	for (RenderObject element : objects)
@@ -58,6 +50,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
 		Utils::checkError();
 		glUseProgram(0);
+		Utils::CheckDebugLog();
+		Loggger::debug("Shader-Log: %s", prog.getLog().c_str());
 	}
 
 	timeF += .01f;

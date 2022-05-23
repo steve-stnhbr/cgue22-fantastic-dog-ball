@@ -95,15 +95,39 @@ void Light::Lights::bind(Shaders::Program& prog)
 
 void Light::Lights::finalize()
 {
-	if (pLights.empty())
-		add(Point{});
-	if (dLights.empty())
-		add(Directional{});
+	if (pLights.empty()) {
+		Point p;
+		p.diffuse = { .1, .1, .1, 0 };
+		add(p);
+	}
+	if (dLights.empty()) {
+		Directional d;
+		d.diffuse = { .1, .1, .1, 0 };
+		add(d);
+	}
 	if (sLights.empty()) {
 		Spot spot;
+		spot.diffuse = {.1, .1, .1, 0};
 		spot.position = { -1000, -1000, -1000, 1 };
 		add(spot);
 	}
+
+	/*
+	for (Point p : pLights)
+	{
+		p.initProgram();
+	}
+
+	for (Directional d : dLights)
+	{
+		d.initProgram();
+	}
+
+	for (Spot s : sLights)
+	{
+		s.initProgram();
+	}
+	*/
 
 	Globals::NUM_POINT_LIGHTS = pLights.size();
 	Globals::NUM_DIRECTIONAL_LIGHTS = dLights.size();
@@ -125,10 +149,13 @@ Light::Light::Light() : Light(true)
 {
 }
 
-Light::Light::Light(bool useShadowMap)
+Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
 {
+}
+
+void Light::Light::initProgram() {
 	shadowMap = 0;
-	if (useShadowMap) {
+	if (castShadow) {
 		if (SHADOW_FRAMEBUFFER == 0) {
 			glCreateFramebuffers(1, &SHADOW_FRAMEBUFFER);
 		}
@@ -141,7 +168,7 @@ Light::Light::Light(bool useShadowMap)
 				Loggger::error(e.what());
 			}
 		}
-		
+
 		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 1 };
 	}
 }

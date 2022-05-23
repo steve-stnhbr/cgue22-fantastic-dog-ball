@@ -23,6 +23,8 @@ namespace Texture
 		Texture(float substituteValue_);
 		Texture(unsigned width, unsigned height, GLenum colorFormat, GLenum internalFormat, GLenum type, unsigned levels);
 
+		~Texture();
+
 		void bind(unsigned location) const;
 	private:
 		void createTexture(unsigned width_, unsigned height_, GLenum colorFormat, GLenum internalFormat, GLenum type, unsigned mipmapLevels);

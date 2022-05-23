@@ -91,11 +91,11 @@ int main(int argc, char* argv[])
         glm::vec3(2,2,2)
     };
 
-    scene.lights.add(p);
+    //scene.lights.add(p);
 
     Light::Directional d = {
         glm::vec3(1,-.1,-.4),
-        glm::vec3(0,0,0),
+        glm::vec3(.2,.2,.2),
         glm::vec3(.8,.8,.8),
         glm::vec3(.4,.4,.4)
     };
@@ -119,14 +119,7 @@ int main(int argc, char* argv[])
         Render::Cube{
             0, 0, 0, 100, .2f, 100
 		}, &texture, "Cube"
-    }.translate(0, -4, 0));
-    /*
-    scene.addObject(RenderObject{
-        Render::Sphere {
-            1, 16, 32
-        }, &texture, "Sphere1"
-    }.translate(0, 1, 0));
-    */
+    }.translate(0, -4, 0));    
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };

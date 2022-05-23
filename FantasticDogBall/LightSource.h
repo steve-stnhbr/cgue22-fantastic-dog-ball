@@ -18,11 +18,13 @@ namespace Light
 		static unsigned SHADOW_FRAMEBUFFER;
 		static Shaders::Program SHADOW_PROGRAM;
 
+		bool castShadow;
 		Texture::Texture shadowMap;
 
 		Light();
 		Light(bool useShadowMap);
 
+		void initProgram();
 		Texture::Texture generateShadowMap(const std::vector<RenderObject>&) const;
 
 		virtual glm::mat4 getLightSpace() const = 0;
