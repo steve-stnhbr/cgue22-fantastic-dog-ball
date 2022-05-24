@@ -30,6 +30,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		light->generateShadowMap(objects);
 	}
 	*/
+	unsigned int tf;
+	glCreateTransformFeedbacks(1, &tf);
 
 	for (RenderObject element : objects)
 	{
@@ -40,7 +42,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
-
+		
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
 		lights.bind(prog);
