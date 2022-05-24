@@ -13,7 +13,9 @@ namespace Decoration
 	class Decoration;
 	class Physics;
 	class Animation;
+	class Compute;
 };
+
 
 /**
  * 
@@ -100,6 +102,41 @@ namespace Decoration
 		std::vector<Render::Mesh> meshes;
 	public:
 		void update(unsigned frame, float dTime) override;
+	};
+
+	class Compute : public Decoration {
+	public:
+		class ComputeType {
+		private:
+		protected:
+			ComputeType() = default;
+			ComputeType(Shaders::Program);
+		public:
+			bool isGeometry;
+			Shaders::Program program;
+		};
+		class CatmullClarkSubdivision : public ComputeType {
+		private:
+			unsigned short levels;
+		public:
+			CatmullClarkSubdivision();
+			CatmullClarkSubdivision(unsigned short levels);
+		};
+		class SimpleSubdivision : public ComputeType {
+		private:
+			unsigned short levels;
+		public:
+			SimpleSubdivision();
+			SimpleSubdivision(unsigned short levels);
+		};
+
+		std::vector<ComputeType> types;
+
+		Compute(ComputeType type);
+		Compute(std::vector<ComputeType> types);
+
+		void update(unsigned frame, float dTime) override;
+		void bind(RenderObject*);
 	};
 
 }

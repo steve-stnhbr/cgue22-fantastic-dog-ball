@@ -102,4 +102,58 @@ void Decoration::Physics::update(unsigned frame, float dTime)
 {
 }
 
+Decoration::Compute::ComputeType::ComputeType(Shaders::Program program_) : program(program_)
+{
+}
+
+Decoration::Compute::CatmullClarkSubdivision::CatmullClarkSubdivision() : CatmullClarkSubdivision(1)
+{
+}
+
+Decoration::Compute::CatmullClarkSubdivision::CatmullClarkSubdivision(unsigned short levels) : ComputeType({ {"./cc_sub.geo"} })
+{
+	isGeometry = true;
+	if (levels > 3)
+		Loggger::warn("Catmull-Clark subdivision was called with %us levels. The computation may take a while", levels);
+}
+
+Decoration::Compute::SimpleSubdivision::SimpleSubdivision() : SimpleSubdivision(1)
+{
+}
+
+Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels) : ComputeType({ {"./si_sub.geo"}})
+{
+	isGeometry = true;
+	if (levels > 5)
+		Loggger::warn("Simple subdivision was called with %us levels. The computation may take a while", levels);
+}
+
+Decoration::Compute::Compute(ComputeType type) : Compute({type})
+{
+}
+
+Decoration::Compute::Compute(std::vector<ComputeType> types_) : types(types_)
+{
+}
+
+void Decoration::Compute::bind(RenderObject* obj) {
+	for (ComputeType type : types) {
+		if (type.isGeometry) {
+			obj->mesh = computeGeometry(type.program, obj);
+		}
+	}
+}
+
+Render::Mesh computeGeometry(Shaders::Program program, RenderObject* obj) {
+	unsigned int fb;
+	glCreateTransformFeedbacks(1, &fb);
+	UncheckedUniformBuffer fbb;
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, fbb.id);
+	glEnable(GL_RASTERIZER_DISCARD);
+	obj->material->assignVertexAttributes(fbb.id);
+	program.use();
+
+	glBeginTransformFeedback(GL_QUADS);
+
+}
 
