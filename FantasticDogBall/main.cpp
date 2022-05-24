@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, NAME, NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -94,10 +94,11 @@ int main(int argc, char* argv[])
     //scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(1,-.1,-.4),
+        glm::vec3(.001, -1, 1),
         glm::vec3(.2,.2,.2),
         glm::vec3(.8,.8,.8),
-        glm::vec3(.4,.4,.4)
+        glm::vec3(.4,.4,.4),
+        true,
     };
 
     scene.lights.add(d);

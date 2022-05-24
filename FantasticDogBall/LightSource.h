@@ -44,7 +44,8 @@ namespace Light
 		Directional(glm::vec3 direction,
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
-			glm::vec3 specular);
+			glm::vec3 specular,
+			bool castShadow = false);
 
 		glm::mat4 getLightSpace() const override;
 	};
@@ -66,7 +67,8 @@ namespace Light
 			float quadratic,
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
-			glm::vec3 specular);
+			glm::vec3 specular,
+			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
 	};
 
@@ -92,7 +94,8 @@ namespace Light
 			float quadratic,
 			glm::vec3 ambient,
 			glm::vec3 diffuse,
-			glm::vec3 specular);
+			glm::vec3 specular,
+			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
 	};
 	

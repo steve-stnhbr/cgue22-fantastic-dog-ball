@@ -79,9 +79,8 @@ void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum i
 	}
 	else {
 		glGenTextures(1, &glID);
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, glID);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width_, height_, 0, colorFormat, type, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width_, height_, 0, colorFormat, type, 0);
 		Utils::checkError();
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
