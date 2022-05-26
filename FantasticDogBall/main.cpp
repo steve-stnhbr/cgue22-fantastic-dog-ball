@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     //scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(.001, -1, 1),
+        glm::vec3(.001, -1, 1 ),
         glm::vec3(.2,.2,.2),
         glm::vec3(.8,.8,.8),
         glm::vec3(.4,.4,.4),
