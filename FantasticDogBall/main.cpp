@@ -119,13 +119,16 @@ int main(int argc, char* argv[])
     texture.specular = { 2 };
     texture.shininess = 1;
     
-    //Decoration::Compute deco = Decoration::Compute::Compute(Decoration::Compute::SimpleSubdivision::SimpleSubdivision(1));
+    Decoration::Compute deco = Decoration::Compute::Compute(new Decoration::Compute::SimpleSubdivision(1));
 
-    scene.addObject(RenderObject{
+    auto cube = RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
-		}, &texture, "Cube"
-        }.translate(0, -4, 0));
+        }, &texture, "Ground"
+    };
+    cube.translate(0, -4, 0);
+
+    scene.addObject(cube);
 
     Render::Mesh before = Render::Cube(0, 0, 0, 100, .2f, 100);
     HLMesh hlMesh = HLMesh::fromMesh(before);
@@ -135,13 +138,17 @@ int main(int argc, char* argv[])
     Render::Mesh after = hlMesh.toMesh();
 
     bool same = before == after;
-    /*
+    
     scene.addObject(RenderObject{
         Render::Sphere {
             1, 16, 32
         }, &texture, "Sphere1"
-    }.translate(0, 1, 0));
-    */
+    }.translate(-3, 1, 0));
+    scene.addObject(RenderObject{
+        Render::Sphere {
+            1, 16, 32
+        }, &texture, "Sphere1"
+        }.translate(3, 1, 0)->add(deco));
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
@@ -223,6 +230,7 @@ void initGl()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 
     glEnable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glCullFace(GL_BACK);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }

@@ -3,11 +3,12 @@
 #include <memory>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <LinearMath/btMotionState.h>
-
-#include "Utils.h"
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
+#include <GL/glew.h>
+
+#include "Utils.h"
+#include "HLMesh.h"
 
 RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
@@ -96,10 +97,15 @@ RenderObject* RenderObject::rotate(float angle, glm::vec3 axes)
 
 void Decoration::Decoration::bind(RenderObject* object_)
 {
-	object = object_; 
+	object = object_;
+	onBind(object_);
 }
 
 void Decoration::Physics::update(unsigned frame, float dTime)
+{
+}
+
+void Decoration::Physics::onBind(RenderObject*)
 {
 }
 
@@ -111,29 +117,65 @@ Decoration::Compute::CatmullClarkSubdivision::CatmullClarkSubdivision() : Catmul
 {
 }
 
-Decoration::Compute::CatmullClarkSubdivision::CatmullClarkSubdivision(unsigned short levels) : ComputeType({ {"./cc_sub.geo"} })
+Decoration::Compute::CatmullClarkSubdivision::CatmullClarkSubdivision(unsigned short levels_)
 {
 	isGeometry = true;
 	if (levels > 3)
 		Loggger::warn("Catmull-Clark subdivision was called with %us levels. The computation may take a while", levels);
+	levels = levels_;
 }
+
+void Decoration::Compute::CatmullClarkSubdivision::doCompute(RenderObject*)
+{
+}
+
+HLMesh Decoration::Compute::SimpleSubdivision::subdivide(HLMesh hl)
+{
+	HLMesh newMesh;
+	for (auto face : hl.faces) {
+		std::vector<Vertex> verts;
+		for (const auto edge : face.edges) {
+			verts.push_back(edge.vertex0);
+			Vertex halfway = Vertex::halfway(edge.vertex0, edge.vertex1);
+			verts.push_back(halfway);
+			verts.push_back(edge.vertex1);
+		}
+
+		newMesh.addFace({ { verts[0], verts[1], verts[5] } });
+		newMesh.addFace({ { verts[1], verts[2], verts[3] } });
+		newMesh.addFace({ { verts[3], verts[4], verts[5] } });
+		newMesh.addFace({ { verts[1], verts[3], verts[5] } });
+	}
+	return newMesh;
+}
+
 
 Decoration::Compute::SimpleSubdivision::SimpleSubdivision() : SimpleSubdivision(1)
 {
 }
 
-Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels) : ComputeType({ {"./si_sub.geom"}})
+Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels_)
 {
 	isGeometry = true;
 	if (levels > 5)
 		Loggger::warn("Simple subdivision was called with %us levels. The computation may take a while", levels);
+	levels = levels_;
 }
 
-Decoration::Compute::Compute(ComputeType type) : Compute(std::vector<ComputeType>{type})
+void Decoration::Compute::SimpleSubdivision::doCompute(RenderObject* obj)
+{
+	HLMesh hl = HLMesh::fromMesh(obj->mesh);
+	for (auto i = 0; i < levels; i++) {
+		hl = subdivide(hl);
+	}
+	obj->mesh = hl.toMesh();
+}
+
+Decoration::Compute::Compute(ComputeType* type) : Compute(std::vector<ComputeType*>{type})
 {
 }
 
-Decoration::Compute::Compute(std::vector<ComputeType> types_) : types(types_)
+Decoration::Compute::Compute(std::vector<ComputeType*> types_) : types(types_)
 {
 }
 
@@ -141,14 +183,14 @@ void Decoration::Compute::update(unsigned frame, float dTime)
 {
 }
 
-void Decoration::Compute::bind(RenderObject* obj) {
-	for (ComputeType type : types) {
-		if (type.isGeometry) {
-			obj->mesh = computeGeometry(type, obj);
-		}
+void Decoration::Compute::onBind(RenderObject* obj)
+{
+	for (ComputeType* type : types) {
+		type->doCompute(obj);
 	}
 }
 
+/*
 Render::Mesh Decoration::Compute::computeGeometry(ComputeType type, RenderObject* obj) {
 	unsigned int fb;
 	glCreateTransformFeedbacks(1, &fb);
@@ -180,4 +222,8 @@ Render::Mesh Decoration::Compute::computeGeometry(ComputeType type, RenderObject
 
 	return mesh;
 }
+*/
 
+void Decoration::Animation::onBind(RenderObject*)
+{
+}

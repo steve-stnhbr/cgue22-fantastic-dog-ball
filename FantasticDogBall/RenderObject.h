@@ -6,6 +6,7 @@
 
 #include "Material.h"
 #include "Render.h"
+#include "HLMesh.h"
 
 
 namespace Decoration
@@ -81,7 +82,7 @@ namespace Decoration
 		RenderObject* object;
 	public:
 		virtual void update(unsigned frame, float dTime) = 0;
-
+		virtual void onBind(RenderObject*) = 0;
 		void bind(RenderObject*);
 	};
 
@@ -94,6 +95,7 @@ namespace Decoration
 		btMotionState* motionState;
 	public:
 		void update(unsigned frame, float dTime) override;
+		void onBind(RenderObject*) override;
 	};
 
 	class Animation : public Decoration
@@ -102,6 +104,7 @@ namespace Decoration
 		std::vector<Render::Mesh> meshes;
 	public:
 		void update(unsigned frame, float dTime) override;
+		void onBind(RenderObject*) override;
 	};
 
 	class Compute : public Decoration {
@@ -115,29 +118,36 @@ namespace Decoration
 			unsigned short levels;
 			bool isGeometry;
 			Shaders::Program program;
+
+			virtual void doCompute(RenderObject*) = 0;
 		};
 		class CatmullClarkSubdivision : public ComputeType {
 		private:
 		public:
 			CatmullClarkSubdivision();
 			CatmullClarkSubdivision(unsigned short levels);
+
+			void doCompute(RenderObject*) override;
 		};
 		class SimpleSubdivision : public ComputeType {
 		private:
+			HLMesh subdivide(HLMesh);
 		public:
 			SimpleSubdivision();
 			SimpleSubdivision(unsigned short levels);
+
+			void doCompute(RenderObject*) override;
 		};
 
-		std::vector<ComputeType> types;
+		std::vector<ComputeType*> types;
 
-		Compute(ComputeType type);
-		Compute(std::vector<ComputeType> types);
+		Compute(ComputeType* type);
+		Compute(std::vector<ComputeType*> types);
 
 		void update(unsigned frame, float dTime) override;
-		void bind(RenderObject*);
+		void onBind(RenderObject*) override;
 
-		Render::Mesh computeGeometry(ComputeType type, RenderObject* obj);
+		//Render::Mesh computeGeometry(ComputeType type, RenderObject* obj);
 	};
 
 }

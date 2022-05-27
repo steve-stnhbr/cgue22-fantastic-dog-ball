@@ -14,6 +14,9 @@ public:
 	Vertex(glm::vec3 position, glm::vec3 normal, glm::vec4 color);
 
 	friend bool operator==(const Vertex&, const Vertex&);
+	friend Vertex operator+(const Vertex&, const Vertex&);
+	friend Vertex operator*(const Vertex&, float i);
+	friend Vertex operator/(const Vertex&, float i);
 
 	// defines the position in object-space 
 	glm::vec3 position;
@@ -24,4 +27,7 @@ public:
 	glm::vec2 texture_coordinate;
 	// defines the color at the point
 	glm::vec4 color;
+
+
+	static Vertex halfway(Vertex v0, Vertex v1);
 };

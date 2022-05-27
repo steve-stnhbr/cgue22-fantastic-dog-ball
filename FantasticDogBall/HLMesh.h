@@ -7,9 +7,6 @@
 class HLMesh
 {
 private:
-	HLMesh() = default;
-
-	void reconstructVertexArray();
 public:
 	static HLMesh fromMesh(Render::Mesh mesh, bool quads = false);
 
@@ -25,6 +22,10 @@ public:
 	struct Face {
 		std::vector<Edge> edges;
 
+		Face() = default;
+		Face(std::vector<Edge> edges);
+		Face(std::vector<Vertex> verts);
+
 		friend bool operator==(const Face& f0, const Face& f1) {
 			return f0.edges == f1.edges;
 		};
@@ -34,9 +35,12 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<Face> faces;
 
+	HLMesh() = default;
+
 	void addFace(Face f);
 	void removeFace(int index);
 	void removeFace(Face f);
+	void reconstructVertexArray();
 	Render::Mesh toMesh();
 
 };

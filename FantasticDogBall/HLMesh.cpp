@@ -65,7 +65,7 @@ void HLMesh::removeFace(Face f)
 Render::Mesh HLMesh::toMesh()
 {
     Render::Mesh mesh;
-
+    reconstructVertexArray();
     mesh.vertex_array = vertices;
 
     for (auto i = 0; i < faces.size(); i++) {
@@ -79,6 +79,25 @@ Render::Mesh HLMesh::toMesh()
     }
 
     return mesh;
+}
+
+HLMesh::Face::Face(std::vector<Edge> edges) : edges(edges)
+{
+}
+
+HLMesh::Face::Face(std::vector<Vertex> verts)
+{
+    unsigned size = verts.size();
+    /*
+    if (size != 3) {
+        Loggger::error("Face cannot be created from %i vertices", size);
+        return;
+    }
+    */
+
+    for (auto i = 0; i < size; i++) {
+        edges.push_back({ verts[i], verts[(i + 1) % size]});
+    }
 }
 
 std::vector<Vertex> HLMesh::Face::getVertices()
