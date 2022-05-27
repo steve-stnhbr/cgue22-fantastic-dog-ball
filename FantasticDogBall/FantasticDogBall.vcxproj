@@ -22,6 +22,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="HLMesh.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LightSource.cpp" />
@@ -43,8 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\x64\Debug\assimp-vc143-mtd.dll" />
+    <None Include="cc_sub.geo" />
+    <None Include="cc_sub.vert" />
     <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
+    <None Include="si_sub.geom" />
+    <None Include="si_sub.vert" />
     <None Include="static.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -54,6 +59,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="HLMesh.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />

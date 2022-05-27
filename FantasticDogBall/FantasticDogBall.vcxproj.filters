@@ -75,6 +75,9 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="HLMesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -91,6 +94,18 @@
       <Filter>Ressourcendateien</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="cc_sub.geo">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="si_sub.geom">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cc_sub.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="si_sub.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">
@@ -151,6 +166,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="HLMesh.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

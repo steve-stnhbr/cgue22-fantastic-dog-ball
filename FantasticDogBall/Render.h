@@ -23,6 +23,7 @@ namespace Render
 		Render::Mesh() = default;
 		Render::Mesh(std::vector<Vertex>, std::vector<unsigned>);
 
+		friend bool operator==(Mesh&, Mesh&);
 
 		static std::vector<Render::Mesh> fromFile(const std::string& path);
 		static std::vector<Render::Mesh> fromFile(const std::string& path, const unsigned flags);

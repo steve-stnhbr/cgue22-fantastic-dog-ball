@@ -193,8 +193,8 @@ Shaders::Program::Program(std::vector<std::string> paths) : binding(20), locatio
 			type = GL_FRAGMENT_SHADER;
 		else if (extension == "vert" || extension == "vertex")
 			type = GL_VERTEX_SHADER;
-		else if (extension == "geo" || extension == "geometry")
-			type = GL_TESS_CONTROL_SHADER;
+		else if (extension == "geo" || extension == "geom" || extension == "geometry")
+			type = GL_GEOMETRY_SHADER;
 		else if (extension == "tes")
 			type = GL_TESS_EVALUATION_SHADER;
 		else if (extension == "tcs")

@@ -23,10 +23,11 @@ void RenderObject::update()
 }
 
 
-void RenderObject::add(Decoration::Decoration& decoration_)
+RenderObject* RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
 	// decorations[typeid(decoration_)] = decoration_;
+	return this;
 }
 
 void RenderObject::buildVAO() const
@@ -121,14 +122,14 @@ Decoration::Compute::SimpleSubdivision::SimpleSubdivision() : SimpleSubdivision(
 {
 }
 
-Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels) : ComputeType({ {"./si_sub.geo"}})
+Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels) : ComputeType({ {"./si_sub.geom"}})
 {
 	isGeometry = true;
 	if (levels > 5)
 		Loggger::warn("Simple subdivision was called with %us levels. The computation may take a while", levels);
 }
 
-Decoration::Compute::Compute(ComputeType type) : Compute({type})
+Decoration::Compute::Compute(ComputeType type) : Compute(std::vector<ComputeType>{type})
 {
 }
 
@@ -136,24 +137,47 @@ Decoration::Compute::Compute(std::vector<ComputeType> types_) : types(types_)
 {
 }
 
+void Decoration::Compute::update(unsigned frame, float dTime)
+{
+}
+
 void Decoration::Compute::bind(RenderObject* obj) {
 	for (ComputeType type : types) {
 		if (type.isGeometry) {
-			obj->mesh = computeGeometry(type.program, obj);
+			obj->mesh = computeGeometry(type, obj);
 		}
 	}
 }
 
-Render::Mesh computeGeometry(Shaders::Program program, RenderObject* obj) {
+Render::Mesh Decoration::Compute::computeGeometry(ComputeType type, RenderObject* obj) {
 	unsigned int fb;
 	glCreateTransformFeedbacks(1, &fb);
 	UncheckedUniformBuffer fbb;
+	fbb.create(1024, GL_STATIC_READ);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, fbb.id);
 	glEnable(GL_RASTERIZER_DISCARD);
-	obj->material->assignVertexAttributes(fbb.id);
-	program.use();
+	//obj->material->assignVertexAttributes(fbb.id);
+	type.program.use();
+	type.program.setInt("levels", type.levels);
+	type.program.setInt("vertexAmount", obj->mesh.vertex_array.size());
+	glBindVertexArray(obj->vaoID);
+	glBindVertexBuffer(0, obj->vboID, 0, sizeof(Vertex));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->eboID);
 
-	glBeginTransformFeedback(GL_QUADS);
+	glBeginTransformFeedback(GL_TRIANGLES);
+	glDrawElements(GL_TRIANGLES, obj->mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+	glEndTransformFeedback();
+	glFlush();
 
+	Render::Mesh mesh;
+	unsigned newSize = obj->mesh.vertex_array.size() * pow(4, type.levels);
+	mesh.vertex_array.resize(newSize);
+	mesh.index_array.resize(newSize);
+	unsigned vertexSize = sizeof(Vertex) * newSize;
+	unsigned indexSize = sizeof(unsigned) * newSize;
+	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vertexSize, mesh.vertex_array.data());
+	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, vertexSize, indexSize, mesh.index_array.data());
+
+	return mesh;
 }
 

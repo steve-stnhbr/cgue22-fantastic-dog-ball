@@ -55,7 +55,7 @@ public:
 	RenderObject(Render::Mesh, Material::Material*, const std::string&);
 	
 	void update();
-	void add(Decoration::Decoration&);
+	RenderObject* add(Decoration::Decoration&);
 	void buildVAO() const;
 	RenderObject* translate(float, float, float);
 	RenderObject* translate(glm::vec3);
@@ -112,19 +112,18 @@ namespace Decoration
 			ComputeType() = default;
 			ComputeType(Shaders::Program);
 		public:
+			unsigned short levels;
 			bool isGeometry;
 			Shaders::Program program;
 		};
 		class CatmullClarkSubdivision : public ComputeType {
 		private:
-			unsigned short levels;
 		public:
 			CatmullClarkSubdivision();
 			CatmullClarkSubdivision(unsigned short levels);
 		};
 		class SimpleSubdivision : public ComputeType {
 		private:
-			unsigned short levels;
 		public:
 			SimpleSubdivision();
 			SimpleSubdivision(unsigned short levels);
@@ -137,6 +136,8 @@ namespace Decoration
 
 		void update(unsigned frame, float dTime) override;
 		void bind(RenderObject*);
+
+		Render::Mesh computeGeometry(ComputeType type, RenderObject* obj);
 	};
 
 }

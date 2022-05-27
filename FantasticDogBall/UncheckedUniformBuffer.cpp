@@ -12,10 +12,15 @@ void UncheckedUniformBuffer::create()
 
 void UncheckedUniformBuffer::create(const unsigned size_)
 {
+	create(size_, GL_STATIC_DRAW);
+}
+
+void UncheckedUniformBuffer::create(unsigned size_, GLenum use)
+{
 	size = size_;
 	glCreateBuffers(1, &id);
 	Utils::checkError();
-	glNamedBufferData(id, size, nullptr, GL_STATIC_DRAW);
+	glNamedBufferData(id, size, nullptr, use);
 	Utils::checkError();
 }
 

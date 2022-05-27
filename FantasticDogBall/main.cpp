@@ -13,6 +13,7 @@
 #include "Loggger.h"
 #include "Scene.h"
 #include "Shaders.h"
+#include "HLMesh.h"
 
 #include "LightSource.h"
 #include "Material.h"
@@ -117,12 +118,23 @@ int main(int argc, char* argv[])
     texture.diffuse = { .8 };
     texture.specular = { 2 };
     texture.shininess = 1;
-     
+    
+    //Decoration::Compute deco = Decoration::Compute::Compute(Decoration::Compute::SimpleSubdivision::SimpleSubdivision(1));
+
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 100, .2f, 100
 		}, &texture, "Cube"
-    }.translate(0, -4, 0));
+        }.translate(0, -4, 0));
+
+    Render::Mesh before = Render::Cube(0, 0, 0, 100, .2f, 100);
+    HLMesh hlMesh = HLMesh::fromMesh(before);
+    HLMesh::Face face = HLMesh::Face{ { HLMesh::Edge(),HLMesh::Edge(),HLMesh::Edge() } };
+    hlMesh.addFace(face);
+    hlMesh.removeFace(face);
+    Render::Mesh after = hlMesh.toMesh();
+
+    bool same = before == after;
     /*
     scene.addObject(RenderObject{
         Render::Sphere {

@@ -33,6 +33,55 @@ public:
 	static bool instanceof(const T*) {
 		return std::is_base_of<Base, T>::value;
 	}
+
+	template<typename V>
+	static int getIndex(std::vector<V> v, V el) {
+		auto it = find(v.begin(), v.end(), el);
+		if (it != v.end())
+		{
+			int index = it - v.begin();
+			return index;
+		}
+		else {
+			return -1;
+		}
+	}
+
+	template<typename V>
+	static bool addUnique(std::vector<V>& v, V el) {
+		if (getIndex(v, el) == -1) {
+			v.push_back(el);
+			return true;
+		}
+		return false;
+	}
+
+	template<typename V>
+	static bool addAllUnique(std::vector<V>& v, const std::vector<V>& elements) {
+		bool added = false;
+		for (V el : elements)
+			added = addUnique(v, el) || added;
+		return added;
+	}
+
+	template<typename V>
+	static bool remove(std::vector<V>& v, const int index) {
+		if (index < 0 || index >= v.size()) {
+			Loggger::warn("Index %i is out of range", index);
+			return false;
+		}
+
+		v.erase(v.begin() + index);
+
+		return true;
+	}
+
+	template<typename V>
+	static bool remove(std::vector<V>& v, const V el) {
+		int index = getIndex(v, el);
+		return remove(v, index);
+	}
+
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
 		unsigned int severity, const char* message);

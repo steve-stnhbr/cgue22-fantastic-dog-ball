@@ -7,11 +7,13 @@ class Vertex {
 private:
 
 public:
-
+	Vertex() = default;
 	explicit Vertex(glm::vec3 position);
 	Vertex(glm::vec3 position, glm::vec3 normal);
 	Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texture_coordinate);
 	Vertex(glm::vec3 position, glm::vec3 normal, glm::vec4 color);
+
+	friend bool operator==(const Vertex&, const Vertex&);
 
 	// defines the position in object-space 
 	glm::vec3 position;

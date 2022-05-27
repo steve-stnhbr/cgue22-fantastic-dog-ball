@@ -283,3 +283,9 @@ unsigned Render::loadProgram(const std::vector<GLenum>& types, const std::vector
 		exit(-13);
 	}
 }
+
+bool Render::operator==(Mesh& m0, Mesh& m1)
+{
+	return m0.index_array == m1.index_array
+		&& m0.vertex_array == m1.vertex_array;
+}
