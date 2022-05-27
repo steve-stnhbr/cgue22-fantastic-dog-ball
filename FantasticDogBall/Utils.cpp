@@ -3,9 +3,9 @@
 #include <string>
 #include <fstream>
 #include <GL/glew.h>
-
 #include "Shaders.h"
 #include <algorithm>
+#include <thread>
 
 std::string Utils::readFile(const char* path)
 {
@@ -172,4 +172,9 @@ void Utils::DebugOutputToFile(unsigned int source, unsigned int type, unsigned i
         fclose(f);
     }
 
+}
+
+int Utils::getLogicalCores()
+{
+    return std::thread::hardware_concurrency();
 }

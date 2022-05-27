@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <GL/glew.h>
+#include<iterator>
+#include<algorithm>
 
 #include "Shaders.h"
 
@@ -82,9 +84,27 @@ public:
 		return remove(v, index);
 	}
 
+	template<typename V>
+	static std::vector<std::vector<V>> splitNWays(std::vector<V> v, const unsigned n) {
+		std::vector<std::vector<V>> splits;
+		splits.reserve(n);
+
+		unsigned chunkSize = floor(v.size() / n);
+		auto begin = v.begin();
+		for (auto i = 0; i < n; i++) {
+			splits.push_back(std::vector<V>(v.begin() + (i * chunkSize), v.begin() + (i + 1) * chunkSize));
+		}
+
+		if (v.size() % n != 0)
+			splits[n - 1].push_back(v[v.size() - 1]);
+
+		return splits;
+	}
+
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
 		unsigned int severity, const char* message);
+	static int getLogicalCores();
 
 
 	#define checkError() checkError_(__FILE__, __LINE__) 

@@ -132,6 +132,7 @@ namespace Decoration
 		class SimpleSubdivision : public ComputeType {
 		private:
 			HLMesh subdivide(HLMesh);
+			HLMesh subdivideAsync(HLMesh);
 		public:
 			SimpleSubdivision();
 			SimpleSubdivision(unsigned short levels);

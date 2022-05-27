@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <GL/glew.h>
+#include <future>
 
 #include "Utils.h"
 #include "HLMesh.h"
@@ -149,6 +150,43 @@ HLMesh Decoration::Compute::SimpleSubdivision::subdivide(HLMesh hl)
 	return newMesh;
 }
 
+std::vector<HLMesh::Face> subdivisionAsyncSubstep(std::vector<HLMesh::Face> faces) {
+	std::vector<HLMesh::Face> newFaces;
+	for (auto face : faces) {
+		std::vector<Vertex> verts;
+		for (const auto edge : face.edges) {
+			verts.push_back(edge.vertex0);
+			Vertex halfway = Vertex::halfway(edge.vertex0, edge.vertex1);
+			verts.push_back(halfway);
+			verts.push_back(edge.vertex1);
+		}
+
+		newFaces.push_back({ { verts[0], verts[1], verts[5] } });
+		newFaces.push_back({ { verts[1], verts[2], verts[3] } });
+		newFaces.push_back({ { verts[3], verts[4], verts[5] } });
+		newFaces.push_back({ { verts[1], verts[3], verts[5] } });
+	}
+
+	return newFaces;
+}
+
+
+HLMesh Decoration::Compute::SimpleSubdivision::subdivideAsync(HLMesh hl)
+{
+	HLMesh newMesh;
+	std::vector<std::vector<HLMesh::Face>> faces = Utils::splitNWays(hl.faces, Utils::getLogicalCores() - 1);
+	std::vector<std::future<std::vector<HLMesh::Face>>> futures;
+	for (auto i = 0; i < faces.size(); i++) {
+		auto fut = std::async(std::launch::async, subdivisionAsyncSubstep, faces[i]);
+		futures.push_back(std::move(fut));
+	}
+
+	for (auto& fut : futures) {
+		auto get = fut.get();
+		newMesh.faces.insert(newMesh.faces.end(), get.begin(), get.end());
+	}
+	return newMesh;
+}
 
 Decoration::Compute::SimpleSubdivision::SimpleSubdivision() : SimpleSubdivision(1)
 {
@@ -166,7 +204,7 @@ void Decoration::Compute::SimpleSubdivision::doCompute(RenderObject* obj)
 {
 	HLMesh hl = HLMesh::fromMesh(obj->mesh);
 	for (auto i = 0; i < levels; i++) {
-		hl = subdivide(hl);
+		hl = subdivideAsync(hl);
 	}
 	obj->mesh = hl.toMesh();
 }

@@ -93,7 +93,7 @@ HLMesh::Face::Face(std::vector<Vertex> verts)
         Loggger::error("Face cannot be created from %i vertices", size);
         return;
     }
-    */
+    */ 
 
     for (auto i = 0; i < size; i++) {
         edges.push_back({ verts[i], verts[(i + 1) % size]});
