@@ -129,6 +129,22 @@ namespace Decoration
 
 			void doCompute(RenderObject*) override;
 		};
+		class LoopSubdivision : public ComputeType {
+		private:
+			HLMesh subdivide(HLMesh);
+		public:
+			struct LoopVertex : public Vertex {
+			public:
+				bool even;
+
+				LoopVertex(Vertex v, bool even);
+			};
+
+			LoopSubdivision();
+			LoopSubdivision(unsigned short levels);
+
+			void doCompute(RenderObject*) override;
+		};
 		class SimpleSubdivision : public ComputeType {
 		private:
 			HLMesh subdivide(HLMesh);

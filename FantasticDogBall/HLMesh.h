@@ -31,6 +31,7 @@ public:
 		};
 
 		std::vector<Vertex> getVertices();
+		bool hasEdge(Edge e);
 	};
 	std::vector<Vertex> vertices;
 	std::vector<Face> faces;
@@ -41,6 +42,8 @@ public:
 	void removeFace(int index);
 	void removeFace(Face f);
 	void reconstructVertexArray();
+	std::vector<Face> getFacesOnEdge(Edge e);
+	std::vector<Vertex> getNeighbors(Vertex v);
 	Render::Mesh toMesh();
 
 };

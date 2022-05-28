@@ -265,3 +265,45 @@ Render::Mesh Decoration::Compute::computeGeometry(ComputeType type, RenderObject
 void Decoration::Animation::onBind(RenderObject*)
 {
 }
+
+Decoration::Compute::LoopSubdivision::LoopVertex::LoopVertex(Vertex v, bool even) : Vertex(v), even(even)
+{
+}
+
+HLMesh Decoration::Compute::LoopSubdivision::subdivide(HLMesh hl)
+{
+	HLMesh newMesh;
+	for (auto face : hl.faces) {
+		std::vector<LoopVertex> verts;
+		for (const auto edge : face.edges) {
+			verts.push_back(LoopVertex(edge.vertex0, true));
+			LoopVertex halfway = LoopVertex(Vertex::halfway(edge.vertex0, edge.vertex1), false);
+			verts.push_back(halfway);
+			verts.push_back(LoopVertex(edge.vertex1, true));
+		}
+
+		newMesh.addFace({ { verts[0], verts[1], verts[5] } });
+		newMesh.addFace({ { verts[1], verts[2], verts[3] } });
+		newMesh.addFace({ { verts[3], verts[4], verts[5] } });
+		newMesh.addFace({ { verts[1], verts[3], verts[5] } });
+	}
+	return newMesh;
+}
+
+Decoration::Compute::LoopSubdivision::LoopSubdivision() : LoopSubdivision(1) {}
+
+Decoration::Compute::LoopSubdivision::LoopSubdivision(unsigned short levels_) {
+	isGeometry = true;
+	if (levels > 3)
+		Loggger::warn("Loop subdivision was called with %us levels. The computation may take a while", levels);
+	levels = levels_;
+}
+
+void Decoration::Compute::LoopSubdivision::doCompute(RenderObject* obj)
+{
+	HLMesh hl = HLMesh::fromMesh(obj->mesh);
+	for (auto i = 0; i < levels; i++) {
+		hl = subdivide(hl);
+	}
+	obj->mesh = hl.toMesh();
+}

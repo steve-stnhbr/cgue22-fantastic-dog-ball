@@ -8,6 +8,21 @@ void HLMesh::reconstructVertexArray()
     }
 }
 
+std::vector<HLMesh::Face> HLMesh::getFacesOnEdge(Edge e)
+{
+    std::vector<Face> edgeFaces;
+    for (Face f : faces)
+        if (f.hasEdge(e))
+            edgeFaces.push_back(f);
+    return edgeFaces;
+}
+
+std::vector<Vertex> HLMesh::getNeighbors(Vertex v)
+{
+    std::vector<Vertex> neighbors;
+
+}
+
 HLMesh HLMesh::fromMesh(Render::Mesh mesh, bool quads)
 {
     quads = false;
@@ -111,4 +126,11 @@ std::vector<Vertex> HLMesh::Face::getVertices()
     }
 
     return verts;
+}
+
+bool HLMesh::Face::hasEdge(Edge e)
+{
+    for (Edge edge : edges)
+        if (e == edge)
+            return true;
 }

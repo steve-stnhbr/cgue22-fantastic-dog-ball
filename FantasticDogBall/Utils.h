@@ -101,6 +101,11 @@ public:
 		return splits;
 	}
 
+	template <typename V>
+	static bool contains(std::vector<V> v, V el) {
+		return std::count(v.begin(), v.end(), el);
+	}
+
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
 		unsigned int severity, const char* message);
