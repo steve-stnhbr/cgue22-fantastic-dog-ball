@@ -9,6 +9,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <assimp/postprocess.h>    // Post processing flags
 
 #include "Loggger.h"
 #include "Scene.h"
@@ -27,14 +28,22 @@ void gl_error_callback(GLenum source​, GLenum type​, GLuint id​,
     GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam);
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs);
 
-const int
+int
 	WINDOW_WIDTH = 1920,
 	WINDOW_HEIGHT = 1080;
 const float
 	FOV = 45.0f;
 const char*
 NAME = "Fantastic Dog Ball";
+bool lines = false;
+int culling = 0;
+GLenum cullings[3] = {
+    GL_NONE,
+    GL_FRONT,
+    GL_BACK
+};
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main(int argc, char* argv[])
 {
@@ -77,8 +86,8 @@ int main(int argc, char* argv[])
     initGl();
     initBullet();
 
-    constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
-
+    const float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
+    Loggger::setLevel(Loggger::DEBUG);
 
     Scene scene;
     const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
@@ -118,45 +127,55 @@ int main(int argc, char* argv[])
     texture.diffuse = { .8 };
     texture.specular = { 2 };
     texture.shininess = 1;
-    
-    Decoration::Compute deco = Decoration::Compute::Compute(new Decoration::Compute::SimpleSubdivision(1));
 
-    auto cube = RenderObject{
-        Render::Cube{
-            0, 0, 0, 100, .2f, 100
-        }, &texture, "Ground"
-    };
-    cube.translate(0, -4, 0);
-
-    scene.addObject(cube);
-
-    Render::Mesh before = Render::Cube(0, 0, 0, 100, .2f, 100);
-    HLMesh hlMesh = HLMesh::fromMesh(before);
-    HLMesh::Face face = HLMesh::Face{ { HLMesh::Edge(),HLMesh::Edge(),HLMesh::Edge() } };
-    hlMesh.addFace(face);
-    hlMesh.removeFace(face);
-    Render::Mesh after = hlMesh.toMesh();
-
-    bool same = before == after;
-    
-    scene.addObject(RenderObject{
-        Render::Sphere {
-            1, 16, 32
-        }, &texture, "Sphere1"
-    }.translate(-3, 1, 0));
-    scene.addObject(RenderObject{
-        Render::Sphere {
-            1, 16, 32
-        }, &texture, "Sphere1"
-        }.translate(3, 1, 0)->add(deco));
+    Material::TextureMaterial goalTex = Material::TextureMaterial{};
+    goalTex.color = { "../res/GoalTexture.png" };
+    goalTex.diffuse = { .8 };
+    goalTex.specular = { 2 };
+    goalTex.shininess = .6;
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
+    
+    Decoration::Compute deco = Decoration::Compute::Compute(new Decoration::Compute::LoopSubdivision(1));
 
-    scene.addObject(RenderObject{
-        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
-    }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
+    auto ground = RenderObject{
+        Render::Cube{
+            0, 0, 0, 100, .2f, 100
+        }, &texture, "Ground"
+    };
+    ground.translate(0, -4, 0);
+
+    scene.addObject(ground);
+    auto cube = (new RenderObject(
+        Render::Cube {
+            2, 2, 2, 2, 2, 2
+        }, &material1, "Cube"
+    ))->translate(-3, 1, 0);
+    auto cubeSubdiv = (new RenderObject(
+        Render::Cube {
+            2, 2, 2, 2, 2, 2
+        }, &material1, "CubeSubdivided"
+    ))->scale(2)->add(deco);
+    scene.addObject(cubeSubdiv);
+
+    /*
+    scene.addObject((new RenderObject{
+        Render::Mesh::fromFile("../res/duck.obj")[0],&texture, "Duck"
+        })->add(deco));
+    */
+
+    scene.addObject((new RenderObject(
+        Render::Mesh::fromFile("../res/Goal.obj", aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals)[0], &goalTex, "Goal"
+    ))->rotate(SIMD_HALF_PI, {0, 1,01}));
+
+    /*
+    scene.addObject((new RenderObject{
+        Render::Mesh::fromFile("../res/slide0.obj")[0],& texture, "Slide"
+    }));
+    */
+    glfwSetKeyCallback(window, key_callback);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -187,7 +206,8 @@ int main(int argc, char* argv[])
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    WINDOW_WIDTH = width;
+    WINDOW_HEIGHT = height;
 }
 
 void error_callback(int error, const char* msg) {
@@ -199,7 +219,21 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
-
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+        lines = !lines;
+        glPolygonMode(GL_FRONT_AND_BACK, lines ? GL_LINE : GL_FILL);
+    }
+    if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+        culling = ++culling % 3;
+        glCullFace(cullings[culling]);
+        if (culling == 0)
+            glDisable(GL_CULL_FACE);
+        else
+            glEnable(GL_CULL_FACE);
+    }
+}
 
 void initGl()
 {
@@ -228,10 +262,7 @@ void initGl()
     glDebugMessageCallback(gl_error_callback, nullptr);
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
-
-    glEnable(GL_CULL_FACE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glCullFace(GL_BACK);
+    
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 

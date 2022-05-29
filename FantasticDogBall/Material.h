@@ -6,7 +6,8 @@
 
 namespace Material
 {
-	const std::string vertexShader = "./VertexShader.vert";
+	const std::string colorVertexShader = "./static.vert";
+	const std::string textureVertexShader = "./texture.vert";
 	const std::string colorFragmentShader = "./static.frag";
 	const std::string textureFragmentShader = "./texture.frag";
 
@@ -78,7 +79,7 @@ namespace Material
 		static size_t numPointLights, numDirLights, numSpotLights;
 		const std::string shaderFile;
 
-		const Shaders::Program program = Utils::loadProgram(vertexShader, shaderFile);
+		const Shaders::Program program = Utils::loadProgram(textureVertexShader, shaderFile);
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;

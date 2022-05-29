@@ -106,6 +106,12 @@
     <None Include="si_sub.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="static.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="texture.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">

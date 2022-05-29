@@ -1,12 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <map>
+
 #include "Vertex.h"
 #include "Render.h"
 
 class HLMesh
 {
-private:
 public:
 	static HLMesh fromMesh(Render::Mesh mesh, bool quads = false);
 
@@ -17,6 +18,9 @@ public:
 			return e0.vertex0 == e1.vertex0
 				&& e0.vertex1 == e1.vertex1;
 		}
+
+		std::vector<Vertex> getVertices() const;
+		std::string toString() const;
 	};
 
 	struct Face {
@@ -30,8 +34,11 @@ public:
 			return f0.edges == f1.edges;
 		};
 
-		std::vector<Vertex> getVertices();
-		bool hasEdge(Edge e);
+		std::vector<Vertex> getVertices() const;
+		bool hasEdge(Edge e) const;
+		bool hasVertex(Vertex v) const;
+
+		std::string toString() const;
 	};
 	std::vector<Vertex> vertices;
 	std::vector<Face> faces;
@@ -44,7 +51,9 @@ public:
 	void reconstructVertexArray();
 	std::vector<Face> getFacesOnEdge(Edge e);
 	std::vector<Vertex> getNeighbors(Vertex v);
+	std::vector<Vertex> getVertices();
 	Render::Mesh toMesh();
 
+private:
 };
 

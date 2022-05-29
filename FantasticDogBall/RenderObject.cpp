@@ -52,6 +52,12 @@ void RenderObject::buildVAO() const
 	material->assignVertexAttributes(vaoID);
 }
 
+RenderObject* RenderObject::scale(float s)
+{
+	scale({ s,s,s });
+	return this;
+}
+
 RenderObject* RenderObject::scale(float x, float y, float z)
 {
 	scale({ x,y,z });
@@ -133,13 +139,12 @@ void Decoration::Compute::CatmullClarkSubdivision::doCompute(RenderObject*)
 HLMesh Decoration::Compute::SimpleSubdivision::subdivide(HLMesh hl)
 {
 	HLMesh newMesh;
-	for (auto face : hl.faces) {
+	for (const auto& face : hl.faces) {
 		std::vector<Vertex> verts;
-		for (const auto edge : face.edges) {
+		for (const auto& edge : face.edges) {
 			verts.push_back(edge.vertex0);
 			Vertex halfway = Vertex::halfway(edge.vertex0, edge.vertex1);
 			verts.push_back(halfway);
-			verts.push_back(edge.vertex1);
 		}
 
 		newMesh.addFace({ { verts[0], verts[1], verts[5] } });
@@ -152,11 +157,12 @@ HLMesh Decoration::Compute::SimpleSubdivision::subdivide(HLMesh hl)
 
 std::vector<HLMesh::Face> subdivisionAsyncSubstep(std::vector<HLMesh::Face> faces) {
 	std::vector<HLMesh::Face> newFaces;
-	for (auto face : faces) {
+	for (const auto& face : faces) {
 		std::vector<Vertex> verts;
-		for (const auto edge : face.edges) {
+		for (const auto& edge : face.edges) {
 			verts.push_back(edge.vertex0);
 			Vertex halfway = Vertex::halfway(edge.vertex0, edge.vertex1);
+			halfway.color = glm::vec4(1);
 			verts.push_back(halfway);
 			verts.push_back(edge.vertex1);
 		}
@@ -202,9 +208,11 @@ Decoration::Compute::SimpleSubdivision::SimpleSubdivision(unsigned short levels_
 
 void Decoration::Compute::SimpleSubdivision::doCompute(RenderObject* obj)
 {
+
 	HLMesh hl = HLMesh::fromMesh(obj->mesh);
+	Loggger::debug("Simple subdivision with %u levels called on %l faces\nThis will result in %l faces", levels, hl.faces.size(), hl.faces.size() * pow(2, levels));
 	for (auto i = 0; i < levels; i++) {
-		hl = subdivideAsync(hl);
+		hl = subdivide(hl);
 	}
 	obj->mesh = hl.toMesh();
 }
@@ -226,41 +234,9 @@ void Decoration::Compute::onBind(RenderObject* obj)
 	for (ComputeType* type : types) {
 		type->doCompute(obj);
 	}
+
+	obj->buildVAO();
 }
-
-/*
-Render::Mesh Decoration::Compute::computeGeometry(ComputeType type, RenderObject* obj) {
-	unsigned int fb;
-	glCreateTransformFeedbacks(1, &fb);
-	UncheckedUniformBuffer fbb;
-	fbb.create(1024, GL_STATIC_READ);
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, fbb.id);
-	glEnable(GL_RASTERIZER_DISCARD);
-	//obj->material->assignVertexAttributes(fbb.id);
-	type.program.use();
-	type.program.setInt("levels", type.levels);
-	type.program.setInt("vertexAmount", obj->mesh.vertex_array.size());
-	glBindVertexArray(obj->vaoID);
-	glBindVertexBuffer(0, obj->vboID, 0, sizeof(Vertex));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->eboID);
-
-	glBeginTransformFeedback(GL_TRIANGLES);
-	glDrawElements(GL_TRIANGLES, obj->mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
-	glEndTransformFeedback();
-	glFlush();
-
-	Render::Mesh mesh;
-	unsigned newSize = obj->mesh.vertex_array.size() * pow(4, type.levels);
-	mesh.vertex_array.resize(newSize);
-	mesh.index_array.resize(newSize);
-	unsigned vertexSize = sizeof(Vertex) * newSize;
-	unsigned indexSize = sizeof(unsigned) * newSize;
-	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vertexSize, mesh.vertex_array.data());
-	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, vertexSize, indexSize, mesh.index_array.data());
-
-	return mesh;
-}
-*/
 
 void Decoration::Animation::onBind(RenderObject*)
 {
@@ -273,13 +249,24 @@ Decoration::Compute::LoopSubdivision::LoopVertex::LoopVertex(Vertex v, bool even
 HLMesh Decoration::Compute::LoopSubdivision::subdivide(HLMesh hl)
 {
 	HLMesh newMesh;
-	for (auto face : hl.faces) {
+	for (const auto& face : hl.faces) {
 		std::vector<LoopVertex> verts;
-		for (const auto edge : face.edges) {
-			verts.push_back(LoopVertex(edge.vertex0, true));
-			LoopVertex halfway = LoopVertex(Vertex::halfway(edge.vertex0, edge.vertex1), false);
-			verts.push_back(halfway);
-			verts.push_back(LoopVertex(edge.vertex1, true));
+		for (const auto& edge : face.edges) {
+			auto faces = hl.getFacesOnEdge(edge);
+			auto otherFace = faces[0] == face ? faces[1] : faces[0];
+			auto verticesOnEdge = edge.getVertices();
+			auto verticesNotOnEdge = Utils::except(Utils::unionUnique(face.getVertices(), otherFace.getVertices()), verticesOnEdge);
+			Vertex newVert;
+			if (verticesNotOnEdge.size() < 2) {
+				newVert = (verticesOnEdge[0] + verticesOnEdge[1]) * 1 / 2;
+			} else {
+				newVert = (verticesOnEdge[0] + verticesOnEdge[1]) * 3 / 8 + (verticesNotOnEdge[0] + verticesNotOnEdge[1]) * 1 / 8;
+			}
+			newVert.color = glm::vec4(-1);
+			
+			Utils::addUnique(verts, LoopVertex(edge.vertex0, true));
+			Utils::addUnique(verts, LoopVertex(edge.vertex1, true));
+			verts.push_back(LoopVertex(newVert, false));
 		}
 
 		newMesh.addFace({ { verts[0], verts[1], verts[5] } });
@@ -287,6 +274,38 @@ HLMesh Decoration::Compute::LoopSubdivision::subdivide(HLMesh hl)
 		newMesh.addFace({ { verts[3], verts[4], verts[5] } });
 		newMesh.addFace({ { verts[1], verts[3], verts[5] } });
 	}
+
+	for (auto& face : newMesh.faces) {
+		for (auto& edge : face.edges) {
+			auto& v = edge.vertex0;
+			if (v.color[0] == -1) continue;
+			const auto index = Utils::getIndex(newMesh.vertices, v);
+			auto neighbors = newMesh.getNeighbors(v);
+			auto n = neighbors.size();
+			float u;
+			if (n < 3) {
+				//const float u = (5.0 / 8.0 - pow(3.0 / 8.0 + 1.0 / 4.0 * std::cos(SIMD_2_PI / n), 2)) / n;
+				u = 3.0f / 8.0f * n;
+			}
+			else {
+				/*
+				auto sum = neighbors[0] + neighbors[1];
+				newV = v * 0.75 + sum * 0.125;
+				*/
+				u = 0.1875f;
+			}
+			Vertex sum = Vertex();
+			for (const auto& n : neighbors)
+				sum = sum + n;
+			//auto newV = v * (1 - n * u) + sum * u;
+			auto newV = v * (1.0f - n * u) + sum * u;
+			v.position = newV.position;
+			v.color = newV.color;
+			v.texture_coordinate = newV.texture_coordinate;
+			v.normal = newV.normal;
+		}
+	}
+
 	return newMesh;
 }
 
@@ -302,6 +321,7 @@ Decoration::Compute::LoopSubdivision::LoopSubdivision(unsigned short levels_) {
 void Decoration::Compute::LoopSubdivision::doCompute(RenderObject* obj)
 {
 	HLMesh hl = HLMesh::fromMesh(obj->mesh);
+	Loggger::debug("Loop subdivision with %u levels called on %u faces\nThis will result in %u faces", levels, hl.faces.size(), (hl.faces.size() * pow(2, levels)));
 	for (auto i = 0; i < levels; i++) {
 		hl = subdivide(hl);
 	}

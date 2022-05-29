@@ -50,6 +50,19 @@ public:
 	}
 
 	template<typename V>
+	static int getIndex(std::vector<V&>& v, V& el) {
+		auto it = find(v.begin(), v.end(), el);
+		if (it != v.end())
+		{
+			int index = it - v.begin();
+			return index;
+		}
+		else {
+			return -1;
+		}
+	}
+
+	template<typename V>
 	static bool addUnique(std::vector<V>& v, V el) {
 		if (getIndex(v, el) == -1) {
 			v.push_back(el);
@@ -59,7 +72,25 @@ public:
 	}
 
 	template<typename V>
+	static bool addUnique(std::vector<V&>& v, V& el) {
+		if (getIndex(v, el) == -1) {
+			v.push_back(el);
+			return true;
+		}
+		return false;
+	}
+
+
+	template<typename V>
 	static bool addAllUnique(std::vector<V>& v, const std::vector<V>& elements) {
+		bool added = false;
+		for (V el : elements)
+			added = addUnique(v, el) || added;
+		return added;
+	}
+
+	template<typename V>
+	static bool addAllUnique(std::vector<V&>& v, const std::vector<V&>& elements) {
 		bool added = false;
 		for (V el : elements)
 			added = addUnique(v, el) || added;
@@ -105,6 +136,33 @@ public:
 	static bool contains(std::vector<V> v, V el) {
 		return std::count(v.begin(), v.end(), el);
 	}
+
+	template<typename V> 
+	static std::vector<V> except(std::vector<V> orig, std::vector<V> ex) {
+		std::vector<V> ret;
+		for (V v : orig)
+			if (!contains(ex, v))
+				ret.push_back(v);
+		return ret;
+	}
+
+	template<typename V>
+	static std::vector<V> union_(std::vector<V> a, std::vector<V> b) {
+		auto u = std::vector<V>(a.size() + b.size());
+		u.insert(u.end(), a.begin(), a.end());
+		u.insert(u.end(), b.begin(), b.end());
+		return u;
+	}
+
+	template<typename V>
+	static std::vector<V> unionUnique(std::vector<V> a, std::vector<V> b) {
+		std::vector<V> un(a);
+		addAllUnique(un, b);
+		return un;
+	}
+
+	template<typename T, unsigned int sz>
+	inline unsigned int lengthof(T(&)[sz]) { return sz; }
 
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,

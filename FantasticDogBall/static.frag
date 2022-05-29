@@ -91,7 +91,7 @@ void main() {
     
     result += s_cubemap * CubemapReflection(norm, viewDir);
 
-    outColor = vec4(result * material.color.xyz, 1.0);
+    outColor = vec4(result * material.color.xyz * vec3(fragColor), 1.0);
 }
 
 

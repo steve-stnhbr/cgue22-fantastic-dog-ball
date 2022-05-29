@@ -62,6 +62,7 @@ public:
 	RenderObject* translate(glm::vec3);
 	RenderObject* rotate(float, float, float);
 	RenderObject* rotate(float, glm::vec3);
+	RenderObject* scale(float s);
 	RenderObject* scale(float, float, float);
 	RenderObject* scale(glm::vec3);
 

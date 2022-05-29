@@ -2,6 +2,7 @@
 #include <string>
 #include <time.h>
 #include <stdexcept>
+#include <future>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -40,39 +41,45 @@ public:
 			constructMessage(level, string_format(msg, args...));
 	}
 	template<typename ... Args>
+	static void logAsync(Level level, const std::string& msg, Args... args) {
+		if (level >= Loggger::LOG_LEVEL)
+			std::async(constructMessage, level, string_format(msg, args...));
+	}
+
+	template<typename ... Args>
 	static void log(GLenum severity, const std::string& msg, Args ... args)
 	{
-		log(severityToLevel(severity), msg, args...);
+		logAsync(severityToLevel(severity), msg, args...);
 	}
 	template<typename ... Args>
 	static void trace(const std::string& msg, Args ... args)
 	{
-		log(TRACE, msg, args...);
+		logAsync(TRACE, msg, args...);
 	}
 	template<typename ... Args>
 	static void debug(const std::string& msg, Args ... args)
 	{
-		log(DEBUG, msg, args...);
+		logAsync(DEBUG, msg, args...);
 	}
 	template<typename ... Args>
 	static void info(const std::string& msg, Args ... args)
 	{
-		log(INFO, msg, args...);
+		logAsync(INFO, msg, args...);
 	}
 	template<typename ... Args>
 	static void warn(const std::string& msg, Args ... args)
 	{
-		log(WARN, msg, args...);
+		logAsync(WARN, msg, args...);
 	}
 	template<typename ... Args>
 	static void error(const std::string& msg, Args ... args)
 	{
-		log(ERROR, msg, args...);
+		logAsync(ERROR, msg, args...);
 	}
 	template<typename ... Args>
 	static void fatal(const std::string& msg, Args ... args)
 	{
-		log(FATAL, msg, args...);
+		logAsync(FATAL, msg, args...);
 	}
 
 	static void setLevel(const Level);

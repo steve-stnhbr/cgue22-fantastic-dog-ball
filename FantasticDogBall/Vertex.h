@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <string>
 
 // This class defines all the different values for a single point on the mesh
 class Vertex {
@@ -28,6 +29,7 @@ public:
 	// defines the color at the point
 	glm::vec4 color;
 
+	const std::string toString() const;
 
 	static Vertex halfway(Vertex v0, Vertex v1);
 };

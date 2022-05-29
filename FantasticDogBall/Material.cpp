@@ -29,7 +29,7 @@ void Material::StaticMaterial::createBuffer()
 
 void Material::StaticMaterial::initProgram()
 {
-	program = Shaders::Program( { vertexShader, colorFragmentShader } );
+	program = Shaders::Program( { colorVertexShader, colorFragmentShader } );
 }
 
 
@@ -120,7 +120,7 @@ void Material::TextureMaterial::assignVertexAttributes(unsigned vao)
 
 void Material::TextureMaterial::initProgram()
 {
-	TextureMaterial::program = Shaders::Program({ vertexShader, textureFragmentShader });
+	TextureMaterial::program = Shaders::Program({ textureVertexShader, textureFragmentShader });
 }
 
 Shaders::Program Material::ProceduralMaterial::getProgram()

@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Utils.h"
+
 Vertex::Vertex(const glm::vec3 position) : position(position), normal(0), texture_coordinate(0), color(0)
 {}
 
@@ -13,6 +15,10 @@ Vertex::Vertex(const glm::vec3 position, const glm::vec3 normal, const glm::vec2
 
 Vertex::Vertex(const glm::vec3 position, const glm::vec3 normal, const glm::vec4 color): position(position), normal(normal), texture_coordinate(0), color(color)
 {}
+
+const std::string Vertex::toString() const {
+	return Utils::string_format("(%f, %f, %f)", position.x, position.y, position.z);
+}
 
 Vertex Vertex::halfway(Vertex v0, Vertex v1)
 {
