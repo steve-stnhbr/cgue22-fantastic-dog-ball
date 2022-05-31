@@ -7,6 +7,7 @@
 #include <stb/stb_image_resize.h>
 
 #include "Utils.h"
+#include "Loggger.h"
 
 Texture::Texture::Texture() : Texture("")
 {
@@ -26,6 +27,7 @@ Texture::Texture::Texture(std::string filePath_)
 		defined = true;
 		int comp;
 		filePath = filePath_;
+		stbi_set_flip_vertically_on_load(true);
 		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb);
 
 		if(data == nullptr)

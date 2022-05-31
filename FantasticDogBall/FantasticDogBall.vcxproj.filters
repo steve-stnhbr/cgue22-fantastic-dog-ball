@@ -91,6 +91,12 @@
       <Filter>Ressourcendateien</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="debug.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="debug.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">
