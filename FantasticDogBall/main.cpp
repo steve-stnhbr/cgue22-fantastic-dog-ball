@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 20, .2f, 20
-        }, &material1, "Cube"
+        }, &texture, "Cube"
     }.translate(0, -4, 10));
 
     /* Loop until the user closes the window */

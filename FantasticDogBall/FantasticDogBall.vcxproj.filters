@@ -97,6 +97,15 @@
     <None Include="shadow.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="shadowCube.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="shadowCube.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="shadowCube.geom">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">

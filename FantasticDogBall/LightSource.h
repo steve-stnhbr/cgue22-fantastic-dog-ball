@@ -25,8 +25,11 @@ namespace Light
 		Light();
 		Light(bool useShadowMap);
 
-		Texture::Texture generateShadowMap(const std::vector<RenderObject>&);
+		//Texture::Texture generateShadowMap(const std::vector<RenderObject>&);
 
+		Texture::Texture generateShadowMap2D(const std::vector<RenderObject>&);
+
+		virtual void generateShadowMap(const std::vector<RenderObject>&) = 0;
 		virtual glm::mat4 getLightSpace() const = 0;
 	};
 
@@ -38,6 +41,8 @@ namespace Light
 			glm::vec4 ambient;
 			glm::vec4 diffuse;
 			glm::vec4 specular;
+
+			Data() = default;
 		} data;
 
 		Directional() = default;
@@ -48,6 +53,7 @@ namespace Light
 			bool castShadow = false);
 
 		glm::mat4 getLightSpace() const override;
+		void generateShadowMap(const std::vector<RenderObject>&) override;
 	};
 
 	struct Point : Light
@@ -58,6 +64,8 @@ namespace Light
 			glm::vec4 ambient;
 			glm::vec4 diffuse;
 			glm::vec4 specular;
+			
+			Data() = default;
 		} data;
 
 		Point() = default;
@@ -70,6 +78,7 @@ namespace Light
 			glm::vec3 specular,
 			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
+		void generateShadowMap(const std::vector<RenderObject>&) override;
 	};
 
 	struct Spot : Light
@@ -82,6 +91,8 @@ namespace Light
 			glm::vec4 ambient;
 			glm::vec4 diffuse;
 			glm::vec4 specular;
+
+			Data() = default;
 		} data;
 
 		Spot() = default;
@@ -97,12 +108,13 @@ namespace Light
 			glm::vec3 specular,
 			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
+		void generateShadowMap(const std::vector<RenderObject>&) override;
 	};
 	
 	class Lights
 	{
 	public:
-		std::vector<const Light*> allLights;
+		std::vector<Light*> allLights;
 		std::vector<Point> pLights;
 		std::vector<Directional> dLights;
 		std::vector<Spot> sLights;
@@ -144,7 +156,7 @@ namespace Light
 
 		void bind(Shaders::Program&);
 
-		std::vector<const Light*> all();
+		void generateAllShadowMaps(const std::vector<RenderObject>&);
 
 		void finalize();
 	};

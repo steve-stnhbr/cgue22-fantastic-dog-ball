@@ -23,13 +23,12 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 
 	lights.dLights[0].generateShadowMap(objects);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
-	/*
-	for (auto light : lights.all()) {
-		light->generateShadowMap(objects);
-	}
-	*/
+	glCullFace(GL_FRONT);
+	//todo add other lights to all shadow maps
+	lights.generateAllShadowMaps(objects);
+	glCullFace(GL_BACK);
+	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
 	for (RenderObject element : objects)
 	{

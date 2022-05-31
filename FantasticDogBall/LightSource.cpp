@@ -27,6 +27,48 @@ glm::mat4 Light::Point::getLightSpace() const {
 	return glm::mat4(1);
 }
 
+void Light::Point::generateShadowMap(const std::vector<RenderObject>& objs) {
+	unsigned int depthCubemap;
+	glGenTextures(1, &depthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+			SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	float aspect = (float)SHADOW_MAP_RESOLUTION / (float)SHADOW_MAP_RESOLUTION;
+	float near = 1.0f;
+	float far = 25.0f;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+	std::vector<glm::mat4> shadowTransforms;
+	glm::vec3 lightPos(data.position);
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+	shadowTransforms.push_back(shadowProj *
+		glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+
+}
+
 Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_, bool castShadow) : Light::Light(castShadow)
 {
 	data = {
@@ -48,6 +90,10 @@ glm::mat4 Light::Directional::getLightSpace() const
 	return depthProjectionMatrix * depthViewMatrix;
 }
 
+void Light::Directional::generateShadowMap(const std::vector<RenderObject>& objs) {
+	generateShadowMap2D(objs);
+}
+
 Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, float outerCutOff_, float constant_, float linear_, float quadratic_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_, bool castShadow) : Light::Light(castShadow)
 {
 	data = {
@@ -65,6 +111,10 @@ glm::mat4 Light::Spot::getLightSpace() const {
 	return glm::mat4(1);
 }
 
+void Light::Spot::generateShadowMap(const std::vector<RenderObject>& objs) {
+	generateShadowMap2D(objs);
+}
+
 Light::Lights::Lights()
 {
 	finalized = false;
@@ -74,7 +124,6 @@ void Light::Lights::add(const Point p)
 {
 	pLights.push_back(p);
 	pData.push_back(p.data);
-	allLights.push_back(&p);
 	Globals::NUM_POINT_LIGHTS++;
 }
 
@@ -82,14 +131,12 @@ void Light::Lights::add(const Directional d)
 {
 	dLights.push_back(d);
 	dData.push_back(d.data);
-	allLights.push_back(&d);
 	Globals::NUM_DIRECTIONAL_LIGHTS++;
 }
 void Light::Lights::add(const Spot s)
 {
 	sLights.push_back(s);
 	sData.push_back(s.data);
-	allLights.push_back(&s);
 	Globals::NUM_SPOT_LIGHTS++;
 }
 
@@ -153,9 +200,10 @@ void Light::Lights::bind(Shaders::Program& prog)
 
 }
 
-std::vector<const Light::Light*> Light::Lights::all()
+void Light::Lights::generateAllShadowMaps(const std::vector<RenderObject>& objs)
 {
-	return allLights;
+	for (auto& l : dLights)
+		l.generateShadowMap(objs);
 }
 
 void Light::Lights::finalize()
@@ -203,7 +251,7 @@ Light::Light::Light() : Light(false)
 Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
 {
 	if (useShadowMap) {
-		shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT, 1, false };
+		//shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT, 1, false };
 	}
 }
 
@@ -226,12 +274,9 @@ void Light::Light::initProgram() {
 	}
 }
 
-Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>& objects)
+Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObject>& objects)
 { 
 	if (!castShadow) return false;
-
-	unsigned int depthMapFBO;
-	glGenFramebuffers(1, &depthMapFBO);
 	unsigned int depthMap;
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -241,14 +286,14 @@ Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	// 1. first render to depth map
 	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	//glEnable(GL_RASTERIZER_DISCARD);
 	SHADOW_PROGRAM.use();
@@ -266,31 +311,5 @@ Texture::Texture Light::Light::generateShadowMap(const std::vector<RenderObject>
 	Texture::Texture tex;
 	tex.glID = depthMap;
 	shadowMap = depthMap;
-	return shadowMap;
-
-	glEnable(GL_DEPTH_TEST);
-	glNamedFramebufferTexture(SHADOW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap.glID, 0);
-	Utils::checkError();
-	GLenum status = glCheckNamedFramebufferStatus(SHADOW_FRAMEBUFFER, GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE) {
-		Loggger::error("FB error, status: 0x%x\n", status);
-	}
-	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
-	SHADOW_PROGRAM.use();
-	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
-	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	Utils::checkError();
-
-	for (auto element : objects) {
-		SHADOW_PROGRAM.setMatrix4("model", element.transform);
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.eboID);
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	Utils::checkError();
-
 	return shadowMap;
 }

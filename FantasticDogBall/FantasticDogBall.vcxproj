@@ -47,6 +47,9 @@
     <None Include="packages.config" />
     <None Include="shadow.frag" />
     <None Include="shadow.vert" />
+    <None Include="shadowCube.frag" />
+    <None Include="shadowCube.geom" />
+    <None Include="shadowCube.vert" />
     <None Include="static.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
