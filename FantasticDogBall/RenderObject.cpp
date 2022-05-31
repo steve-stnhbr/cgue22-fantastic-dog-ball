@@ -119,7 +119,6 @@ void RenderObject::applyToPhysics() {
 	if (auto p = getDecoration<Decoration::Physics>()) {
 		p->pBody->getWorldTransform().setFromOpenGLMatrix(glm::value_ptr(transform));
 	}
-	
 }
 
 
@@ -151,6 +150,7 @@ void Decoration::Physics::init(RenderObject* object)
 	}
 
 	btTransform t;
+	t.setIdentity();
 	t.setFromOpenGLMatrix(glm::value_ptr(object->transform));
 
 	pTransform = new btDefaultMotionState(t);
@@ -178,9 +178,8 @@ void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 	btTransform transform;
 	pBody->getMotionState()->getWorldTransform(transform);
 	glm::mat4 mat;
-	transform.getOpenGLMatrix(glm::value_ptr(mat));
+	transform.getOpenGLMatrix(glm::value_ptr(obj->transform));
 	Loggger::trace("Bullet: Updating transform of %s to %s", obj->name.c_str(), glm::to_string(mat).c_str());
-	(*obj).transform = (pMass == 0.0f ? glm::mat4(1) : glm::mat4(0)) + mat;
 } 
 
 void Decoration::Physics::onCollide(RenderObject* other)

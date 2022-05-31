@@ -127,13 +127,8 @@ int main(int argc, char* argv[])
            100, 100
         }, &texture, "Cube"
     };
-    cube.translate(0, -4, 0);
-    //cube.rotate(.3, { 0, 0, 1 });
+    cube.rotate(.3, { 0, 0, 1 });
     Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
-    physx.onUpdate = [cube = &cube](RenderObject* obj, unsigned long frame, float) {
-        cube->rotate(.1 * frame, { 0, 0, 1 });
-        obj->rotate(.1 * frame, { 0, 0, 1 });
-    };
     cube.add(physx);
     level.add(cube);
 
@@ -144,12 +139,14 @@ int main(int argc, char* argv[])
     auto sphere = RenderObject{
         Render::Sphere(1, 32, 16), &material1, "Sphere"
     };
-
-    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, new btSphereShape(3), 1.0);
+    sphere.translate({ 0, 3, 0 });
+    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, nullptr, 1.0);
+    /*
     phys0.onUpdate = [](RenderObject* obj_, unsigned long, float)
     {
         obj_->getDecoration<Decoration::Physics>()->pBody->applyCentralForce({ 0, 0, 10 });
     };
+    */
     sphere.add(phys0);
     level.add(sphere);
     
@@ -238,6 +235,9 @@ void initGl()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 }
 
 void initBullet() {

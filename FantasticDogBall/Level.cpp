@@ -25,8 +25,10 @@ void Level::render()
 	if (pWorld) {
 		pWorld->stepSimulation(dt);
 	}
-
+	debugDrawer.debugProgram.use();
+	debugDrawer.setCamera(scene.renderer.camera);
 	scene.render(dt);
+	//pWorld->debugDrawWorld();
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);
@@ -44,6 +46,7 @@ void Level::setupPhysics()
 	// create the world
 	pWorld = new btDiscreteDynamicsWorld(pDispatcher, pBroadphase, pSolver, pCollisionConfiguration); 
 	pWorld->setGravity(btVector3(0, -9.81f, 0));
+	//pWorld->setDebugDrawer(&debugDrawer);
 
 	pWorld->setInternalTickCallback(physicsTick);
 }
