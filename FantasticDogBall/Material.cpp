@@ -36,7 +36,9 @@ void Material::StaticMaterial::initProgram()
 void Material::StaticMaterial::bind(Shaders::Program& p)
 {
 	buffer.update(sizeof(Values), &vals);
+	Utils::checkError();
 	p.setUniform("Material", buffer);
+	Utils::checkError();
 }
 
 

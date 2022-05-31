@@ -11,6 +11,31 @@ Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_ar
 {
 }
 
+void Render::Mesh::createBuffers(unsigned int vaoID) const
+{
+	glCreateBuffers(1, (GLuint*)&vboID);
+	auto vboSize = vertex_array.size() * sizeof(Vertex);
+	Loggger::trace("Creating vbo with size of %u", vboSize);
+	glNamedBufferStorage(vboID, vboSize, vertex_array.data(), GL_CLIENT_STORAGE_BIT);
+	glVertexArrayVertexBuffer(vaoID, 0, vboID, 0, sizeof(Vertex));
+	Utils::checkError();
+
+	glCreateBuffers(1, (GLuint*)&eboID);
+	auto eboSize = index_array.size() * sizeof(unsigned);
+	Loggger::trace("Creating vbo with size of %u", eboSize);
+	glNamedBufferStorage(eboID, eboSize, index_array.data(), GL_CLIENT_STORAGE_BIT);
+	glVertexArrayElementBuffer(vaoID, eboID);
+	Utils::checkError();
+}
+
+void Render::Mesh::bind(Shaders::Program prog)
+{
+	glBindVertexBuffer(0, vboID, 0, sizeof(Vertex));
+	Utils::checkError();
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+	Utils::checkError();
+}
+
 std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 {
 	return fromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
@@ -21,7 +46,7 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 	std::vector<Mesh> meshes;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
-
+  
 	if (scene == nullptr) {
 		Loggger::error(importer.GetErrorString());
 		meshes.push_back({});
@@ -31,6 +56,7 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 	for(unsigned i = 0; i < scene->mNumMeshes; i++)
 	{
 		Mesh m;
+		m.fileName = path;
 		const aiMesh* mesh = scene->mMeshes[i];
 		for (unsigned j = 0; j < mesh->mNumVertices; ++j)
 		{
@@ -282,4 +308,26 @@ unsigned Render::loadProgram(const std::vector<GLenum>& types, const std::vector
 		glfwTerminate();
 		exit(-13);
 	}
+}
+
+Render::Plane::Plane(float width, float depth) : Mesh({
+		{
+			{width / 2, 0, depth / 2},
+			{0, 1, 0},
+			{1, 1}
+		},{
+			{width / 2, 0, -depth / 2},
+			{0, 1, 0},
+			{1, 0}
+		},{
+			{-width / 2, 0, -depth / 2},
+			{0, 1, 0},
+			{0, 0}
+		},{
+			{-width / 2, 0, depth / 2},
+			{0, 1, 0},
+			{0, 1}
+		},
+	}, {0,1,2,0,2,3})
+{
 }

@@ -6,6 +6,9 @@
 
 #include "Shaders.h"
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <filesystem>
 
 std::string Utils::readFile(const char* path)
 {
@@ -49,34 +52,6 @@ GLenum Utils::checkError_(const char* file, int line)
 		#endif
     }
     return errorCode;
-}
-
-
-
-Shaders::Program Utils::loadProgram(std::string vertex, std::string fragment)
-{
-	try
-	{
-        return Shaders::Program(vertex, fragment);
-	}
-	catch (Shaders::ShaderCompilationException& e)
-	{
-        Utils::checkError();
-        Loggger::error("Failed to compile shader (%s): %s", e.shaderName.c_str(), e.what());
-        exit(-10);
-	}
-    catch (Shaders::ProgramLinkException& e)
-    {
-        Utils::checkError();
-        Loggger::error("Failed to link program (%d): %s", e.program, e.what());
-        exit(-11);
-    }
-    catch (std::exception& e)
-    {
-        Utils::checkError();
-        Loggger::error("Failed to link program: %s", e.what());
-        exit(-11);
-    }
 }
 
 char asciitolower(char in) {
