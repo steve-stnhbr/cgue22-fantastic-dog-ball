@@ -9,11 +9,11 @@
 
 namespace Light
 {
+	static Shaders::Program SHADOW_PROGRAM_2D;
+	static const unsigned SHADOW_MAP_RESOLUTION = 1024;
 
 	struct Light
 	{
-		static Shaders::Program* SHADOW_PROGRAM_2D
-
 
 		Texture::Texture* shadowMap;
 		virtual Texture::Texture* generateShadowMap(const std::vector<RenderObject>& objects) = 0;

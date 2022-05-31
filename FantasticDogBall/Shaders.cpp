@@ -4,6 +4,7 @@
 
 #include "LightSource.h"
 #include "Render.h"
+#include <glm/gtc/type_ptr.hpp>
 
 std::vector<unsigned> shaders, programs;
 
@@ -251,6 +252,11 @@ void Shaders::Program::setVec3(const std::string& name, glm::vec3 v) const
 {
 	Loggger::debug("Setting %s to (%f, %f, %f)", name.c_str(), v.x, v.y, v.z);
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), v.x, v.y, v.z);
+}
+
+void Shaders::Program::setMatrix4(const std::string& name, glm::mat4 mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, false, glm::value_ptr(mat));
 }
 
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)

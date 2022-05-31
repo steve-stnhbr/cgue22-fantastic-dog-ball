@@ -21,6 +21,7 @@ Texture::Cubemap* Light::Point::generateShadowMap(const std::vector<RenderObject
 
 Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_)
 {
+	SHADOW_PROGRAM_2D = Shaders::Program({ "./shadow.vert", "./shadow.frag" });
 	data = {
 		glm::vec4(direction_.x, direction_.y, direction_.z, 0),
 		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
@@ -31,6 +32,58 @@ Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::v
 
 Texture::Texture* Light::Directional::generateShadowMap(const std::vector<RenderObject>& objects)
 {
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	unsigned int depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// 1. first render to depth map
+	glViewport(0, 0, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	SHADOW_PROGRAM_2D.use();
+
+	float near_plane = 1.0f, far_plane = 7.5f;
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane); 
+	glm::mat4 lightView = glm::lookAt(glm::vec3(-2.0f, 4.0f, -1.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+	SHADOW_PROGRAM_2D.setMatrix4("lightSpace", lightSpaceMatrix);
+	for (RenderObject element : objects)
+	{
+		element.update();
+
+		Loggger::info("\t%s", element.name.c_str());
+
+		// bind program
+		auto prog = element.material->getProgram();
+		prog.use();
+		element.material->bind(prog);
+		Utils::checkError();
+		glBindVertexArray(element.vaoID);
+		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.eboID);
+		Utils::checkError();
+		// draw
+		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+		Utils::checkError();
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	shadowMap->glID = depthMap;
 	return shadowMap;
 }
 
@@ -48,8 +101,6 @@ Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, floa
 }
 Texture::Texture* Light::Spot::generateShadowMap(const std::vector<RenderObject>& objects)
 {
-
-
 
 	return shadowMap;
 }

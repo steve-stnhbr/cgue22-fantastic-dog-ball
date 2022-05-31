@@ -6,6 +6,7 @@
 #include <map>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
+#include <glm/matrix.hpp>
 
 #include "UniformBuffer.h"
 #include "Texture.h"
@@ -78,6 +79,7 @@ namespace Shaders
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
 		void setVec3(const std::string& name, glm::vec3) const;
+		void setMatrix4(const std::string& name, glm::mat4) const;
 		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
 		void setUniform(const int binding, UncheckedUniformBuffer buffer) const;
 		template <typename V>
