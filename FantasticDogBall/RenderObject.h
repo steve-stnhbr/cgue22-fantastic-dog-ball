@@ -97,8 +97,13 @@ namespace Decoration
 	class Animation : public Decoration
 	{
 	private:
+		bool loop;
+		float speed;
 		std::vector<Render::Mesh> meshes;
 	public:
+		Animation(std::string path, bool = true, float = 1.0f);
+		Animation(std::vector<std::string> paths, bool = true, float = 1.0f);
+
 		void update(unsigned frame, float dTime) override;
 	};
 

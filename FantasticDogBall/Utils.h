@@ -17,6 +17,7 @@ public:
 	}
 
 	static void strToLower(std::string);
+	static std::vector<std::string> filesInDirectory(std::string);
 
 	template<typename ... Args>
 	static std::string string_format(const std::string& format, Args ... args)

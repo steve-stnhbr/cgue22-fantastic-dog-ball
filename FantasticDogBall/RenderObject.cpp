@@ -8,6 +8,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
+#include <iostream>
+#include <filesystem>
 
 RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
@@ -102,4 +104,22 @@ void Decoration::Physics::update(unsigned frame, float dTime)
 {
 }
 
+Decoration::Animation::Animation(std::string path, bool loop, float speed) : loop(loop), speed(speed)
+{
+	for (const auto& file : std::filesystem::directory_iterator(path.c_str()))
+		if(file.path().extension() == "obj")
+			meshes.push_back(Render::Mesh::fromFile(file.path().string())[0]);
+}
 
+Decoration::Animation::Animation(std::vector<std::string> paths, bool loop, float speed) : loop(loop), speed(speed)
+{
+	for(const auto& path : paths) 
+		meshes.push_back(Render::Mesh::fromFile(path)[0]);
+}
+
+void Decoration::Animation::update(unsigned frame, float dTime)
+{
+	if (!loop && frame > meshes.size() * (1 / speed))
+		return;
+	object->mesh = meshes[static_cast<unsigned>(floor(frame * speed)) % meshes.size()];
+}

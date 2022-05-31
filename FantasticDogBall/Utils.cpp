@@ -6,6 +6,9 @@
 
 #include "Shaders.h"
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <filesystem>
 
 std::string Utils::readFile(const char* path)
 {
