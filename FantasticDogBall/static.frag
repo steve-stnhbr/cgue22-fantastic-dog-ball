@@ -88,7 +88,8 @@ void main() {
     vec3 result = vec3(0, 0, 0);
     // phase 1: directional lighting
     for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++) { // error can be ignored since the value is inserted at runtime
-        float shadow = dLights[i].castsShadow ? ShadowCalculationDir(dLights[i].lightSpace * vec4(fragPos, 1), dLights[i].shadowMap, vec3(dLights[i].direction)) : 0;
+        float shadow = dLights[i].castsShadow ? ShadowCalculationDir(dLights[i].lightSpace * vec4(fragPos, 1), dLights[i].shadowMap, vec3(-dLights[i].direction)) : 0;
+        //float shadow = dLights[i].castsShadow ? ShadowCalculation(dLights[i].lightSpace * vec4(fragPos, 1), dLights[i].shadowMap) : 0;
         result += CalcDirLight(dLights[i], norm, viewDir, shadow);
     }
     // phase 2: point lights
@@ -142,7 +143,6 @@ float ShadowCalculationDir(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lig
         
     return shadow;
 }
-
 vec3 CubemapReflection(vec3 normal, vec3 directionToCam) {
 	vec3 reflectDir = reflect(directionToCam, normal);
 	return vec3(texture(cubemap, -reflectDir));

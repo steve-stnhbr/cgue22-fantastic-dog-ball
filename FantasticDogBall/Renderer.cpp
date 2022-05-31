@@ -21,7 +21,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
-	const Texture::Texture shadowMap = lights.dLights[0].generateShadowMap(objects);
+	lights.dLights[0].generateShadowMap(objects);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
@@ -30,8 +30,6 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		light->generateShadowMap(objects);
 	}
 	*/
-	unsigned int tf;
-	glCreateTransformFeedbacks(1, &tf);
 
 	for (RenderObject element : objects)
 	{

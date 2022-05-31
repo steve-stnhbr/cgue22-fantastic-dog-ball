@@ -58,6 +58,8 @@ uniform float value_specular;
 uniform sampler2D specular;
 uniform float shininess;
 
+uniform sampler2D shadowMap;
+
 layout(std140) uniform CameraData{
     mat4 model;
     mat4 view;
@@ -107,7 +109,7 @@ void main() {
     }
 
     outColor = texture(color, texCoords) * vec4(result, 1);
-    outColor = texture(dLights[0].shadowMap, texCoords);
+    //outColor = texture(dLights[0].shadowMap, texCoords);
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap)

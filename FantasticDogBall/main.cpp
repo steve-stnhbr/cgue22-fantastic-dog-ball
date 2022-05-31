@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     //scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(.001, -1, 1 ),
+        glm::vec3(2, -4, 1),
         glm::vec3(.2,.2,.2),
         glm::vec3(.8,.8,.8),
         glm::vec3(.4,.4,.4),
@@ -116,19 +116,19 @@ int main(int argc, char* argv[])
     texture.specular = { 2 };
     texture.shininess = 1;
      
-    scene.addObject(RenderObject{
-        Render::Cube{
-            0, 0, 0, 100, .2f, 100
-		}, &texture, "Cube"
-    }.translate(0, -4, 0));    
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
-    material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
+    material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
     scene.addObject(RenderObject{
         Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
-    }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, 0)->rotate(0, 0, -glm::half_pi<float>()));
+    }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, -glm::half_pi<float>())->rotate(-glm::half_pi<float>()/3, 0, 0));
+    scene.addObject(RenderObject{
+        Render::Cube{
+            0, 0, 0, 20, .2f, 20
+        }, &material1, "Cube"
+    }.translate(0, -4, 10));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

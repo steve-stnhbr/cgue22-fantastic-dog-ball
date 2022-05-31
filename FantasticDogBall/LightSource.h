@@ -25,7 +25,7 @@ namespace Light
 		Light();
 		Light(bool useShadowMap);
 
-		Texture::Texture generateShadowMap(const std::vector<RenderObject>&) const;
+		Texture::Texture generateShadowMap(const std::vector<RenderObject>&);
 
 		virtual glm::mat4 getLightSpace() const = 0;
 	};
