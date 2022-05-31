@@ -92,7 +92,7 @@ void main() {
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     
-    outColor = vec4(vec3(texture(color, texCoords)) * result, 1.0);
+    outColor = vec4(vec3(texture(color, texCoords)) * result, 1);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

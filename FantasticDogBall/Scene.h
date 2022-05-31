@@ -27,18 +27,5 @@ public:
 	void addObject(RenderObject object);
 	void addObject(RenderObject* object);
 
-	void render();
-
-	void setupPhysics();
-
-protected:
-	// core Bullet components
-	btBroadphaseInterface* pBroadphase;
-	btCollisionConfiguration* pCollisionConfiguration;
-	btCollisionDispatcher* pDispatcher;
-	btConstraintSolver* pSolver;
-	btDynamicsWorld* pWorld;
-	btClock clock;
-
-	void addPhysics(btRigidBody*);
+	void render(float dTime);
 };

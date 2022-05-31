@@ -13,5 +13,5 @@ public:
 	GLenum renderMode;
 	Camera camera;
 
-	void render(const std::vector<RenderObject>&, Light::Lights lights);
+	void render(const std::vector<RenderObject>&, Light::Lights lights, float dTime);
 };
