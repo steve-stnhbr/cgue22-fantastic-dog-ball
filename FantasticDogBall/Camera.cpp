@@ -29,11 +29,16 @@ void Camera::setView(const glm::mat4 mat)
 	data.view = mat;
 }
 
+void Camera::setRotation(const glm::vec3 direction_) 
+{
+	data.direction = glm::vec3(direction_.x, direction_.y, direction_.z);
+}
+
+
 void Camera::bind(Shaders::Program& program)
 {
 	bindWithModel(program, glm::mat4(1));
 }
-
 
 void Camera::bindWithModel(Shaders::Program& prog, glm::mat4 model)
 {

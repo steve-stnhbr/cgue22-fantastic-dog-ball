@@ -19,6 +19,7 @@ public:
 		 * The vector describing the cameras position;
 		 */
 		glm::vec4 position;
+		glm::vec3 direction;
 	};
 
 	/**
@@ -41,6 +42,8 @@ public:
 	void setProjection(const glm::mat4);
 
 	void setView(const glm::mat4);
+
+	void setRotation(const glm::vec3);
 
 	void bind(Shaders::Program&);
 

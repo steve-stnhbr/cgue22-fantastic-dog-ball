@@ -75,6 +75,7 @@ void Texture::Cubemap::initGL()
 	glTextureParameteri(glID, GL_TEXTURE_MAX_LEVEL, 1);
 }
 
+
 Texture::Cubemap::Cubemap(std::string& path)
 {
 	int width, height, nrChannels; 

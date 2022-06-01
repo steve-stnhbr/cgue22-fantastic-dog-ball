@@ -42,26 +42,35 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
     <None Include="static.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="testfrag.frag" />
+    <None Include="testvert.vert" />
     <None Include="VertexShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="filesystem.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="LightSource_alt.h" />
     <ClInclude Include="Loggger.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Shaders.h" />
+    <ClInclude Include="testcamera.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UncheckedUniformBuffer.h" />
     <ClInclude Include="UniformBuffer.h" />

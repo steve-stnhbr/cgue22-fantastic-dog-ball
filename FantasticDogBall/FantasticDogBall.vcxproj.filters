@@ -90,6 +90,18 @@
     <None Include="static.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="skybox.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="testfrag.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="testvert.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderObject.h">
@@ -150,6 +162,21 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="testcamera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
