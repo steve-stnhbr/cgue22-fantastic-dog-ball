@@ -19,6 +19,7 @@
 #include "Level.h"
 #include "RenderObject.h"
 
+
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -28,9 +29,6 @@ void gl_error_callback(GLenum source​, GLenum type​, GLuint id​,
     GLenum severity​, GLsizei length​, const GLchar* message​, const void* userParam);
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs);
 
-const int
-	WINDOW_WIDTH = 1920,
-	WINDOW_HEIGHT = 1080;
 const float
 	FOV = 45.0f;
 const char*
@@ -52,7 +50,7 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, NAME, NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -78,8 +76,7 @@ int main(int argc, char* argv[])
     initGl();
     initBullet();
 
-    constexpr float ratio = WINDOW_WIDTH / static_cast<float>(WINDOW_HEIGHT);
-
+    const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
 
     Level level;
     const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
@@ -99,10 +96,11 @@ int main(int argc, char* argv[])
     level.scene.lights.add(p);
 
     Light::Directional d = {
-        glm::vec3(1,-.1,-.4),
-        glm::vec3(0,0,0),
+        glm::vec3(2, -4, 1),
+        glm::vec3(.2,.2,.2),
         glm::vec3(.8,.8,.8),
-        glm::vec3(.4,.4,.4)
+        glm::vec3(.4,.4,.4),
+        true,
     };
 
     level.scene.lights.add(d);
@@ -133,9 +131,14 @@ int main(int argc, char* argv[])
     //level.add(cube);
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
-    material1.vals.color = { 0.2, 1 , 0.0, 1.0 };
+    material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
-
+  
+    scene.addObject(RenderObject{
+        Render::Cube{
+            0, 0, 0, 20, .2f, 20
+        }, &texture, "Cube"
+    }.translate(0, -4, 10));
     auto sphere = RenderObject{
         Render::Sphere(1, 32, 16), &material1, "Sphere"
     };
@@ -166,7 +169,6 @@ int main(int argc, char* argv[])
     dog.add(anim);
 
     level.add(dog);
-    
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

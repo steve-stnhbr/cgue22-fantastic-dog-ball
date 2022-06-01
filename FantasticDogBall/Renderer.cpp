@@ -21,6 +21,15 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
+	lights.dLights[0].generateShadowMap(objects);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glCullFace(GL_FRONT);
+	//todo add other lights to all shadow maps
+	lights.generateAllShadowMaps(objects);
+	glCullFace(GL_BACK);
+	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+
 	for (RenderObject element : objects)
 	{
 		Loggger::info("\t%s", element.name.c_str());
@@ -29,11 +38,11 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind program
 		auto prog = element.material->getProgram();
 		prog.use();
+		
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
 		lights.bind(prog);
 		element.draw(prog);
-		// draw
 	}
 
 	timeF += .01f;

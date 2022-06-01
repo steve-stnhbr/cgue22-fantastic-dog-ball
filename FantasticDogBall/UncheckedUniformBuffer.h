@@ -9,6 +9,7 @@ public:
 	void update(unsigned, void*);
 	void bind();
 	void bind(unsigned);
+	~UncheckedUniformBuffer();
 
 private:
 	static constexpr unsigned STANDARD_BUFFER_SIZE = 1024;
@@ -16,6 +17,7 @@ private:
 	void* data;
 
 	void checkCreated_(const char* file, int line) const;
+
 
 #define checkCreated checkCreated_(__FILE__, __LINE__);
 };

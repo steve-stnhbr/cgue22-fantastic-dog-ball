@@ -81,7 +81,6 @@ Shaders::Program Material::TextureMaterial::getProgram()
 
 void Material::TextureMaterial::bind(Shaders::Program& p)
 {
-
 	p.setTexture("color", color);
 	p.setTexture("normal", normal);
 	p.setTexture("diffuse", diffuse);

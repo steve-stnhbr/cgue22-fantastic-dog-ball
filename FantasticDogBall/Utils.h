@@ -6,6 +6,17 @@
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <vector >
 
+class Globals {
+public:
+	static unsigned NUM_POINT_LIGHTS;
+	static unsigned NUM_DIRECTIONAL_LIGHTS;
+	static unsigned NUM_SPOT_LIGHTS;
+	static unsigned NUM_SHADOW_CUBEMAPS;
+	static unsigned NUM_SHADOW_MAPS;
+	static unsigned WINDOW_WIDTH;
+	static unsigned WINDOW_HEIGHT;
+};
+
 class Utils
 {
 public:

@@ -7,6 +7,10 @@ struct DirLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    sampler2D shadowMap;
 };
 
 struct PointLight {
@@ -15,8 +19,12 @@ struct PointLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    samplerCubeShadow shadowMap;
 };
-
+ 
 struct SpotLight {
     vec4 position;
     vec4 direction;
@@ -25,7 +33,17 @@ struct SpotLight {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    
+    bool castsShadow;
+    mat4 lightSpace;
+    sampler2DShadow shadowMap;
 };
+
+uniform PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
+
+uniform DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
+
+uniform SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 
 uniform int s_color;
 uniform float value_color;
@@ -40,23 +58,13 @@ uniform float value_specular;
 uniform sampler2D specular;
 uniform float shininess;
 
+uniform sampler2D shadowMap;
+
 layout(std140) uniform CameraData{
     mat4 model;
     mat4 view;
     mat4 projection;
     vec4 viewPos;
-};
-
-layout(std140) uniform PointLights {
-    PointLight pLights[NUM_POINT_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
-
-layout(std140) uniform DirectionalLights {
-    DirLight dLights[NUM_DIRECTIONAL_LIGHTS]; // error can be ignored since the value is inserted at runtime
-};
-
-layout(std140) uniform SpotLights {
-    SpotLight sLights[NUM_SPOT_LIGHTS]; // error can be ignored since the value is inserted at runtime
 };
 
 in vec4 fragColor;
@@ -66,9 +74,12 @@ in vec2 texCoords;
 
 out vec4 outColor;
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+
+float ShadowCalculationDir(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lightDir);
+float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap);
 
 void main() {
     // properties
@@ -82,20 +93,78 @@ void main() {
     // this fragment's final color.
     // == =====================================================
     vec3 result = vec3(0, 0, 0);
-    // phase 1: directional lights
-    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
-        result += CalcDirLight(dLights[i], norm, viewDir);
+    // phase 1: directional lighting
+    for (int i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++) { // error can be ignored since the value is inserted at runtime
+        float shadow = dLights[i].castsShadow ? ShadowCalculationDir(dLights[i].lightSpace * vec4(fragPos, 1), dLights[i].shadowMap, vec3(-dLights[i].direction)) : 0;
+        //float shadow = dLights[i].castsShadow ? ShadowCalculation(dLights[i].lightSpace * vec4(fragPos, 1), dLights[i].shadowMap) : 0;
+        result += CalcDirLight(dLights[i], norm, viewDir, shadow);
+    }
     // phase 2: point lights
-    for (int i = 0; i < NUM_POINT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
+    for (int i = 0; i < NUM_POINT_LIGHTS; i++) { // error can be ignored since the value is inserted at runtime
         result += CalcPointLight(pLights[i], norm, fragPos, viewDir);
+    }
     // phase 3: spot light
-    for (int i = 0; i < NUM_SPOT_LIGHTS; i++) // error can be ignored since the value is inserted at runtime
+    for (int i = 0; i < NUM_SPOT_LIGHTS; i++) { // error can be ignored since the value is inserted at runtime 
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
-    
-    outColor = vec4(vec3(texture(color, texCoords)) * result, 1);
+    }
+
+    outColor = texture(color, texCoords) * vec4(result, 1);
+    //outColor = texture(dLights[0].shadowMap, texCoords);
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+}  
+
+float ShadowCalculationDir(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(fragNormal);
+    //vec3 lightDir = normalize(lightPos - fragPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    // check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+    
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+        
+    return shadow;
+}
+
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow)
 {
     vec3 lightDir = normalize(-light.direction.xyz);
     // diffuse shading
@@ -107,7 +176,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 ambient = light.ambient.xyz * (s_diffuse == 0 ? vec3(value_diffuse) : vec3(texture(diffuse, texCoords)));
     vec3 diffuse = light.diffuse.xyz * diff * (s_diffuse == 0 ? vec3(value_diffuse) : vec3(texture(diffuse, texCoords)));
     vec3 specular = light.specular.xyz * spec * (s_specular == 0 ? vec3(value_specular) :vec3(texture(specular, texCoords)));
-    return (ambient + diffuse + specular);
+    return (ambient + (diffuse + specular) * (1.0 - shadow));
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)

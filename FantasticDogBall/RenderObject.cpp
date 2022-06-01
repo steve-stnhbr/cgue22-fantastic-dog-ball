@@ -61,11 +61,8 @@ void RenderObject::add(Decoration::Decoration& decoration_)
 void RenderObject::buildVAO() const
 {
 	Loggger::trace("Creating RenderObject %s", name.c_str());
-	using vertexType = std::decay_t<decltype(*mesh.vertex_array.begin())>;
-	using indexType = std::decay_t<decltype(*mesh.index_array.begin())>;
 	glCreateVertexArrays(1, (GLuint*)&vaoID);
 	mesh.createBuffers(vaoID);
-	
 	material->assignVertexAttributes(vaoID);
 }
 

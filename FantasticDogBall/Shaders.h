@@ -6,6 +6,7 @@
 #include <map>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 #include "UniformBuffer.h"
 #include "Texture.h"
@@ -63,6 +64,8 @@ namespace Shaders
 		bool linked = false;
 		int binding;
 		int location;
+
+		std::vector<std::string> paths;
 		std::map<const char*, std::pair<unsigned, unsigned>> binding_map;
 
 		std::string vertexPath, fragmentPath;
@@ -78,6 +81,8 @@ namespace Shaders
 		void setInt(const std::string& name, int value) const;
 		void setFloat(const std::string& name, float value) const;
 		void setVec3(const std::string& name, glm::vec3) const;
+		void setVector4(const std::string& name, glm::vec4) const;
+		void setMatrix4(const std::string& name, glm::mat4) const;
 		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
 		void setUniform(const int binding, UncheckedUniformBuffer buffer) const;
 		template <typename V>
@@ -92,5 +97,8 @@ namespace Shaders
 
 		void setTexture(const unsigned, const Texture::Texture& texture) const;
 		void setTexture(const std::string&, const Texture::Texture& texture);
+
+
+		std::string getLog();
 	};
 };
