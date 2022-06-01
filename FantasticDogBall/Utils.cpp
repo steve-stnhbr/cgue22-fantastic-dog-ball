@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <filesystem>
+#include "Loggger.h"
 
 unsigned Globals::NUM_DIRECTIONAL_LIGHTS = 0;
 unsigned Globals::NUM_POINT_LIGHTS = 0;

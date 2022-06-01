@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
   
-    scene.addObject(RenderObject{
+    level.add(RenderObject{
         Render::Cube{
             0, 0, 0, 20, .2f, 20
         }, &texture, "Cube"

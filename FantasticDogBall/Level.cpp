@@ -57,6 +57,25 @@ void Level::add(RenderObject obj)
 	obj.init();
 }
 
+void Level::add(RenderObject* obj)
+{
+	add(*obj);
+}
+
+void Level::add(Light::Directional l)
+{
+	scene.lights.add(l);
+}
+void Level::add(Light::Point l)
+{
+	scene.lights.add(l);
+}
+void Level::add(Light::Spot l)
+{
+	scene.lights.add(l);
+}
+
+
 void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 {
 	int numManifolds = world->getDispatcher()->getNumManifolds();

@@ -23,6 +23,15 @@ Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float q
 	};
 }
 
+Light::Point::Data::Data(glm::vec4 position, glm::vec4 attenuation, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular):
+	position(position),
+	attenuation(attenuation),
+	ambient(ambient),
+	diffuse(diffuse),
+	specular(specular)
+{
+}
+
 glm::mat4 Light::Point::getLightSpace() const {
 	return glm::mat4(1);
 }
@@ -71,12 +80,20 @@ void Light::Point::generateShadowMap(const std::vector<RenderObject>& objs) {
 
 Light::Directional::Directional(glm::vec3 direction_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_, bool castShadow) : Light::Light(castShadow)
 {
-	data = {
+	data = Data(
 		glm::vec4(direction_.x, direction_.y, direction_.z, 0),
 		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
 		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
 		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
-	};
+	);
+}
+
+Light::Directional::Data::Data(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular) : 
+	direction(direction),
+	ambient(ambient),
+	diffuse(diffuse),
+	specular(specular)
+{
 }
 
 glm::mat4 Light::Directional::getLightSpace() const
@@ -105,6 +122,16 @@ Light::Spot::Spot(glm::vec3 position_, glm::vec3 direction_, float cutOff_, floa
 		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
 		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
 	};
+}
+
+Light::Spot::Data::Data(glm::vec4 position, glm::vec4 direction, glm::vec4 cutoff, glm::vec4 attenuation, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular) : 
+	position(position),
+	cutoff(cutoff),
+	attenuation(attenuation),
+	ambient(ambient),
+	diffuse(diffuse),
+	specular(specular)
+{
 }
 
 glm::mat4 Light::Spot::getLightSpace() const {
@@ -300,10 +327,7 @@ Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObjec
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
 	for (auto element : objects) {
 		SHADOW_PROGRAM.setMatrix4("model", element.transform);
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.eboID);
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+		element.draw(SHADOW_PROGRAM);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

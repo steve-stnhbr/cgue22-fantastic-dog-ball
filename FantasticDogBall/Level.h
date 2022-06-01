@@ -24,6 +24,10 @@ public:
 
 	void setupPhysics();
 	void add(RenderObject);
+	void add(RenderObject*);
+	void add(Light::Directional);
+	void add(Light::Point);
+	void add(Light::Spot);
 
 protected:
 	// core Bullet components

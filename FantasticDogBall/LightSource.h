@@ -43,6 +43,10 @@ namespace Light
 			glm::vec4 specular;
 
 			Data() = default;
+			Data(glm::vec4 direction,
+				glm::vec4 ambient,
+				glm::vec4 diffuse,
+				glm::vec4 specular);
 		} data;
 
 		Directional() = default;
@@ -66,6 +70,11 @@ namespace Light
 			glm::vec4 specular;
 			
 			Data() = default;
+			Data(glm::vec4 position,
+				glm::vec4 attenuation,
+				glm::vec4 ambient,
+				glm::vec4 diffuse,
+				glm::vec4 specular);
 		} data;
 
 		Point() = default;
@@ -93,6 +102,13 @@ namespace Light
 			glm::vec4 specular;
 
 			Data() = default;
+			Data(glm::vec4 position,
+				glm::vec4 direction,
+				glm::vec4 cutoff,
+				glm::vec4 attenuation,
+				glm::vec4 ambient,
+				glm::vec4 diffuse,
+				glm::vec4 specular);
 		} data;
 
 		Spot() = default;
