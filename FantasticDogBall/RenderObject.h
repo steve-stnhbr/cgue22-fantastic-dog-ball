@@ -3,6 +3,15 @@
 #include <typeindex>
 #include <BulletCollision/CollisionDispatch/btCollisionObject.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include <BulletCollision/BroadphaseCollision/btBroadphaseInterface.h>
+#include <BulletCollision/CollisionDispatch/btCollisionConfiguration.h>
+#include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
+#include <btBulletDynamicsCommon.h>
+#include <LinearMath/btQuickprof.h>
+#include <functional>
+
+#include <unordered_map>
 
 #include "Material.h"
 #include "Render.h"
@@ -20,6 +29,8 @@ namespace Decoration
  */
 class RenderObject
 {
+private:
+	void applyToPhysics();
 public:
 	/**
 	 * The Mesh containing the vertecies and indices used to draw
@@ -32,7 +43,7 @@ public:
 	/*
 	 *
 	 */
-	// std::unordered_map<std::type_index, Decoration::Decoration> decorations;
+	Utils::Map<size_t, Decoration::Decoration*>* decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -44,43 +55,54 @@ public:
 	/**
 	 * unsigned 
 	 */
-	GLuint vaoID, vboID, eboID;
+	GLuint vaoID;
 	/*
 	 * matrix holding information about transforms
 	 */
 	glm::mat4 transform;
+	btMatrix3x3 pRotate;
+	btVector3 pTranslate;
+	btVector3 pScale;
 
 	RenderObject(Render::Mesh, Material::Material*, const std::string&);
 	
-	void update();
+	void init();
+	void update(unsigned long frame, float dTime);
+	void draw(Shaders::Program prog);
 	void add(Decoration::Decoration&);
 	void buildVAO() const;
 	RenderObject* translate(float, float, float);
 	RenderObject* translate(glm::vec3);
 	RenderObject* rotate(float, float, float);
 	RenderObject* rotate(float, glm::vec3);
+	RenderObject* scale(float);
 	RenderObject* scale(float, float, float);
 	RenderObject* scale(glm::vec3);
 
-private:
-	void doTransform();
-};
-
-class Cube : public RenderObject
-{
-	Cube(float centerX, float centerY, float centerZ, float width, float height, float depth);
+	template <class T>
+	inline T* getDecoration() const {
+		auto& type = typeid(T);
+		auto name = type.name();
+		auto f = decorations->get(type.hash_code());
+		if (f == NULL) return nullptr;
+		return static_cast<T*>(f);
+	}
 };
 
 namespace Decoration
 {
 	class Decoration
 	{
-	protected:
-		RenderObject* object;
 	public:
-		virtual void update(unsigned frame, float dTime) = 0;
+		RenderObject* object;
+		std::function<void(RenderObject*, unsigned long, float)> onUpdate;
+		virtual void init(RenderObject*) = 0;
+		virtual void update(RenderObject* object, unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
+
+		Decoration() = default;
+		Decoration(RenderObject*);
 	};
 
 
@@ -88,18 +110,38 @@ namespace Decoration
 	{
 	private:
 		btCollisionShape* pShape;
-		float mass;
-		btMotionState* motionState;
+		float pMass;
+		btMotionState* pTransform;
+
 	public:
-		void update(unsigned frame, float dTime) override;
+		btRigidBody* pBody;
+		btDynamicsWorld* pWorld;
+
+		void init(RenderObject*) override;
+		void bind(RenderObject*);
+		void update(RenderObject* object, unsigned frame, float dTime) override;
+
+		void onCollide(RenderObject* other);
+
+		/*
+		 *	if pShape is nullptr the mesh of the object bound will be used
+		 */
+		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass);
 	};
 
 	class Animation : public Decoration
 	{
 	private:
+		bool loop;
+		float speed;
 		std::vector<Render::Mesh> meshes;
+		std::vector<std::string> paths;
 	public:
-		void update(unsigned frame, float dTime) override;
+		Animation(std::string path, float = 1.0f, bool = true);
+		Animation(std::vector<std::string> paths, float = 1.0f, bool = true);
+
+		void init(RenderObject*) override;
+		void update(RenderObject*, unsigned frame, float dTime) override;
 	};
 
 }

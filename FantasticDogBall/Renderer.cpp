@@ -17,7 +17,7 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights)
+void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
@@ -32,9 +32,8 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 
 	for (RenderObject element : objects)
 	{
-		element.update();
-
 		Loggger::info("\t%s", element.name.c_str());
+		element.update(frameCount, dTime);
 
 		// bind program
 		auto prog = element.material->getProgram();
@@ -43,18 +42,7 @@ void Renderer::render(const std::vector<RenderObject>& objects, Light::Lights li
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
 		lights.bind(prog);
-		element.material->bind(prog);
-		Utils::checkError();
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.eboID);
-		Utils::checkError();
-		// draw
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
-		Utils::checkError();
-		glUseProgram(0);
-		Utils::CheckDebugLog();
-		Loggger::debug("Shader-Log: %s", prog.getLog().c_str());
+		element.draw(prog);
 	}
 
 	timeF += .01f;

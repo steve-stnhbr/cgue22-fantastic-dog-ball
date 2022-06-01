@@ -78,7 +78,7 @@ namespace Material
 		static size_t numPointLights, numDirLights, numSpotLights;
 		const std::string shaderFile;
 
-		const Shaders::Program program = Utils::loadProgram(vertexShader, shaderFile);
+		const Shaders::Program program = Shaders::Program({ vertexShader, shaderFile });
 
 		Shaders::Program getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;

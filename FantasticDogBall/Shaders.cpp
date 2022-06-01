@@ -152,11 +152,11 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
 
-Shaders::Program::Program() : location(10), binding(20), ID(0)
+Shaders::Program::Program() : location(0), binding(20), ID(0)
 {
 }
 
-Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	location(10),
+Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	location(0),
 																				binding(20),
 																				vertexPath(vertexPath),
 																				fragmentPath(fragmentPath)
@@ -331,7 +331,6 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	}
 	this->setInt("s_" + name, 1);
 	
-	const unsigned location_ = ++location;
 	const auto ul = glGetUniformLocation(ID, name.c_str());
 	//if (ul < 0)
 		//Loggger::error("The location for %s was not found in shader %u", name.c_str(), ID);
@@ -342,6 +341,8 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	Utils::checkError();
 	texture.bind(location);
 	Utils::checkError();
+
+	location++;
 }
 
 std::string Shaders::Program::getLog()

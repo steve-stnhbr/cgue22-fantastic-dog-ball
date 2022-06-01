@@ -16,6 +16,8 @@
 
 #include "LightSource.h"
 #include "Material.h"
+#include "Level.h"
+#include "RenderObject.h"
 
 
 void error_callback(int error, const char* msg);
@@ -76,12 +78,12 @@ int main(int argc, char* argv[])
 
     const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
 
-    Scene scene;
+    Level level;
     const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
 
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
     const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
+    level.scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
 
     Light::Point p = {
         glm::vec3(0, 1, 0),
@@ -91,7 +93,7 @@ int main(int argc, char* argv[])
         glm::vec3(2,2,2)
     };
 
-    //scene.lights.add(p);
+    level.scene.lights.add(p);
 
     Light::Directional d = {
         glm::vec3(2, -4, 1),
@@ -101,9 +103,11 @@ int main(int argc, char* argv[])
         true,
     };
 
-    scene.lights.add(d);
+    level.scene.lights.add(d);
     
-    scene.lights.finalize();
+    level.scene.lights.finalize();
+
+    typeid(Decoration::Physics);
 
     Material::StaticMaterial material = Material::StaticMaterial{};
     material.vals.color = { .0, 0.5 , 0.0, 1.0 };
@@ -116,19 +120,55 @@ int main(int argc, char* argv[])
     texture.specular = { 2 };
     texture.shininess = 1;
      
+    auto cube = RenderObject{
+        Render::Plane{
+           100, 100
+        }, &texture, "Cube"
+    };
+    cube.rotate(.3, { 0, 0, 1 });
+    Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
+    cube.add(physx);
+    //level.add(cube);
 
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
-
-    scene.addObject(RenderObject{
-        Render::Mesh::fromFile("../res/duck.obj")[0],& material1, "Duck"
-    }.translate(0, -2, 5)->rotate(-glm::half_pi<float>(), 0, -glm::half_pi<float>())->rotate(-glm::half_pi<float>()/3, 0, 0));
+  
     scene.addObject(RenderObject{
         Render::Cube{
             0, 0, 0, 20, .2f, 20
         }, &texture, "Cube"
     }.translate(0, -4, 10));
+    auto sphere = RenderObject{
+        Render::Sphere(1, 32, 16), &material1, "Sphere"
+    };
+    sphere.translate({ 0, 3, 0 });
+    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, nullptr, 1.0);
+    /*
+    phys0.onUpdate = [](RenderObject* obj_, unsigned long, float)
+    {
+        obj_->getDecoration<Decoration::Physics>()->pBody->applyCentralForce({ 0, 0, 10 });
+    };
+    */
+    sphere.add(phys0);
+    //level.add(sphere);
+
+    Material::TextureMaterial dog_mat;
+    dog_mat.color = { "../res/dog_texture.png" };
+    //dog_mat.normal = { "../res/fur_normal.png" };
+    dog_mat.diffuse = { .8 };
+    dog_mat.specular = { 2 };
+    dog_mat.shininess = 1.0f;
+    
+    auto dog = RenderObject{
+        Render::Mesh::fromFile("../res/dog_canter/Cachorro_walk_000001.obj")[0],& dog_mat, "Dog"
+    };
+    dog.rotate(SIMD_PI, { 0, 1, 0 });
+    std::string dogPath = "../res/dog_canter";
+    Decoration::Animation anim(dogPath, .1f);
+    dog.add(anim);
+
+    level.add(dog);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -140,7 +180,7 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
 
-        scene.render();
+        level.render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -204,6 +244,9 @@ void initGl()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 }
 
 void initBullet() {

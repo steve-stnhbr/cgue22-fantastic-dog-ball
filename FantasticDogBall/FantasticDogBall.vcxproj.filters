@@ -104,6 +104,10 @@
       <Filter>Ressourcendateien</Filter>
     </None>
     <None Include="shadowCube.geom">
+    <None Include="debug.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="debug.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
   </ItemGroup>
