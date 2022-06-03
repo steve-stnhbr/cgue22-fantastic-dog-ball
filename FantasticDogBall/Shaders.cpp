@@ -238,7 +238,7 @@ Shaders::Program::Program(std::vector<std::string> paths) : binding(20), locatio
 void Shaders::Program::setBool(const std::string& name, const bool value) const
 {
 	use();
-	Loggger::debug("Setting %s to %b", name.c_str(), value);
+	Loggger::debug("Setting %s to %s", name.c_str(), value ? "true" : "false");
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
 }
 void Shaders::Program::setInt(const std::string& name, const int value) const

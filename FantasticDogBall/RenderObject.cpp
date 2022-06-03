@@ -66,6 +66,11 @@ void RenderObject::buildVAO() const
 	material->assignVertexAttributes(vaoID);
 }
 
+void RenderObject::cleanup()
+{
+
+}
+
 RenderObject* RenderObject::scale(float x, float y, float z)
 {
 	scale({ x,y,z });

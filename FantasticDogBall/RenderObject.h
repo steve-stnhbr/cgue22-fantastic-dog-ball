@@ -72,6 +72,7 @@ public:
 	void draw(Shaders::Program prog);
 	void add(Decoration::Decoration&);
 	void buildVAO() const;
+	void cleanup();
 	RenderObject* translate(float, float, float);
 	RenderObject* translate(glm::vec3);
 	RenderObject* rotate(float, float, float);

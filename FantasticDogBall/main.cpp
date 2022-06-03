@@ -93,17 +93,17 @@ int main(int argc, char* argv[])
         glm::vec3(2,2,2)
     };
 
-    level.scene.lights.add(p);
+    //level.scene.lights.add(p);
 
     Light::Directional d = {
         glm::vec3(2, -4, 1),
-        glm::vec3(.2,.2,.2),
+        glm::vec3(.3,.3,.3),
         glm::vec3(.8,.8,.8),
-        glm::vec3(.4,.4,.4),
-        true,
+        glm::vec3(.9,.9,.9),
+        true
     };
 
-    level.scene.lights.add(d);
+    level.add(d);
     
     level.scene.lights.finalize();
 
@@ -120,9 +120,9 @@ int main(int argc, char* argv[])
 
     Material::TextureMaterial dog_mat;
     dog_mat.color = { "../res/dog_texture.png" };
-    dog_mat.normal = { "../res/concrete_norm.jpg" };
+    dog_mat.normal = { "../res/fur_normal.png" };
     dog_mat.diffuse = { .8 };
-    dog_mat.specular = { 2 };
+    dog_mat.specular = { .1 };
     dog_mat.shininess = 1;
 
     auto sphere = RenderObject{
@@ -134,16 +134,18 @@ int main(int argc, char* argv[])
              0, -5, 0, 50, .2, 50
         }, &texture, "Cube"
     };
+    cube.translate({ 0, -.5, 0 });
 
     auto dog = RenderObject(Render::Mesh::fromFile("../res/Cachorro.obj")[0], &dog_mat, "Doggo");
-    Decoration::Animation anim("../res/dog_canter", .35);
-    Decoration::Custom custom([](RenderObject* obj, unsigned frame, float) {
-        obj->rotate(frame / 100, { 0,1,0 });
+    Decoration::Animation anim("../res/dog_walk", .35);
+    Decoration::Custom custom([](RenderObject* obj, unsigned frame, float dTime) {
+        obj->rotate(frame / static_cast<float>(10000), { 0,1,1 });
     });
     dog.add(anim);
     dog.add(custom);
     level.add(dog);
     level.add(cube);
+    level.add(sphere);
 
 
     /* Loop until the user closes the window */
@@ -167,6 +169,7 @@ int main(int argc, char* argv[])
     }
 
     Shaders::cleanup();
+    level.cleanup();
 
     glfwTerminate();
     return 0;

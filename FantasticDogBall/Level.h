@@ -22,6 +22,7 @@ public:
 	
 	void render();
 
+	void cleanup();
 	void setupPhysics();
 	void add(RenderObject);
 	void add(RenderObject*);

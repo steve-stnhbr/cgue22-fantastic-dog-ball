@@ -33,6 +33,13 @@ void Level::render()
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);
 
+void Level::cleanup()
+{
+	for (RenderObject obj : scene.objects) {
+		obj.cleanup();
+	}
+}
+
 void Level::setupPhysics()
 {
 	// create the collision configuration

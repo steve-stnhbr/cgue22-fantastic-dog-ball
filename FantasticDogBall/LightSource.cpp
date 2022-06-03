@@ -17,9 +17,9 @@ Light::Point::Point(glm::vec3 position_, float constant_, float linear_, float q
 	data = {
 		glm::vec4(position_.x, position_.y, position_.z, 0),
 		glm::vec4(constant_, linear_, quadratic_, 0),
-		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0),
-		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0),
-		glm::vec4(specular_.x, specular_.y, specular_.z, 0)
+		glm::vec4(ambient_.x, ambient_.y, ambient_.z, 0) * (castShadow ? 2.5f : 1),
+		glm::vec4(diffuse_.x, diffuse_.y, diffuse_.z, 0) * (castShadow ? 2.5f : 1),
+		glm::vec4(specular_.x, specular_.y, specular_.z, 0) * (castShadow ? 2.5f : 1)
 	};
 }
 
@@ -231,6 +231,12 @@ void Light::Lights::generateAllShadowMaps(const std::vector<RenderObject>& objs)
 {
 	for (auto& l : dLights)
 		l.generateShadowMap(objs);
+	/*
+	for (auto& l : sLights)
+		l.generateShadowMap(objs);
+	for (auto& l : pLights)
+		l.generateShadowMap(objs);
+		*/
 }
 
 void Light::Lights::finalize()
@@ -275,7 +281,7 @@ Light::Light::Light() : Light(false)
 {
 }
 
-Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
+Light::Light::Light(bool useShadowMap): castShadow(useShadowMap), shadowMapID(0)
 {
 	if (useShadowMap) {
 		glGenTextures(1, &shadowMapID);
@@ -325,11 +331,18 @@ Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObjec
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
 	for (auto element : objects) {
 		SHADOW_PROGRAM.setMatrix4("model", element.transform);
-		element.draw(SHADOW_PROGRAM);
+		Utils::checkError();
+		glBindVertexArray(element.vaoID);
+		glBindVertexBuffer(0, element.mesh.vboID, 0, sizeof(Vertex));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.mesh.eboID);
+		Utils::checkError();
+		// draw
+		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+		Utils::checkError();
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//glEnable(GL_RASTERIZER_DISCARD);
+	glDisable(GL_RASTERIZER_DISCARD);
 	Texture::Texture tex;
 	tex.defined = true;
 	tex.glID = shadowMapID;
