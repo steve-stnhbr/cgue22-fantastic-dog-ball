@@ -278,7 +278,14 @@ Light::Light::Light() : Light(false)
 Light::Light::Light(bool useShadowMap): castShadow(useShadowMap)
 {
 	if (useShadowMap) {
-		//shadowMap = Texture::Texture{ SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT, 1, false };
+		glGenTextures(1, &shadowMapID);
+		glBindTexture(GL_TEXTURE_2D, shadowMapID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+			SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 }
 
@@ -304,17 +311,8 @@ void Light::Light::initProgram() {
 Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObject>& objects)
 { 
 	if (!castShadow) return false;
-	unsigned int depthMap;
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapID, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -333,7 +331,7 @@ Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObjec
 
 	//glEnable(GL_RASTERIZER_DISCARD);
 	Texture::Texture tex;
-	tex.glID = depthMap;
-	shadowMap = depthMap;
+	tex.glID = shadowMapID;
+	shadowMap = tex;
 	return shadowMap;
 }

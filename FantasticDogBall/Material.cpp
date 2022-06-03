@@ -17,7 +17,7 @@ Material::StaticMaterial::StaticMaterial(const glm::vec4 color_, const float dif
 	Utils::checkError();
 }
 
-Shaders::Program Material::StaticMaterial::getProgram()
+Shaders::Program& Material::StaticMaterial::getProgram()
 {
 	return program;
 }
@@ -74,7 +74,7 @@ void Material::StaticMaterial::assignVertexAttributes(unsigned vao)
 }
 
 
-Shaders::Program Material::TextureMaterial::getProgram()
+Shaders::Program& Material::TextureMaterial::getProgram()
 {
 	return program;
 }
@@ -124,7 +124,7 @@ void Material::TextureMaterial::initProgram()
 	TextureMaterial::program = Shaders::Program({ vertexShader, textureFragmentShader });
 }
 
-Shaders::Program Material::ProceduralMaterial::getProgram()
+Shaders::Program& Material::ProceduralMaterial::getProgram()
 {
 	return program;
 }

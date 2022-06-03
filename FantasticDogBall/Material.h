@@ -12,7 +12,7 @@ namespace Material
 
 	struct Material
 	{
-		virtual Shaders::Program getProgram() = 0;
+		virtual Shaders::Program& getProgram() = 0;
 		virtual ~Material() = default;
 		virtual void bind(Shaders::Program&) = 0;
 		/*
@@ -44,7 +44,7 @@ namespace Material
 			const float specular_,
 			const float shininess_);
 
-		Shaders::Program getProgram() override;
+		Shaders::Program& getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
 		void bind(Shaders::Program&) override;
 		void createBuffer();
@@ -64,7 +64,7 @@ namespace Material
 
 		static Shaders::Program program;
 
-		Shaders::Program getProgram() override;
+		Shaders::Program& getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
 		void bind(Shaders::Program&) override;
 
@@ -78,9 +78,9 @@ namespace Material
 		static size_t numPointLights, numDirLights, numSpotLights;
 		const std::string shaderFile;
 
-		const Shaders::Program program = Shaders::Program({ vertexShader, shaderFile });
+		Shaders::Program program = Shaders::Program({ vertexShader, shaderFile });
 
-		Shaders::Program getProgram() override;
+		Shaders::Program& getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
 		void bind(Shaders::Program&) override; //todo
 	};

@@ -21,6 +21,7 @@ namespace Light
 
 		bool castShadow;
 		Texture::Texture shadowMap;
+		unsigned shadowMapID;
 
 		Light();
 		Light(bool useShadowMap);

@@ -291,14 +291,14 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 			return;
 		}
 		Utils::checkError();
-		Loggger::debug("Binding uniform %s to program %d with index %d", c_name, ID, ubi);
+		Loggger::trace("Binding uniform %s to program %d with index %d", c_name, ID, ubi);
 
 		buffer_map[name] = std::pair<unsigned, unsigned>(binding_, ubi);
 	} else
 	{
 		binding_ = map_val->second.first;
 		ubi = map_val->second.second;
-		Loggger::fatal("Read binding for %s from map: %u", c_name, binding_);
+		Loggger::trace("Read binding for %s from map: %u", c_name, binding_);
 	}
 
 	glUniformBlockBinding(ID, ubi, binding_);

@@ -118,6 +118,13 @@ int main(int argc, char* argv[])
     material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
 
+    Material::TextureMaterial dog_mat;
+    dog_mat.color = { "../res/dog_texture.png" };
+    dog_mat.normal = { "../res/concrete_norm.jpg" };
+    dog_mat.diffuse = { .8 };
+    dog_mat.specular = { 2 };
+    dog_mat.shininess = 1;
+
     auto sphere = RenderObject{
         Render::Sphere(1, 32, 16), &material1, "Sphere"
     };
@@ -125,11 +132,14 @@ int main(int argc, char* argv[])
     auto cube = RenderObject{
         Render::Cube{
              0, -5, 0, 50, .2, 50
-        }, &material1, "Cube"
+        }, &texture, "Cube"
     };
 
-    level.add(sphere);
+    auto dog = RenderObject(Render::Mesh::fromFile("../res/Cachorro.obj")[0], &dog_mat, "Doggo");
+    level.add(dog);
     level.add(cube);
+
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {

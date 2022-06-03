@@ -36,7 +36,7 @@ void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights l
 		element.update(frameCount, dTime);
 
 		// bind program
-		auto prog = element.material->getProgram();
+		auto& prog = element.material->getProgram();
 		prog.use();
 		
 		// bind uniforms here
