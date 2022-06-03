@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 
     const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
     const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    level.scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj});
+    level.scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj, glm::vec4(cameraPos.x, cameraPos.y, cameraPos.z, 1)});
 
     Light::Point p = {
         glm::vec3(0, 1, 0),
@@ -107,12 +107,6 @@ int main(int argc, char* argv[])
     
     level.scene.lights.finalize();
 
-    typeid(Decoration::Physics);
-
-    Material::StaticMaterial material = Material::StaticMaterial{};
-    material.vals.color = { .0, 0.5 , 0.0, 1.0 };
-    material.vals.data = { 1.0f, 5.0f, 1, 0};
-
     Material::TextureMaterial texture = Material::TextureMaterial{};
     texture.color = { "../res/concrete.jpg" };
     texture.normal = { "../res/concrete_norm.jpg" };
@@ -120,56 +114,22 @@ int main(int argc, char* argv[])
     texture.specular = { 2 };
     texture.shininess = 1;
      
-    auto cube = RenderObject{
-        Render::Plane{
-           100, 100
-        }, &texture, "Cube"
-    };
-    cube.rotate(.3, { 0, 0, 1 });
-    Decoration::Physics physx = Decoration::Physics(level.pWorld, nullptr, 0);
-    cube.add(physx);
-    //level.add(cube);
-
     Material::StaticMaterial material1 = Material::StaticMaterial{};
     material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
     material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
-  
-    level.add(RenderObject{
-        Render::Cube{
-            0, 0, 0, 20, .2f, 20
-        }, &texture, "Cube"
-    }.translate(0, -4, 10));
+
     auto sphere = RenderObject{
         Render::Sphere(1, 32, 16), &material1, "Sphere"
     };
-    sphere.translate({ 0, 3, 0 });
-    Decoration::Physics phys0 = Decoration::Physics(level.pWorld, nullptr, 1.0);
-    /*
-    phys0.onUpdate = [](RenderObject* obj_, unsigned long, float)
-    {
-        obj_->getDecoration<Decoration::Physics>()->pBody->applyCentralForce({ 0, 0, 10 });
+    sphere.translate({ 0, 2, 0 });
+    auto cube = RenderObject{
+        Render::Cube{
+             0, -5, 0, 50, .2, 50
+        }, &material1, "Cube"
     };
-    */
-    sphere.add(phys0);
-    //level.add(sphere);
 
-    Material::TextureMaterial dog_mat;
-    dog_mat.color = { "../res/dog_texture.png" };
-    //dog_mat.normal = { "../res/fur_normal.png" };
-    dog_mat.diffuse = { .8 };
-    dog_mat.specular = { 2 };
-    dog_mat.shininess = 1.0f;
-    
-    auto dog = RenderObject{
-        Render::Mesh::fromFile("../res/dog_canter/Cachorro_walk_000001.obj")[0],& dog_mat, "Dog"
-    };
-    dog.rotate(SIMD_PI, { 0, 1, 0 });
-    std::string dogPath = "../res/dog_canter";
-    Decoration::Animation anim(dogPath, .1f);
-    dog.add(anim);
-
-    level.add(dog);
-
+    level.add(sphere);
+    level.add(cube);
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {

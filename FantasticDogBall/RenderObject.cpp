@@ -41,8 +41,8 @@ void RenderObject::update(unsigned long frame, float dTime)
 
 void RenderObject::draw(Shaders::Program prog)
 {
-	material->bind(prog);
 	mesh.bind(prog);
+	material->bind(prog);
 
 	glBindVertexArray(vaoID);
 	Utils::checkError();

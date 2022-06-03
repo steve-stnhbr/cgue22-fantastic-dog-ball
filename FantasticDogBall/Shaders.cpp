@@ -280,16 +280,20 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 	unsigned ubi = 0;
 
 	const auto c_name = name.c_str();
-	auto map_val = binding_map.find(c_name);
-	if(true)
+	auto map_val = buffer_map.find(name);
+	if(map_val == buffer_map.end())
 	{
 		binding = ++binding;
 		binding_ = binding;
 		ubi = glGetUniformBlockIndex(ID, c_name);
+		if (ubi < 0 || ubi == GL_INVALID_INDEX) {
+			Loggger::warn("The location for %s was not found in shader %u", name.c_str(), ID);
+			return;
+		}
 		Utils::checkError();
 		Loggger::debug("Binding uniform %s to program %d with index %d", c_name, ID, ubi);
 
-		binding_map.insert(std::pair<const char*, std::pair<unsigned, unsigned>>(c_name, std::pair<unsigned, unsigned>(binding_, ubi)));
+		buffer_map[name] = std::pair<unsigned, unsigned>(binding_, ubi);
 	} else
 	{
 		binding_ = map_val->second.first;
@@ -330,19 +334,34 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 		return;
 	}
 	this->setInt("s_" + name, 1);
-	
-	const auto ul = glGetUniformLocation(ID, name.c_str());
-	//if (ul < 0)
-		//Loggger::error("The location for %s was not found in shader %u", name.c_str(), ID);
-		
-	Utils::checkError();
-	Loggger::debug("Binding texture %s to location %u", name.c_str(), location);
-	glUniform1i(ul, location);
-	Utils::checkError();
-	texture.bind(location);
-	Utils::checkError();
 
-	location++;
+	unsigned ul = 0, location_ = 0;
+	
+	auto map_val = texture_map.find(name);
+	if (map_val == texture_map.end()) {
+		ul = glGetUniformLocation(ID, name.c_str());
+		if (ul < 0 || ul == GL_INVALID_INDEX) {
+			Loggger::warn("The location for %s was not found in shader %u", name.c_str(), ID);
+			return;
+		}
+
+		location_ = ++location;
+		Utils::checkError();
+		Loggger::debug("Binding texture %s to location %u", name.c_str(), location);
+
+		texture_map[name] = std::pair(ul, location);
+	}
+	else {
+		ul = map_val->second.first;
+		location_ = map_val->second.second;
+
+		Loggger::trace("Read binding-values for %s from map", name.c_str());
+	}
+
+	glUniform1i(ul, location_);
+	Utils::checkError();
+	texture.bind(location_);
+	Utils::checkError();
 }
 
 std::string Shaders::Program::getLog()

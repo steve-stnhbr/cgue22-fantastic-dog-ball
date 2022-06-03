@@ -66,7 +66,8 @@ namespace Shaders
 		int location;
 
 		std::vector<std::string> paths;
-		std::map<const char*, std::pair<unsigned, unsigned>> binding_map;
+		std::map<std::string, std::pair<unsigned, unsigned>> buffer_map;
+		std::map<std::string, std::pair<unsigned, unsigned>> texture_map;
 
 		std::string vertexPath, fragmentPath;
 
