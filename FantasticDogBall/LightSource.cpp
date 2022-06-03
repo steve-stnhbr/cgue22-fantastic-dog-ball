@@ -331,6 +331,7 @@ Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObjec
 
 	//glEnable(GL_RASTERIZER_DISCARD);
 	Texture::Texture tex;
+	tex.defined = true;
 	tex.glID = shadowMapID;
 	shadowMap = tex;
 	return shadowMap;

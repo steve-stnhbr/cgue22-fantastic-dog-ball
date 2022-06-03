@@ -221,3 +221,23 @@ void Decoration::Animation::update(RenderObject* obj,unsigned frame, float dTime
 	auto index = static_cast<unsigned>(floor(frame * speed)) % meshes.size();
 	obj->mesh = meshes[index];
 }
+
+Decoration::Custom::Custom(std::function<void(RenderObject*, unsigned, float)> func) : updateFunc(func)
+{
+}
+
+Decoration::Custom::Custom(std::function<void(RenderObject*, unsigned, float)> update, std::function<void(RenderObject*)> init) : updateFunc(update), initFunc(init)
+{
+}
+
+void Decoration::Custom::init(RenderObject* obj) {
+	if(initFunc)
+		initFunc(obj);
+}
+
+void Decoration::Custom::update(RenderObject* obj, unsigned frame, float dTime)
+{
+	updateFunc(obj, frame, dTime);
+}
+
+

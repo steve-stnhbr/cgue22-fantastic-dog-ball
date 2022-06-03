@@ -136,6 +136,12 @@ int main(int argc, char* argv[])
     };
 
     auto dog = RenderObject(Render::Mesh::fromFile("../res/Cachorro.obj")[0], &dog_mat, "Doggo");
+    Decoration::Animation anim("../res/dog_canter", .35);
+    Decoration::Custom custom([](RenderObject* obj, unsigned frame, float) {
+        obj->rotate(frame / 100, { 0,1,0 });
+    });
+    dog.add(anim);
+    dog.add(custom);
     level.add(dog);
     level.add(cube);
 

@@ -22,6 +22,7 @@ namespace Decoration
 	class Decoration;
 	class Physics;
 	class Animation;
+	class Custom;
 };
 
 /**
@@ -139,6 +140,18 @@ namespace Decoration
 	public:
 		Animation(std::string path, float = 1.0f, bool = true);
 		Animation(std::vector<std::string> paths, float = 1.0f, bool = true);
+
+		void init(RenderObject*) override;
+		void update(RenderObject*, unsigned frame, float dTime) override;
+	};
+
+	class Custom : public Decoration {
+	public:
+		std::function<void(RenderObject*, unsigned, float)> updateFunc;
+		std::function<void(RenderObject*)> initFunc;
+
+		Custom(std::function<void(RenderObject*, unsigned, float)> func);
+		Custom(std::function<void(RenderObject*, unsigned, float)> update, std::function<void(RenderObject*)> init);
 
 		void init(RenderObject*) override;
 		void update(RenderObject*, unsigned frame, float dTime) override;

@@ -20,8 +20,6 @@ Renderer::Renderer()
 void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
-
-	lights.dLights[0].generateShadowMap(objects);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glCullFace(GL_FRONT);
