@@ -135,14 +135,18 @@ int main(int argc, char* argv[])
         }, &texture, "Cube"
     };
     cube.translate({ 0, -.5, 0 });
+    Decoration::Physics cube_physics(level.pWorld, nullptr, 0);
+    cube.add(cube_physics);
 
     auto dog = RenderObject(Render::Mesh::fromFile("../res/Cachorro.obj")[0], &dog_mat, "Doggo");
     Decoration::Animation anim("../res/dog_walk", .35);
     Decoration::Custom custom([](RenderObject* obj, unsigned frame, float dTime) {
-        obj->rotate(frame / static_cast<float>(10000), { 0,1,1 });
+        obj->getDecoration<Decoration::Physics>()->pBody->applyCentralForce({0, 0, 1});
     });
+    Decoration::Physics dog_physics(level.pWorld, new btSphereShape(1), 5);
     dog.add(anim);
     dog.add(custom);
+    dog.add(dog_physics);
     level.add(dog);
     level.add(cube);
     level.add(sphere);
