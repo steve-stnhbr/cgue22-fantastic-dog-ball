@@ -14,6 +14,10 @@
 
 #include "Utils.h"
 
+RenderObject::RenderObject() : material(new Material::StaticMaterial()), name("")
+{
+}
+
 RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
 	material(material_),
@@ -22,29 +26,29 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 	pScale({1, 1, 1})
 {
 	buildVAO();
-	decorations = new Utils::Map<size_t, Decoration::Decoration*>();
+	decorations = Utils::Map<size_t, Decoration::Decoration*>();
 }
 
 void RenderObject::init()
 {
-	for (auto val : decorations->vals) {
+	for (auto* const val : decorations.vals) {
+		if(!val->initialized)
 		val->init(this);
 	}
 }
 
 void RenderObject::update(unsigned long frame, float dTime)
 {
-	for (auto val : decorations->vals) {
+	for (auto* const val : decorations.vals) {
 		val->update(this, frame, dTime);
 	}
 }
-
 void RenderObject::draw(Shaders::Program prog)
 {
+	glBindVertexArray(vaoID);
 	mesh.bind(prog);
 	material->bind(prog);
 
-	glBindVertexArray(vaoID);
 	Utils::checkError();
 
 	glDrawElements(GL_TRIANGLES, mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
@@ -55,7 +59,7 @@ void RenderObject::draw(Shaders::Program prog)
 void RenderObject::add(Decoration::Decoration& decoration_)
 {
 	decoration_.bind(this);
-	decorations->insert(typeid(decoration_).hash_code(), &decoration_);
+	decorations.insert(typeid(decoration_).hash_code(), &decoration_);
 }
 
 void RenderObject::buildVAO() const
@@ -129,6 +133,11 @@ void RenderObject::applyToPhysics() {
 }
 
 
+void Decoration::Decoration::init(RenderObject*)
+{
+	initialized = true;
+}
+
 void Decoration::Decoration::bind(RenderObject* object_)
 {
 	object = object_;
@@ -197,6 +206,10 @@ Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_
 {
 }
 
+Decoration::Animation::Animation() : meshes({Render::Mesh()}), paths{""}
+{
+}
+
 Decoration::Animation::Animation(std::string path, float speed, bool loop) : loop(loop), speed(speed)
 {
 	for (const auto& file : std::filesystem::directory_iterator(path.c_str()))
@@ -216,7 +229,6 @@ void Decoration::Animation::init(RenderObject* obj)
 		mesh.createBuffers(obj->vaoID);
 		meshes.push_back(mesh);
 	}
-	obj->mesh = meshes[0];
 }
 
 void Decoration::Animation::update(RenderObject* obj,unsigned frame, float dTime)

@@ -36,7 +36,7 @@ glm::mat4 Light::Point::getLightSpace() const {
 	return glm::mat4(1);
 }
 
-void Light::Point::generateShadowMap(const std::vector<RenderObject>& objs) {
+void Light::Point::generateShadowMap(const RenderObject::renderList& objs) {
 	unsigned int depthCubemap;
 	glGenTextures(1, &depthCubemap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
@@ -107,7 +107,7 @@ glm::mat4 Light::Directional::getLightSpace() const
 	return depthProjectionMatrix * depthViewMatrix;
 }
 
-void Light::Directional::generateShadowMap(const std::vector<RenderObject>& objs) {
+void Light::Directional::generateShadowMap(const RenderObject::renderList& objs) {
 	generateShadowMap2D(objs);
 }
 
@@ -138,7 +138,7 @@ glm::mat4 Light::Spot::getLightSpace() const {
 	return glm::mat4(1);
 }
 
-void Light::Spot::generateShadowMap(const std::vector<RenderObject>& objs) {
+void Light::Spot::generateShadowMap(const RenderObject::renderList& objs) {
 	generateShadowMap2D(objs);
 }
 
@@ -227,7 +227,7 @@ void Light::Lights::bind(Shaders::Program& prog)
 
 }
 
-void Light::Lights::generateAllShadowMaps(const std::vector<RenderObject>& objs)
+void Light::Lights::generateAllShadowMaps(const RenderObject::renderList& objs)
 {
 	for (auto& l : dLights)
 		l.generateShadowMap(objs);
@@ -314,7 +314,7 @@ void Light::Light::initProgram() {
 	}
 }
 
-Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObject>& objects)
+Texture::Texture Light::Light::generateShadowMap2D(const RenderObject::renderList& objects)
 { 
 	if (!castShadow) return false;
 	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
@@ -329,7 +329,7 @@ Texture::Texture Light::Light::generateShadowMap2D(const std::vector<RenderObjec
 	//glEnable(GL_RASTERIZER_DISCARD);
 	SHADOW_PROGRAM.use();
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
-	for (auto element : objects) {
+	for (RenderObject element : objects) {
 		SHADOW_PROGRAM.setMatrix4("model", element.transform);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);

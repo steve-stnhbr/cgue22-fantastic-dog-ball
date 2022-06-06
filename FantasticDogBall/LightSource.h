@@ -12,6 +12,8 @@
 namespace Light
 {
 
+	typedef RenderObject RenderObjectType;
+
 	struct Light
 	{
 		static unsigned SHADOW_MAP_RESOLUTION;
@@ -28,9 +30,9 @@ namespace Light
 
 		//Texture::Texture generateShadowMap(const std::vector<RenderObject>&);
 
-		Texture::Texture generateShadowMap2D(const std::vector<RenderObject>&);
+		Texture::Texture generateShadowMap2D(const RenderObject::renderList&);
 
-		virtual void generateShadowMap(const std::vector<RenderObject>&) = 0;
+		virtual void generateShadowMap(const RenderObject::renderList&) = 0;
 		virtual glm::mat4 getLightSpace() const = 0;
 	};
 
@@ -58,7 +60,7 @@ namespace Light
 			bool castShadow = false);
 
 		glm::mat4 getLightSpace() const override;
-		void generateShadowMap(const std::vector<RenderObject>&) override;
+		void generateShadowMap(const RenderObject::renderList&) override;
 	};
 
 	struct Point : Light
@@ -88,7 +90,7 @@ namespace Light
 			glm::vec3 specular,
 			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
-		void generateShadowMap(const std::vector<RenderObject>&) override;
+		void generateShadowMap(const RenderObject::renderList&) override;
 	};
 
 	struct Spot : Light
@@ -125,7 +127,7 @@ namespace Light
 			glm::vec3 specular,
 			bool castShadow = false);
 		glm::mat4 getLightSpace() const override;
-		void generateShadowMap(const std::vector<RenderObject>&) override;
+		void generateShadowMap(const RenderObject::renderList&) override;
 	};
 	
 	class Lights
@@ -173,7 +175,7 @@ namespace Light
 
 		void bind(Shaders::Program&);
 
-		void generateAllShadowMaps(const std::vector<RenderObject>&);
+		void generateAllShadowMaps(const RenderObject::renderList&);
 
 		void finalize();
 	};

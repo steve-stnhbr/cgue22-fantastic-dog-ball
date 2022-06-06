@@ -3,7 +3,7 @@
 void Scene::addObject(RenderObject object)
 {
     object.index = objects.size();
-	objects.push_back(object);
+    objects.push_back(object);
 }
 
 void Scene::addObject(RenderObject* object)

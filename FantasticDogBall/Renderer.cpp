@@ -17,7 +17,7 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights lights, float dTime)
+void Renderer::render(const RenderObject::renderList& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -28,8 +28,9 @@ void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights l
 	glCullFace(GL_BACK);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
-	for (RenderObject element : objects)
+	for (auto it = objects.begin(); it != objects.end(); it++)
 	{
+		auto element = *it;
 		Loggger::info("\t%s", element.name.c_str());
 		element.update(frameCount, dTime);
 
@@ -40,16 +41,7 @@ void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights l
 		// bind uniforms here
 		camera.bindWithModel(prog, element.transform);
 		lights.bind(prog);
-
-		element.material->bind(prog);
-		Utils::checkError();
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.mesh.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.mesh.eboID);
-		Utils::checkError();
-		// draw
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
-		Utils::checkError();
+		element.draw(prog);
 	}
 
 	timeF += .01f;

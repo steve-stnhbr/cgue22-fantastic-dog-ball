@@ -24,7 +24,7 @@ public:
 
 	void cleanup();
 	void setupPhysics();
-	void add(RenderObject);
+	void add(RenderObject&);
 	void add(RenderObject*);
 	void add(Light::Directional);
 	void add(Light::Point);

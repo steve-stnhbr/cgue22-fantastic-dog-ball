@@ -18,7 +18,7 @@
 #include "Material.h"
 #include "Level.h"
 #include "RenderObject.h"
-
+#include "Player.h"
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -76,14 +76,7 @@ int main(int argc, char* argv[])
     initGl();
     initBullet();
 
-    const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
-
     Level level;
-    const glm::vec3 cameraPos = glm::vec3(0, 1, -6);
-
-    const auto proj = glm::perspective<float>(45, ratio, .1f, 100.0f);
-    const auto view = glm::lookAt<float>(cameraPos, {.0f, .0f, .0f}, {.0f, 1.0f, .0f});
-    level.scene.renderer.camera.setData(Camera::Data{ glm::mat4(1), view, proj, glm::vec4(cameraPos.x, cameraPos.y, cameraPos.z, 1)});
 
     Light::Point p = {
         glm::vec3(0, 1, 0),
@@ -107,45 +100,9 @@ int main(int argc, char* argv[])
     
     level.scene.lights.finalize();
 
-    Material::TextureMaterial texture = Material::TextureMaterial{};
-    texture.color = { "../res/concrete.jpg" };
-    texture.normal = { "../res/concrete_norm.jpg" };
-    texture.diffuse = { .8 };
-    texture.specular = { 2 };
-    texture.shininess = 1;
-     
-    Material::StaticMaterial material1 = Material::StaticMaterial{};
-    material1.vals.color = { 0.2, .4 , 0.3, 1.0 };
-    material1.vals.data = { 1.9f, 1.0f, 1.5, 0 };
-
-    Material::TextureMaterial dog_mat;
-    dog_mat.color = { "../res/dog_texture.png" };
-    dog_mat.normal = { "../res/fur_normal.png" };
-    dog_mat.diffuse = { .8 };
-    dog_mat.specular = { .1 };
-    dog_mat.shininess = 1;
-
-    auto sphere = RenderObject{
-        Render::Sphere(1, 32, 16), &material1, "Sphere"
-    };
-    sphere.translate({ 0, 2, 0 });
-    auto cube = RenderObject{
-        Render::Cube{
-             0, -5, 0, 50, .2, 50
-        }, &texture, "Cube"
-    };
-    cube.translate({ 0, -.5, 0 });
-
-    auto dog = RenderObject(Render::Mesh::fromFile("../res/Cachorro.obj")[0], &dog_mat, "Doggo");
-    Decoration::Animation anim("../res/dog_walk", .35);
-    Decoration::Custom custom([](RenderObject* obj, unsigned frame, float dTime) {
-        obj->rotate(frame / static_cast<float>(10000), { 0,1,1 });
-    });
-    dog.add(anim);
-    dog.add(custom);
-    level.add(dog);
-    level.add(cube);
-    level.add(sphere);
+    Player player = {level};
+    level.add(player.ball);
+    level.add(player.dog);
 
 
     /* Loop until the user closes the window */

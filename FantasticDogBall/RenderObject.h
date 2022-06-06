@@ -33,6 +33,7 @@ class RenderObject
 private:
 	void applyToPhysics();
 public:
+	typedef std::list<RenderObject> renderList;
 	/**
 	 * The Mesh containing the vertecies and indices used to draw
 	 */
@@ -44,7 +45,7 @@ public:
 	/*
 	 *
 	 */
-	Utils::Map<size_t, Decoration::Decoration*>* decorations;
+	Utils::Map<size_t, Decoration::Decoration*> decorations;
 	/*
 	 * This string is just for debugging purposes
 	 */
@@ -65,11 +66,12 @@ public:
 	btVector3 pTranslate;
 	btVector3 pScale;
 
+	RenderObject();
 	RenderObject(Render::Mesh, Material::Material*, const std::string&);
 	
-	void init();
-	void update(unsigned long frame, float dTime);
-	void draw(Shaders::Program prog);
+	virtual void init();
+	virtual void update(unsigned long frame, float dTime);
+	virtual void draw(Shaders::Program prog);
 	void add(Decoration::Decoration&);
 	void buildVAO() const;
 	void cleanup();
@@ -85,7 +87,7 @@ public:
 	inline T* getDecoration() const {
 		auto& type = typeid(T);
 		auto name = type.name();
-		auto f = decorations->get(type.hash_code());
+		auto f = decorations.get(type.hash_code());
 		if (f == NULL) return nullptr;
 		return static_cast<T*>(f);
 	}
@@ -96,9 +98,10 @@ namespace Decoration
 	class Decoration
 	{
 	public:
+		bool initialized;
 		RenderObject* object;
 		std::function<void(RenderObject*, unsigned long, float)> onUpdate;
-		virtual void init(RenderObject*) = 0;
+		virtual void init(RenderObject*);
 		virtual void update(RenderObject* object, unsigned frame, float dTime) = 0;
 
 		void bind(RenderObject*);
@@ -120,7 +123,6 @@ namespace Decoration
 		btDynamicsWorld* pWorld;
 
 		void init(RenderObject*) override;
-		void bind(RenderObject*);
 		void update(RenderObject* object, unsigned frame, float dTime) override;
 
 		void onCollide(RenderObject* other);
@@ -139,6 +141,7 @@ namespace Decoration
 		std::vector<Render::Mesh> meshes;
 		std::vector<std::string> paths;
 	public:
+		Animation();
 		Animation(std::string path, float = 1.0f, bool = true);
 		Animation(std::vector<std::string> paths, float = 1.0f, bool = true);
 

@@ -25,8 +25,10 @@ void Level::render()
 	if (pWorld) {
 		pWorld->stepSimulation(dt);
 	}
+	/*
 	debugDrawer.debugProgram.use();
 	debugDrawer.setCamera(scene.renderer.camera);
+	*/
 	scene.render(dt);
 	//pWorld->debugDrawWorld();
 }
@@ -58,7 +60,7 @@ void Level::setupPhysics()
 	pWorld->setInternalTickCallback(physicsTick);
 }
 
-void Level::add(RenderObject obj)
+void Level::add(RenderObject& obj)
 {
 	scene.addObject(obj);
 	obj.init();
@@ -66,7 +68,8 @@ void Level::add(RenderObject obj)
 
 void Level::add(RenderObject* obj)
 {
-	add(*obj);
+	scene.addObject(obj);
+	obj->init();
 }
 
 void Level::add(Light::Directional l)
