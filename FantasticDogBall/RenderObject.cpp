@@ -216,7 +216,6 @@ void Decoration::Animation::init(RenderObject* obj)
 		mesh.createBuffers(obj->vaoID);
 		meshes.push_back(mesh);
 	}
-	obj->mesh = meshes[0];
 }
 
 void Decoration::Animation::update(RenderObject* obj,unsigned frame, float dTime)

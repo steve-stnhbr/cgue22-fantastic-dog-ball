@@ -10,8 +10,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Scene.h"
+#include "Inputs.h"
 
-class Level
+class Level : public Inputs::Processor
 {
 public:
 	Scene scene;
@@ -29,6 +30,11 @@ public:
 	void add(Light::Directional);
 	void add(Light::Point);
 	void add(Light::Spot);
+
+	void onW() override;
+	void onA() override;
+	void onS() override;
+	void onD() override;
 
 protected:
 	// core Bullet components

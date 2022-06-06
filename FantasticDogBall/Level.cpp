@@ -25,8 +25,10 @@ void Level::render()
 	if (pWorld) {
 		pWorld->stepSimulation(dt);
 	}
+	/*
 	debugDrawer.debugProgram.use();
 	debugDrawer.setCamera(scene.renderer.camera);
+	*/
 	scene.render(dt);
 	//pWorld->debugDrawWorld();
 }
@@ -99,3 +101,26 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 		}
 	}
 }
+
+void Level::onW()
+{
+	const auto dir = glm::normalize(scene.renderer.camera.direction);
+	pWorld->setGravity({ dir.x, dir.y, dir.z });
+}
+
+void Level::onA()
+{
+	const auto dir = glm::normalize(-scene.renderer.camera.direction);
+	pWorld->setGravity({ dir.x, dir.y, dir.z });
+}
+void Level::onS()
+{
+	const auto dir = glm::normalize(-scene.renderer.camera.direction);
+	pWorld->setGravity({ dir.x, dir.y, dir.z });
+}
+void Level::onD()
+{
+	const auto dir = glm::normalize(-scene.renderer.camera.direction);
+	pWorld->setGravity({ dir.x, dir.y, dir.z });
+}
+

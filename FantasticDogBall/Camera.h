@@ -20,7 +20,9 @@ public:
 		 * The vector describing the cameras position;
 		 */
 		glm::vec4 position;
-	};
+	} data;
+
+	glm::vec3 direction;
 
 	/**
 	 * Default constructor
@@ -39,11 +41,14 @@ public:
 
 	void setPosition(const glm::vec3);
 
+	void setDirection(const glm::vec3);
+
 	void setProjection(const glm::mat4);
 
 	void setView(const glm::mat4);
 
 	void bind(Shaders::Program&);
+	void update();
 
 	/**
 	 * Function that binds the camera to the currently active program
@@ -52,6 +57,5 @@ public:
 	/**
 	 * Struct containing current state of the camera
 	 */
-	Data data;
 };
 
