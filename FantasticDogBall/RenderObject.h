@@ -33,7 +33,7 @@ class RenderObject
 private:
 	void applyToPhysics();
 public:
-	typedef std::list<RenderObject> renderList;
+	typedef std::list<RenderObject*> renderList;
 	/**
 	 * The Mesh containing the vertecies and indices used to draw
 	 */
@@ -73,8 +73,9 @@ public:
 	virtual void update(unsigned long frame, float dTime);
 	virtual void draw(Shaders::Program prog);
 	void add(Decoration::Decoration&);
+	void add(Decoration::Decoration*);
 	void buildVAO() const;
-	void cleanup();
+	virtual void cleanup();
 	RenderObject* translate(float, float, float);
 	RenderObject* translate(glm::vec3);
 	RenderObject* rotate(float, float, float);

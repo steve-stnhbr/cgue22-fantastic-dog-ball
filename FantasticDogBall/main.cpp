@@ -100,10 +100,24 @@ int main(int argc, char* argv[])
     
     level.scene.lights.finalize();
 
-    Player player = {level};
-    level.add(player.ball);
-    level.add(player.dog);
+    Player player(level);
+    //level.add(&player);
+    level.add(&player);
+    level.add(&player.ball);
+    level.add(&player.dog);
 
+    auto* ground_mat = new Material::TextureMaterial;
+    ground_mat->color = { "../res/concrete.jpg" };
+    ground_mat->normal = {"../res/concrete_norm.jpg" };
+    ground_mat->diffuse = { .2 };
+    ground_mat->specular = { .5 };
+    ground_mat->shininess = .3;
+
+    auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
+    ground->translate({ 0, -4, 0 });
+    ground->rotate(.1, { 1, 0, 0 });
+    ground->add(new Decoration::Physics(level.pWorld, nullptr, 0));
+    level.add(ground);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -173,7 +187,10 @@ void initGl()
 	#endif
 
     glEnable(GL_DEPTH_TEST);
-    glDebugMessageCallback(gl_error_callback, nullptr);
+    glDebugMessageCallback(gl_error_callback, nullptr); 
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 

@@ -329,7 +329,8 @@ Texture::Texture Light::Light::generateShadowMap2D(const RenderObject::renderLis
 	//glEnable(GL_RASTERIZER_DISCARD);
 	SHADOW_PROGRAM.use();
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
-	for (RenderObject element : objects) {
+	for (RenderObject* elementP : objects) {
+		auto element = *elementP;
 		SHADOW_PROGRAM.setMatrix4("model", element.transform);
 		Utils::checkError();
 		glBindVertexArray(element.vaoID);

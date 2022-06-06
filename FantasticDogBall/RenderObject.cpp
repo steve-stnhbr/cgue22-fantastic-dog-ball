@@ -62,6 +62,11 @@ void RenderObject::add(Decoration::Decoration& decoration_)
 	decorations.insert(typeid(decoration_).hash_code(), &decoration_);
 }
 
+void RenderObject::add(Decoration::Decoration* decoration_) {
+	decoration_->bind(this);
+	decorations.insert(typeid(*decoration_).hash_code(), decoration_);
+}
+
 void RenderObject::buildVAO() const
 {
 	Loggger::trace("Creating RenderObject %s", name.c_str());

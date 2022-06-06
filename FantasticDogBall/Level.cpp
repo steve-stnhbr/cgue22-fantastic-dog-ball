@@ -37,8 +37,8 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep);
 
 void Level::cleanup()
 {
-	for (RenderObject obj : scene.objects) {
-		obj.cleanup();
+	for (RenderObject* obj : scene.objects) {
+		obj->cleanup();
 	}
 }
 

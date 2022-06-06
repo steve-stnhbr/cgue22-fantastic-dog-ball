@@ -31,17 +31,17 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 	for (auto it = objects.begin(); it != objects.end(); it++)
 	{
 		auto element = *it;
-		Loggger::info("\t%s", element.name.c_str());
-		element.update(frameCount, dTime);
+		Loggger::info("\t%s", element->name.c_str());
+		element->update(frameCount, dTime);
 
 		// bind program
-		auto& prog = element.material->getProgram();
+		auto& prog = element->material->getProgram();
 		prog.use();
 		
 		// bind uniforms here
-		camera.bindWithModel(prog, element.transform);
+		camera.bindWithModel(prog, element->transform);
 		lights.bind(prog);
-		element.draw(prog);
+		element->draw(prog);
 	}
 
 	timeF += .01f;

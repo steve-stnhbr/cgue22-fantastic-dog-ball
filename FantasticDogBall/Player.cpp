@@ -8,8 +8,8 @@ Player::Player(Level& level, glm::vec3 position)
 {
 	auto* ball_mat = new Material::StaticMaterial({ .6, .6, .8, .4 }, { .32 }, { .4 }, 2.4);
 	ball = RenderObject{ Render::Sphere(1, 16, 32), ball_mat, "PlayerBall" };
-	Decoration::Physics physics(level.pWorld, new btSphereShape(1), 20);
-	//ball.add(physics);
+	auto* physics = new Decoration::Physics(level.pWorld, nullptr, 20);
+	ball.add(physics); 
 
 	auto* dog_material = new Material::TextureMaterial();
 	dog_material->color = { "../res/dog/color.png" };
@@ -26,20 +26,19 @@ Player::Player(Level& level, glm::vec3 position)
 	trot.init(&dog);
 	canter = Decoration::Animation("../res/dog/dog_canter", .6);
 	canter.init(&dog);
-}
 
-void Player::add(Level& level)
-{
-	level.scene.objects.push_back(ball);
-	level.scene.objects.push_back(dog);
+	ball.init();
+	dog.init();
 }
 
 void Player::update(unsigned long frame, float dTime)
 {
-	dog.transform = ball.transform;
+	ball.update(frame, dTime);
+	dog.update(frame, dTime);
+	dog.transform = glm::translate(ball.transform, {0, -.5, 0});
 
 	const auto speed = ball.getDecoration<Decoration::Physics>()->pBody->getLinearVelocity().length2() > 10;
-	/*
+	
 	if (speed > 10)
 		dog.add(canter);
 	else if (speed > 6)
@@ -47,13 +46,11 @@ void Player::update(unsigned long frame, float dTime)
 	else if (speed > 2)
 		dog.add(walk);
 	else
-		// remove animation??
 		dog.add(stand);
-	*/
+	
 
 }
 
 void Player::draw(Shaders::Program prog)
 {
-
 }
