@@ -35,7 +35,7 @@ void Player::update(unsigned long frame, float dTime)
 {
 	ball.update(frame, dTime);
 	dog.update(frame, dTime);
-	dog.transform = glm::translate(ball.transform, {0, -.5, 0});
+	dog.transform = glm::translate(ball.transform, {0, -.6, 0});
 
 	auto velocity = ball.getDecoration<Decoration::Physics>()->pBody->getLinearVelocity();
 	velocity.setY(0);

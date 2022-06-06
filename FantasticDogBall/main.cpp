@@ -103,16 +103,15 @@ int main(int argc, char* argv[])
     Player player(level);
     //level.add(&player);
     level.add(&player);
-    level.add(&player.ball);
     level.add(&player.dog);
+    level.add(&player.ball);
 
     auto* ground_mat = new Material::TextureMaterial;
     ground_mat->color = { "../res/concrete.jpg" };
-    ground_mat->normal = {"../res/concrete_norm.jpg" };
+    ground_mat->normal = { "../res/concrete_norm.jpg" };
     ground_mat->diffuse = { .2 };
     ground_mat->specular = { .5 };
     ground_mat->shininess = .3;
-
     auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
     ground->translate({ 0, -4, 0 });
     ground->rotate(.5, { 1, 0, 0 });
@@ -123,10 +122,6 @@ int main(int argc, char* argv[])
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
-
-        /* Render here */
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
 
         level.render();

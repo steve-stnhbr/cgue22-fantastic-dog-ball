@@ -20,14 +20,18 @@ Renderer::Renderer()
 void Renderer::render(const RenderObject::renderList& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glCullFace(GL_FRONT);
 	//todo add other lights to all shadow maps
 	lights.generateAllShadowMaps(objects);
 	glCullFace(GL_BACK);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+	glEnable(GL_BLEND); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (auto it = objects.begin(); it != objects.end(); it++)
 	{
 		auto element = *it;
