@@ -90,10 +90,10 @@ int main(int argc, char* argv[])
 
     Light::Directional d = {
         glm::vec3(2, -4, 1),
-        glm::vec3(.3,.3,.3),
-        glm::vec3(.8,.8,.8),
-        glm::vec3(.9,.9,.9),
-        true
+        glm::vec3(.5),
+        glm::vec3(.8),
+        glm::vec3(.9),
+        false
     };
 
     level.add(d);
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 
     auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
     ground->translate({ 0, -4, 0 });
-    ground->rotate(.1, { 1, 0, 0 });
+    ground->rotate(.5, { 1, 0, 0 });
     ground->add(new Decoration::Physics(level.pWorld, nullptr, 0));
     level.add(ground);
 

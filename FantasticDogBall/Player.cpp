@@ -37,11 +37,13 @@ void Player::update(unsigned long frame, float dTime)
 	dog.update(frame, dTime);
 	dog.transform = glm::translate(ball.transform, {0, -.5, 0});
 
-	const auto speed = ball.getDecoration<Decoration::Physics>()->pBody->getLinearVelocity().length2() > 10;
-	
-	if (speed > 10)
+	auto velocity = ball.getDecoration<Decoration::Physics>()->pBody->getLinearVelocity();
+	velocity.setY(0);
+	const auto speed = velocity.length2();
+
+	if (speed > 17)
 		dog.add(canter);
-	else if (speed > 6)
+	else if (speed > 9)
 		dog.add(trot);
 	else if (speed > 2)
 		dog.add(walk);
