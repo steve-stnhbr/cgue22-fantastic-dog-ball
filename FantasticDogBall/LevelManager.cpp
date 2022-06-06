@@ -35,7 +35,6 @@ void LevelManager::load(unsigned short levelNr)
 
         level->scene.lights.finalize();
 
-        level->init();
 
         auto* ground_mat = new Material::TextureMaterial;
         ground_mat->color = { "../res/concrete.jpg" };
@@ -48,6 +47,7 @@ void LevelManager::load(unsigned short levelNr)
         ground->rotate(.27, { 1, 0, 1 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
+        level->finalize();
         levels[levelNr] = level;
         current = level;
         break;

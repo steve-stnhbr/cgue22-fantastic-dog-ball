@@ -22,7 +22,7 @@ public:
 	Level();
 	~Level();
 	
-	void init();
+	void finalize();
 	void render();
 
 	void cleanup();

@@ -16,7 +16,7 @@ Level::~Level()
 	delete pSolver;
 }
 
-void Level::init() {
+void Level::finalize() {
 	player = new Player(pWorld);
 	player->init();
 	add(player->dog);
