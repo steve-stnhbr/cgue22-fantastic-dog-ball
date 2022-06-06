@@ -19,6 +19,9 @@
 #include "Level.h"
 #include "RenderObject.h"
 #include "Player.h"
+#include "LevelManager.h"
+
+#define NUM_LEVELS = 1
 
 void error_callback(int error, const char* msg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -75,48 +78,9 @@ int main(int argc, char* argv[])
 
     initGl();
     initBullet();
+    LevelManager mgr;
 
-    Level level;
-
-    Light::Point p = {
-        glm::vec3(0, 1, 0),
-        2.0f, 1.0f, .5f,
-        glm::vec3(1.5,1.5,1.5),
-        glm::vec3(5,5,5),
-        glm::vec3(2,2,2)
-    };
-
-    //level.scene.lights.add(p);
-
-    Light::Directional d = {
-        glm::vec3(2, -4, 1),
-        glm::vec3(.5),
-        glm::vec3(.8),
-        glm::vec3(.9),
-        false
-    };
-
-    level.add(d);
-    
-    level.scene.lights.finalize();
-
-    Player player(level);
-    //level.add(&player);
-    level.add(&player);
-    level.add(&player.dog);
-    level.add(&player.ball);
-
-    auto* ground_mat = new Material::TextureMaterial;
-    ground_mat->color = { "../res/concrete.jpg" };
-    ground_mat->normal = { "../res/concrete_norm.jpg" };
-    ground_mat->diffuse = { .2 };
-    ground_mat->specular = { .5 };
-    ground_mat->shininess = .3;
-    auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
-    ground->translate({ 0, -4, 0 });
-    ground->rotate(.5, { 1, 0, 0 });
-    ground->add(new Decoration::Physics(level.pWorld, nullptr, 0));
-    level.add(ground);
+    mgr.load(0);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -124,7 +88,7 @@ int main(int argc, char* argv[])
         processInput(window);
         Utils::checkError();
 
-        level.render();
+        mgr.render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -135,7 +99,6 @@ int main(int argc, char* argv[])
     }
 
     Shaders::cleanup();
-    level.cleanup();
 
     glfwTerminate();
     return 0;

@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "Player.h"
 
 
 Level::Level() : scene()
@@ -13,6 +14,14 @@ Level::~Level()
 	delete pCollisionConfiguration;
 	delete pDispatcher;
 	delete pSolver;
+}
+
+void Level::init() {
+	player = new Player(pWorld);
+	player->init();
+	add(player->dog);
+	add(player->ball);
+	add(player);
 }
 
 void Level::render()

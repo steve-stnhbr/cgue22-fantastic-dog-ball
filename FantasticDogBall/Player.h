@@ -1,16 +1,17 @@
 #pragma once
 
 #include "RenderObject.h"
-#include "Level.h"
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 
 class Player : public RenderObject
 {
 private:
-	Decoration::Animation stand, walk, trot, canter;
+	Decoration::Animation *stand, *walk, *trot, *canter;
 public:
-	RenderObject dog, ball;
-	Player(Level& level);
-	Player(Level& level, glm::vec3 position);
+	float directionAngle;
+	RenderObject *dog, *ball;
+	Player(btDynamicsWorld* pWorld);
+	Player(btDynamicsWorld* pWorld, glm::vec3 position);
 	void update(unsigned long frame, float dTime);
 	void draw(Shaders::Program prog) override;
 };

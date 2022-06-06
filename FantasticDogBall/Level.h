@@ -9,6 +9,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Player.h"
 #include "Scene.h"
 
 class Level
@@ -16,10 +17,12 @@ class Level
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
+	Player* player;
 	
 	Level();
 	~Level();
 	
+	void init();
 	void render();
 
 	void cleanup();

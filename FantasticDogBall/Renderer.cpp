@@ -32,9 +32,8 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for (auto it = objects.begin(); it != objects.end(); it++)
+	for (auto* element : objects)
 	{
-		auto element = *it;
 		Loggger::info("\t%s", element->name.c_str());
 		element->update(frameCount, dTime);
 

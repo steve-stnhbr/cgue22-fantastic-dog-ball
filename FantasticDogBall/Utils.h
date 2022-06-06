@@ -15,6 +15,7 @@ public:
 	static unsigned NUM_SHADOW_MAPS;
 	static unsigned WINDOW_WIDTH;
 	static unsigned WINDOW_HEIGHT;
+	static unsigned NUM_LEVELS;
 };
 
 class Utils
