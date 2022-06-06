@@ -49,8 +49,6 @@ void Player::update(unsigned long frame, float dTime)
 		dog.add(walk);
 	else
 		dog.add(stand);
-	
-
 }
 
 void Player::draw(Shaders::Program prog)
