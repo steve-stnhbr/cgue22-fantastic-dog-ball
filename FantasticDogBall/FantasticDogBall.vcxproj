@@ -24,6 +24,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Inputs.cpp" />
+    <ClCompile Include="Items.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LightSource.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Inputs.h" />
+    <ClInclude Include="Items.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LightSource.h" />

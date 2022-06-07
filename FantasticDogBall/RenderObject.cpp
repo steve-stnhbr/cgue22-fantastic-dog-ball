@@ -205,9 +205,14 @@ void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 
 void Decoration::Physics::onCollide(RenderObject* other)
 {
+	if (collidingFunc) collidingFunc(other);
 }
 
-Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_)
+Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_), collidingFunc(nullptr)
+{
+}
+
+Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_, std::function<void(RenderObject*)> collidingFunc_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_), collidingFunc(collidingFunc_)
 {
 }
 

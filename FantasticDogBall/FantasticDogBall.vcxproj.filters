@@ -84,6 +84,9 @@
     <ClCompile Include="Inputs.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Items.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -190,6 +193,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Inputs.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Items.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
