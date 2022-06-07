@@ -108,7 +108,9 @@ void main() {
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     }
 
-    outColor = texture(color, texCoords) * vec4(result, 1);
+    //outColor = texture(color, texCoords) * vec4(result, 1);
+    outColor = vec4(texture(color, texCoords).xyz * result, texture(color,texCoords).a);
+
     //outColor = texture(dLights[0].shadowMap, texCoords);
 }
 

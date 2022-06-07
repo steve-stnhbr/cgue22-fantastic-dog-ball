@@ -103,7 +103,7 @@ void main() {
 
     result += s_cubemap * CubemapReflection(norm, viewDir);
 
-    outColor = vec4(result * material.color.xyz, 1);
+    outColor = vec4(result * material.color.xyz, material.color.a);
 }
 
 float ShadowCalculationDir(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lightDir)

@@ -17,39 +17,34 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const std::vector<RenderObject >& objects, Light::Lights lights, float dTime)
+void Renderer::render(const RenderObject::renderList& objects, Light::Lights lights, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glCullFace(GL_FRONT);
 	//todo add other lights to all shadow maps
 	lights.generateAllShadowMaps(objects);
 	glCullFace(GL_BACK);
 	glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+	glEnable(GL_BLEND); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	for (RenderObject element : objects)
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	for (auto* element : objects)
 	{
-		Loggger::info("\t%s", element.name.c_str());
-		element.update(frameCount, dTime);
+		Loggger::info("\t%s", element->name.c_str());
+		element->update(frameCount, dTime);
 
 		// bind program
-		auto& prog = element.material->getProgram();
+		auto& prog = element->material->getProgram();
 		prog.use();
 		
 		// bind uniforms here
-		camera.bindWithModel(prog, element.transform);
+		camera.bindWithModel(prog, element->transform);
 		lights.bind(prog);
-
-		element.material->bind(prog);
-		Utils::checkError();
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.mesh.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.mesh.eboID);
-		Utils::checkError();
-		// draw
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
-		Utils::checkError();
+		element->draw(prog);
 	}
 
 	timeF += .01f;

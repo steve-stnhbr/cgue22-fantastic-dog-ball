@@ -20,7 +20,18 @@ public:
 		 * The vector describing the cameras position;
 		 */
 		glm::vec4 position;
-	};
+	} data;
+
+	glm::vec3 direction;
+	float a_leaning, leaning;
+	/*
+	 * These variables hold the desired values for rotations
+	*/
+	float xRotation, yRotation, zRotation;
+	/*
+	 * These variables hold the actual values for rotations
+	*/
+	float a_xRotation, a_yRotation, a_zRotation;
 
 	/**
 	 * Default constructor
@@ -39,19 +50,24 @@ public:
 
 	void setPosition(const glm::vec3);
 
+	void setDirection(const glm::vec3);
+
+	void setLeaning(const float leaning_);
+
+	void setPitch(const float);
+	void setYaw(const float);
+	void setRoll(const float);
+
 	void setProjection(const glm::mat4);
 
 	void setView(const glm::mat4);
 
 	void bind(Shaders::Program&);
+	void update();
 
 	/**
 	 * Function that binds the camera to the currently active program
 	 */
 	void bindWithModel(Shaders::Program&, glm::mat4);
-	/**
-	 * Struct containing current state of the camera
-	 */
-	Data data;
 };
 

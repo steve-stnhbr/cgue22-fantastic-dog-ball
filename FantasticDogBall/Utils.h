@@ -15,6 +15,7 @@ public:
 	static unsigned NUM_SHADOW_MAPS;
 	static unsigned WINDOW_WIDTH;
 	static unsigned WINDOW_HEIGHT;
+	static unsigned NUM_LEVELS;
 };
 
 class Utils
@@ -72,6 +73,11 @@ public:
 	struct Map {
 		std::vector<K> keys;
 		std::vector<V> vals;
+
+		Map() {
+			keys = std::vector<K>(0);
+			vals = std::vector<V>(0);
+		}
 
 		size_t insert(K key, V val) {
 			size_t index = keys.size();

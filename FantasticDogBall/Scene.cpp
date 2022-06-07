@@ -2,13 +2,13 @@
 
 void Scene::addObject(RenderObject object)
 {
-    object.index = objects.size();
-	objects.push_back(object);
+    addObject(&object);
 }
 
 void Scene::addObject(RenderObject* object)
 {
-    addObject(*object);
+    object->index = objects.size();
+    objects.push_back(object);
 }
 
 void Scene::render(float dTime)

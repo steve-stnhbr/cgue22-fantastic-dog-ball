@@ -17,6 +17,7 @@ unsigned Globals::NUM_SHADOW_CUBEMAPS = 0;
 unsigned Globals::NUM_SHADOW_MAPS = 0;
 unsigned Globals::WINDOW_WIDTH = 1920;
 unsigned Globals::WINDOW_HEIGHT = 1080;
+unsigned Globals::NUM_LEVELS = 1;
 
 std::string Utils::readFile(const char* path)
 {

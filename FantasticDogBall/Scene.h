@@ -18,7 +18,9 @@
 class Scene
 {
 public:
-	std::vector<RenderObject> objects;
+	typedef std::list<RenderObject*> renderList;
+
+	std::list<RenderObject*> objects;
 	Light::Lights lights;
 	Renderer renderer;
 
