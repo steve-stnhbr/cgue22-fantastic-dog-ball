@@ -28,8 +28,8 @@ void LevelManager::load(unsigned short levelNr)
         Light::Directional d = {
             glm::vec3(2, -4, 1),
             glm::vec3(.5),
-            glm::vec3(.8),
-            glm::vec3(.9),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
             true
         };
 
@@ -45,7 +45,7 @@ void LevelManager::load(unsigned short levelNr)
         ground_mat->shininess = .3;
         auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
         ground->translate({ 0, -4, 0 });
-        ground->rotate(.4, { 1, 0, 1 });
+        //ground->rotate(.4, { 1, 0, 1 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
         level->finalize();

@@ -35,18 +35,20 @@ Player::Player(btDynamicsWorld* pWorld, glm::vec3 position)
 
 void Player::update(unsigned long frame, float dTime)
 {
+	// get information about players state
 	auto ballBody = ball->getDecoration<Decoration::Physics>()->pBody;
 	auto velocity = ballBody->getLinearVelocity();
 	velocity.setY(0);
 
+	// set transformations of player-ball and dog to the same
 	ball->update(frame, dTime);
 	dog->update(frame, dTime);
 	directionAngle = glm::atan(velocity.x() / velocity.z());
 	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, {0, 1, 0});
 
+	// change animation based on the size of the velocity
 	const auto speed = velocity.length2();
-
 	if (speed > 17)
 		dog->add(canter);
 	else if (speed > 9)
@@ -56,6 +58,7 @@ void Player::update(unsigned long frame, float dTime)
 	else
 		dog->add(stand);
 
+	// change camera to follow player
 	const auto oldCamDirection = LevelManager::current->scene.renderer.camera.direction;
 	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;
