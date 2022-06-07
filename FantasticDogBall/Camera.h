@@ -22,6 +22,8 @@ public:
 		glm::vec4 position;
 	};
 
+	glm::vec3 direction;
+
 	/**
 	 * Default constructor
 	 */
@@ -39,6 +41,8 @@ public:
 
 	void setPosition(const glm::vec3);
 
+	void setDirection(const glm::vec3);
+
 	void setProjection(const glm::mat4);
 
 	void setView(const glm::mat4);
@@ -49,6 +53,8 @@ public:
 	 * Function that binds the camera to the currently active program
 	 */
 	void bindWithModel(Shaders::Program&, glm::mat4);
+
+	void update();
 	/**
 	 * Struct containing current state of the camera
 	 */

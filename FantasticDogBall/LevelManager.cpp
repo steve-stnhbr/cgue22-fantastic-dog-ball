@@ -2,6 +2,8 @@
 
 #include "Utils.h"
 
+Level* LevelManager::current = nullptr;
+
 LevelManager::LevelManager()
 {
     levels.resize(Globals::NUM_LEVELS);
@@ -28,13 +30,12 @@ void LevelManager::load(unsigned short levelNr)
             glm::vec3(.5),
             glm::vec3(.8),
             glm::vec3(.9),
-            false
+            true
         };
 
         level->add(d);
 
         level->scene.lights.finalize();
-
 
         auto* ground_mat = new Material::TextureMaterial;
         ground_mat->color = { "../res/concrete.jpg" };
@@ -44,7 +45,7 @@ void LevelManager::load(unsigned short levelNr)
         ground_mat->shininess = .3;
         auto ground = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground");
         ground->translate({ 0, -4, 0 });
-        ground->rotate(.27, { 1, 0, 1 });
+        ground->rotate(.4, { 1, 0, 1 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
         level->finalize();

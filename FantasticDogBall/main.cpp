@@ -81,6 +81,8 @@ int main(int argc, char* argv[])
     LevelManager mgr;
 
     mgr.load(0);
+    mgr.current->scene.renderer.camera.setPosition({ 0, 1, -6 });
+    mgr.current->scene.renderer.camera.setDirection({ 0, -1, .1 });
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

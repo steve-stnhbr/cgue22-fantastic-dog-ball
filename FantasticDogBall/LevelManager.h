@@ -5,8 +5,8 @@
 class LevelManager
 {
 private:
-	Level* current;
 public:
+	static Level* current;
 	std::vector<Level*> levels;
 
 	LevelManager();

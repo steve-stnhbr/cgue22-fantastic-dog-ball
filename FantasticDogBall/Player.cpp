@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#include "LevelManager.h"
+
 Player::Player(btDynamicsWorld* pWorld) : Player(pWorld, {0,0,0})
 {
 }
@@ -33,12 +35,14 @@ Player::Player(btDynamicsWorld* pWorld, glm::vec3 position)
 
 void Player::update(unsigned long frame, float dTime)
 {
-	auto velocity = ball->getDecoration<Decoration::Physics>()->pBody->getLinearVelocity();
+	auto ballBody = ball->getDecoration<Decoration::Physics>()->pBody;
+	auto velocity = ballBody->getLinearVelocity();
 	velocity.setY(0);
 
 	ball->update(frame, dTime);
 	dog->update(frame, dTime);
 	directionAngle = glm::atan(velocity.x() / velocity.z());
+	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, {0, 1, 0});
 
 	const auto speed = velocity.length2();
@@ -51,6 +55,21 @@ void Player::update(unsigned long frame, float dTime)
 		dog->add(walk);
 	else
 		dog->add(stand);
+
+	const auto oldCamDirection = LevelManager::current->scene.renderer.camera.direction;
+	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
+	const auto diffAngle = directionAngle - oldCamAngle;
+	auto newCamAngle = .0;
+	if (abs(diffAngle) < .2)
+		newCamAngle = directionAngle;
+	else
+		newCamAngle = oldCamAngle + diffAngle * .2;
+	const auto newCamDirection = glm::vec3(glm::sin(newCamAngle), -1.3, glm::cos(newCamAngle));
+	const auto ballPos = ballBody->getWorldTransform().getOrigin();
+	const auto camPosition = glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()) - glm::normalize(newCamDirection) * 5.0f;
+
+	LevelManager::current->scene.renderer.camera.setDirection(newCamDirection);
+	LevelManager::current->scene.renderer.camera.setPosition(camPosition);
 }
 
 void Player::draw(Shaders::Program prog)
