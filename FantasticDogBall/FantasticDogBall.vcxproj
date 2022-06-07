@@ -23,6 +23,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LightSource.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Inputs.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LightSource.h" />

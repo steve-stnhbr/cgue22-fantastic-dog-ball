@@ -1,6 +1,10 @@
 #include "Level.h"
 #include "Player.h"
 
+#include "glm/gtx/rotate_vector.hpp"
+
+const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
+const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
 
 Level::Level() : scene()
 {
@@ -105,9 +109,56 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 			const btCollisionObject* objB = contactManifold->getBody1();
 			const auto rObjA = static_cast<RenderObject*>(objA->getUserPointer());
 			const auto rObjB = static_cast<RenderObject*>(objB->getUserPointer());
-			Loggger::fatal("%s collided with %s", rObjA->name.c_str(), rObjB->name.c_str());
+			Loggger::debug("%s collided with %s", rObjA->name.c_str(), rObjB->name.c_str());
 			rObjA->getDecoration<Decoration::Physics>()->onCollide(rObjB);
 			rObjB->getDecoration<Decoration::Physics>()->onCollide(rObjA);
 		}
 	}
 }
+
+void Level::pressW()
+{
+	const auto dir = glm::normalize(scene.renderer.camera.direction) * 5.0f;
+	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z});
+	//scene.renderer.camera.setPitch(.3);
+}
+
+void Level::pressA()
+{
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(-scene.renderer.camera.direction), 1), glm::half_pi<float>()) * 5.0f;
+	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	//scene.renderer.camera.setRoll(-.3);
+}
+void Level::pressS()
+{
+	const auto dir = -glm::normalize(scene.renderer.camera.direction) * 5.0f;
+	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	//scene.renderer.camera.setPitch(-.3);
+}
+void Level::pressD()
+{
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), -glm::half_pi<float>()) * 5.0f;
+	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	//scene.renderer.camera.setRoll(.3);
+}
+
+void Level::releaseW() {
+	pWorld->setGravity(GRAVITY);
+	scene.renderer.camera.setPitch(0);
+}
+
+void Level::releaseA() {
+	pWorld->setGravity(GRAVITY);
+	scene.renderer.camera.setRoll(0);
+}
+
+void Level::releaseS() {
+	pWorld->setGravity(GRAVITY);
+	scene.renderer.camera.setPitch(0);
+}
+
+void Level::releaseD() {
+	pWorld->setGravity(GRAVITY);
+	scene.renderer.camera.setRoll(0);
+}
+

@@ -63,16 +63,14 @@ void Player::update(unsigned long frame, float dTime)
 	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;
 	auto newCamAngle = .0;
-	if (abs(diffAngle) < .2)
+	if (abs(diffAngle) < .05)
 		newCamAngle = directionAngle;
 	else
-		newCamAngle = oldCamAngle + diffAngle * .2;
-	const auto newCamDirection = glm::vec3(glm::sin(newCamAngle), -1.3, glm::cos(newCamAngle));
+		newCamAngle = oldCamAngle + diffAngle * .1;
 	const auto ballPos = ballBody->getWorldTransform().getOrigin();
-	const auto camPosition = glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()) - glm::normalize(newCamDirection) * 5.0f;
-
-	LevelManager::current->scene.renderer.camera.setDirection(newCamDirection);
-	LevelManager::current->scene.renderer.camera.setPosition(camPosition);
+	LevelManager::current->scene.renderer.camera.setYaw(newCamAngle);
+	LevelManager::current->scene.renderer.camera.setPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
+	LevelManager::current->scene.renderer.camera.update();
 }
 
 void Player::draw(Shaders::Program prog)

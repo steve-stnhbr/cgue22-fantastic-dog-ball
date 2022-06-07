@@ -18,6 +18,7 @@
 #include "Material.h"
 #include "Level.h"
 #include "RenderObject.h"
+#include "Inputs.h"
 #include "Player.h"
 #include "LevelManager.h"
 
@@ -59,10 +60,11 @@ int main(int argc, char* argv[])
         glfwTerminate();
         return -1;
     }
-
+    Loggger::setLevel(Loggger::WARN);
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, Inputs::keyCallback);
 
     glewExperimental = GL_TRUE;
 
@@ -87,7 +89,9 @@ int main(int argc, char* argv[])
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
+        /* Render here */
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
 
         mgr.render();

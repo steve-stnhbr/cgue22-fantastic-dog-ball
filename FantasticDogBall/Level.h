@@ -11,9 +11,12 @@
 
 #include "Player.h"
 #include "Scene.h"
+#include "Inputs.h"
 
-class Level
+class Level : public Inputs::Processor
 {
+private:
+	const static glm::mat4 rotateA, rotateD;
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
@@ -33,8 +36,18 @@ public:
 	void add(Light::Point);
 	void add(Light::Spot);
 
+	void pressW() override;
+	void pressA() override;
+	void pressS() override;
+	void pressD() override;
+	void releaseW() override;
+	void releaseA() override;
+	void releaseS() override;
+	void releaseD() override;
+
 protected:
 	// core Bullet components
+	const btVector3 GRAVITY = { 0, -9.81f, 0 };
 	btBroadphaseInterface* pBroadphase;
 	btCollisionConfiguration* pCollisionConfiguration;
 	btCollisionDispatcher* pDispatcher;

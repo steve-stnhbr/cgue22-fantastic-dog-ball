@@ -48,9 +48,15 @@ void LevelManager::load(unsigned short levelNr)
         //ground->rotate(.4, { 1, 0, 1 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
+        auto ground0 = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground0");
+        ground0->translate({ 10, -10, 60 });
+        ground0->rotate(-.4, { 1, 0, 1.4 });
+        ground0->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        //level->add(ground0);
         level->finalize();
         levels[levelNr] = level;
         current = level;
+        Inputs::setProcessor(current);
         break;
 	}
 }
