@@ -101,7 +101,7 @@ void main() {
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     }
 
-    result += s_cubemap * CubemapReflection(norm, viewDir);
+    result += s_cubemap * CubemapReflection(norm, viewDir) * material.data[3];
 
     outColor = vec4(result * material.color.xyz, material.color.a);
 }

@@ -17,7 +17,7 @@ Renderer::Renderer()
  * \brief 
  * \param objects 
  */
-void Renderer::render(const RenderObject::renderList& objects, Light::Lights lights, float dTime)
+void Renderer::render(const RenderObject::renderList& objects, Light::Lights lights, Cubemap* cubemap, float dTime)
 {
 	Loggger::info("Rendering (%llu):", frameCount);
 
@@ -32,6 +32,7 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (auto* element : objects)
 	{
 		Loggger::info("\t%s", element->name.c_str());
@@ -42,9 +43,16 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 		prog.use();
 		
 		// bind uniforms here
+		if (cubemap == nullptr)
+			cubemap = new Cubemap{ .1 };
+		prog.setTexture("cubemap", *cubemap);
 		camera.bindWithModel(prog, element->transform);
 		lights.bind(prog);
 		element->draw(prog);
+	}
+
+	if (cubemap != nullptr) {
+		cubemap->draw(camera);
 	}
 
 	timeF += .01f;

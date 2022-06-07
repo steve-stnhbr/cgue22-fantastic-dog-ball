@@ -10,8 +10,8 @@ Material::StaticMaterial::StaticMaterial()
 	createBuffer();
 }
 
-Material::StaticMaterial::StaticMaterial(const glm::vec4 color_, const float diffuse_, const float specular_, const float shininess_) :
-	vals({ color_, diffuse_, specular_, shininess_ })
+Material::StaticMaterial::StaticMaterial(const glm::vec4 color_, const float diffuse_, const float specular_, const float shininess_, const float reflectiveness_) :
+	vals({ color_, diffuse_, specular_, shininess_, reflectiveness_ })
 {
 	createBuffer();
 	Utils::checkError();

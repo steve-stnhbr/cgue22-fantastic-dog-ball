@@ -16,7 +16,6 @@
 #include "Material.h"
 #include "Render.h"
 
-
 namespace Decoration
 {
 	class Decoration;

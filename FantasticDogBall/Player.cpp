@@ -8,7 +8,7 @@ Player::Player(btDynamicsWorld* pWorld) : Player(pWorld, {0,0,0})
 
 Player::Player(btDynamicsWorld* pWorld, glm::vec3 position)
 {
-	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4);
+	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .4);
 	ball = new RenderObject{ Render::Sphere(1, 16, 32), ball_mat, "PlayerBall" };
 	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 20);
 	ball->add(physics); 

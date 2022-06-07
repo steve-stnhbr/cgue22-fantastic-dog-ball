@@ -29,7 +29,7 @@ namespace Material
 			glm::vec4 data;
 
 			Values() = default;
-			Values(glm::vec4 color_, float diffuse_, float specular_, float shininess_) : color(color_), data(diffuse_, specular_, shininess_, 0) {}
+			Values(glm::vec4 color_, float diffuse_, float specular_, float shininess_, float reflectiveness_ = 0) : color(color_), data(diffuse_, specular_, shininess_, reflectiveness_) {}
 		};
 
 		Values vals;
@@ -42,7 +42,8 @@ namespace Material
 		StaticMaterial(const glm::vec4 color_,
 			const float diffuse_,
 			const float specular_,
-			const float shininess_);
+			const float shininess_,
+			const float reflectiveness_);
 
 		Shaders::Program& getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;

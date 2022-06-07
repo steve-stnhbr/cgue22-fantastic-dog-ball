@@ -9,7 +9,7 @@
 
 #include "LightSource.h"
 #include "Renderer.h"
-#include "RenderObject.h"
+#include "Cubemap.h"
 
 /*
  * The scene class is responsible for handling all RenderObjects
@@ -20,6 +20,7 @@ class Scene
 public:
 	typedef std::list<RenderObject*> renderList;
 
+	Cubemap* cubemap;
 	std::list<RenderObject*> objects;
 	Light::Lights lights;
 	Renderer renderer;

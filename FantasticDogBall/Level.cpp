@@ -1,5 +1,4 @@
 #include "Level.h"
-#include "Player.h"
 
 #include "glm/gtx/rotate_vector.hpp"
 
@@ -98,6 +97,9 @@ void Level::add(Light::Spot l)
 	scene.lights.add(l);
 }
 
+void Level::set(Cubemap* cubemap) {
+	scene.cubemap = cubemap;
+}
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 {

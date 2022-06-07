@@ -69,5 +69,7 @@ public:
 	 * Function that binds the camera to the currently active program
 	 */
 	void bindWithModel(Shaders::Program&, glm::mat4);
+
+	void bindCubemap(Shaders::Program&);
 };
 

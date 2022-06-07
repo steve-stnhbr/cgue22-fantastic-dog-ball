@@ -13,5 +13,5 @@ void Scene::addObject(RenderObject* object)
 
 void Scene::render(float dTime)
 {
-    renderer.render(objects, lights, dTime);
+    renderer.render(objects, lights, cubemap, dTime);
 }

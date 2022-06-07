@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include "LightSource.h"
+#include "Cubemap.h"
 
 class Renderer
 {
@@ -13,5 +14,5 @@ public:
 	GLenum renderMode;
 	Camera camera;
 
-	void render(const RenderObject::renderList&, Light::Lights lights, float dTime);
+	void render(const RenderObject::renderList&, Light::Lights lights, Cubemap* cubemap, float dTime);
 };

@@ -35,6 +35,8 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
+        level->set(new Cubemap("../res/cubemaps/Storforsen4"));
+
         level->scene.lights.finalize();
 
         auto* ground_mat = new Material::TextureMaterial;
@@ -44,15 +46,11 @@ void LevelManager::load(unsigned short levelNr)
         ground_mat->specular = { .5 };
         ground_mat->shininess = .3;
         auto ground = new RenderObject(Render::Plane(20, 100), ground_mat, "Ground");
-        ground->translate({ 0, -4, 0 });
-        //ground->rotate(.4, { 1, 0, 1 });
+        ground->translate({ 0, -1, 0 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
-        auto ground0 = new RenderObject(Render::Plane(100, 100), ground_mat, "Ground0");
-        ground0->translate({ 10, -10, 60 });
-        ground0->rotate(-.4, { 1, 0, 1.4 });
-        ground0->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        //level->add(ground0);
+        auto* cube = new RenderObject(Render::Cube(0, 0, 0, 1, 1, 1), ground_mat, "Cube");
+        level->add(cube);
         level->finalize();
         levels[levelNr] = level;
         current = level;

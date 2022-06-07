@@ -35,6 +35,7 @@ public:
 	void add(Light::Directional);
 	void add(Light::Point);
 	void add(Light::Spot);
+	void set(Cubemap* cubemap);
 
 	void pressW() override;
 	void pressA() override;

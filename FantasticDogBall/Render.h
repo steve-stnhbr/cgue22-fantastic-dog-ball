@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
-#include <stb/stb_image.h>
 
 #include "Shaders.h"
 #include "Utils.h"

@@ -57,8 +57,9 @@ uniform int s_specular;
 uniform float value_specular;
 uniform sampler2D specular;
 uniform float shininess;
-
-uniform sampler2D shadowMap;
+uniform int s_reflectiveness;
+uniform float value_reflectiveness;
+uniform sampler2D reflectiveness;
 
 layout(std140) uniform CameraData{
     mat4 model;
@@ -67,6 +68,9 @@ layout(std140) uniform CameraData{
     vec4 viewPos;
 };
 
+uniform samplerCube cubemap;
+uniform int s_cubemap = 1;
+
 in vec4 fragColor;
 in vec3 fragPos;
 in vec3 fragNormal;
@@ -74,6 +78,7 @@ in vec2 texCoords;
 
 out vec4 outColor;
 
+vec3 CubemapReflection(vec3 normal, vec3 directionToCam);
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -107,6 +112,8 @@ void main() {
     for (int i = 0; i < NUM_SPOT_LIGHTS; i++) { // error can be ignored since the value is inserted at runtime 
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     }
+
+    result += s_cubemap * CubemapReflection(norm, viewDir) * (s_reflectiveness == 1 ? texture(reflectiveness, texCoords).r : value_reflectiveness);
 
     //outColor = texture(color, texCoords) * vec4(result, 1);
     outColor = vec4(texture(color, texCoords).xyz * result, texture(color,texCoords).a);
@@ -164,6 +171,10 @@ float ShadowCalculationDir(vec4 fragPosLightSpace, sampler2D shadowMap, vec3 lig
         shadow = 0.0;
         
     return shadow;
+}
+vec3 CubemapReflection(vec3 normal, vec3 directionToCam) {
+	vec3 reflectDir = reflect(directionToCam, normal);
+	return vec3(texture(cubemap, -reflectDir));
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shadow)
