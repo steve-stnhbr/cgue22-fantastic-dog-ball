@@ -116,49 +116,54 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 	}
 }
 
+
 void Level::pressW()
 {
 	const auto dir = glm::normalize(scene.renderer.camera.direction) * 5.0f;
+	//const auto dir = glm::normalize(glm::vec3(0, 0, 1)) * 5.0f;
 	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z});
-	//scene.renderer.camera.setPitch(.3);
+	scene.renderer.camera.setLeaning(.5);
 }
 
 void Level::pressA()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(-scene.renderer.camera.direction), 1), glm::half_pi<float>()) * 5.0f;
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(90)) * 5.0f;
+	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(90)) * 5.0f;
 	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
-	//scene.renderer.camera.setRoll(-.3);
+	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressS()
 {
 	const auto dir = -glm::normalize(scene.renderer.camera.direction) * 5.0f;
+	//const auto dir = -glm::vec3(0,0,1) * 5.0f;
 	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
-	//scene.renderer.camera.setPitch(-.3);
+	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressD()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), -glm::half_pi<float>()) * 5.0f;
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(-90)) * 5.0f;
+	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(-90)) * 5.0f;
 	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
-	//scene.renderer.camera.setRoll(.3);
+	scene.renderer.camera.setLeaning(.5);
 }
 
 void Level::releaseW() {
 	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setPitch(0);
+	scene.renderer.camera.setLeaning(0);
 }
 
 void Level::releaseA() {
 	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setRoll(0);
+	scene.renderer.camera.setLeaning(0);
 }
 
 void Level::releaseS() {
 	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setPitch(0);
+	scene.renderer.camera.setLeaning(0);
 }
 
 void Level::releaseD() {
 	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setRoll(0);
+	scene.renderer.camera.setLeaning(0);
 }
 

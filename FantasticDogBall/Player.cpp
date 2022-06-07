@@ -37,18 +37,12 @@ void Player::update(unsigned long frame, float dTime)
 {
 	// get information about players state
 	auto ballBody = ball->getDecoration<Decoration::Physics>()->pBody;
-	auto velocity = ballBody->getLinearVelocity();
-	velocity.setY(0);
+	auto velocity = glm::vec3(ballBody->getLinearVelocity().x(), 0, ballBody->getLinearVelocity().z());
 
-	// set transformations of player-ball and dog to the same
-	ball->update(frame, dTime);
-	dog->update(frame, dTime);
-	directionAngle = glm::atan(velocity.x() / velocity.z());
-	if (directionAngle != directionAngle) directionAngle = 0;
-	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, {0, 1, 0});
+	const auto speed = glm::length(velocity);
+	velocity = glm::normalize(velocity);
 
 	// change animation based on the size of the velocity
-	const auto speed = velocity.length2();
 	if (speed > 17)
 		dog->add(canter);
 	else if (speed > 9)
@@ -58,7 +52,16 @@ void Player::update(unsigned long frame, float dTime)
 	else
 		dog->add(stand);
 
+	// set transformations of player-ball and dog to the same
+	ball->update(frame, dTime);
+	dog->update(frame, dTime);
+	directionAngle = glm::atan(velocity.x / velocity.z);
+
+	if (directionAngle != directionAngle) directionAngle = 0;
+	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
+
 	// change camera to follow player
+
 	const auto oldCamDirection = LevelManager::current->scene.renderer.camera.direction;
 	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;

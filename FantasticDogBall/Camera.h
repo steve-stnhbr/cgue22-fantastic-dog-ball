@@ -23,6 +23,7 @@ public:
 	} data;
 
 	glm::vec3 direction;
+	float a_leaning, leaning;
 	/*
 	 * These variables hold the desired values for rotations
 	*/
@@ -51,8 +52,9 @@ public:
 
 	void setDirection(const glm::vec3);
 
-	void setPitch(const float);
+	void setLeaning(const float leaning_);
 
+	void setPitch(const float);
 	void setYaw(const float);
 	void setRoll(const float);
 
