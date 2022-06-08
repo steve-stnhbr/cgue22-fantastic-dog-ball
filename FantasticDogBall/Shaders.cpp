@@ -270,7 +270,9 @@ void Shaders::Program::setVector4(const std::string& name, glm::vec4 v) const {
 void Shaders::Program::setMatrix4(const std::string& name, glm::mat4 v) const
 {
 	use();
-	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(v));
+	auto location = glGetUniformLocation(ID, name.c_str());
+	if (!checkLocation(location, name)) return;
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(v));
 }
 
 void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffer buffer)
@@ -286,10 +288,7 @@ void Shaders::Program::setUniform(const std::string& name, UncheckedUniformBuffe
 		binding = ++binding;
 		binding_ = binding;
 		ubi = glGetUniformBlockIndex(ID, c_name);
-		if (ubi < 0 || ubi == GL_INVALID_INDEX) {
-			Loggger::warn("The location for %s was not found in shader %u", name.c_str(), ID);
-			return;
-		}
+		if (!checkLocation(ubi, name)) return;
 		Utils::checkError();
 		Loggger::trace("Binding uniform %s to program %d with index %d", c_name, ID, ubi);
 
@@ -310,6 +309,15 @@ void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buff
 {
 	use();
 	buffer.bind(binding);
+}
+
+bool Shaders::Program::checkLocation(unsigned location, std::string name) const
+{
+	if (location < 0 || location == GL_INVALID_INDEX) {
+		Loggger::warn("The location for %s was not found in shader %u (%s)", name.c_str(), ID, Utils::arr2str(paths).c_str());
+		return false;
+	}
+	return true;
 }
 
 
@@ -340,8 +348,7 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 	auto map_val = texture_map.find(name);
 	if (map_val == texture_map.end()) {
 		ul = glGetUniformLocation(ID, name.c_str());
-		if (ul < 0 || ul == GL_INVALID_INDEX) {
-			Loggger::warn("The location for %s was not found in shader %u", name.c_str(), ID);
+		if (!checkLocation(ul, name)) {
 			return;
 		}
 

@@ -3,10 +3,13 @@
 #include "Utils.h"
 
 Level* LevelManager::current = nullptr;
+HUD* LevelManager::hud;
 
 LevelManager::LevelManager()
 {
     levels.resize(Globals::NUM_LEVELS);
+    hud = new HUD();
+    hud->init();
 }
 
 void LevelManager::load(unsigned short levelNr)
@@ -35,7 +38,7 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
-        level->set(new Cubemap("../res/cubemaps/Storforsen4"));
+        //level->set(new Cubemap("../res/cubemaps/Storforsen4"));
 
         level->scene.lights.finalize();
 
@@ -62,4 +65,24 @@ void LevelManager::load(unsigned short levelNr)
 void LevelManager::render()
 {
     current->render();
+    start2D();
+    hud->draw("32", "55");
+    end2D();
+}
+
+void LevelManager::start2D()
+{
+    glUseProgram(0);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_LIGHTING);
+    glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+}
+
+void LevelManager::end2D()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
 }

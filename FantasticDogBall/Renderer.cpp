@@ -33,10 +33,11 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+	/*
 	if (cubemap != nullptr) {
 		cubemap->draw(camera);
 	}
+	*/
 
 	for (auto* element : objects)
 	{
@@ -50,7 +51,7 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 		// bind uniforms here
 		if (cubemap == nullptr)
 			cubemap = new Cubemap{ .1 };
-		//prog.setTexture("cubemap", *cubemap);
+		prog.setTexture("cubemap", *cubemap);
 		camera.bindWithModel(prog, element->transform);
 		lights.bind(prog);
 		element->draw(prog);

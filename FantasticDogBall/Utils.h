@@ -24,6 +24,16 @@ public:
 	static std::string readFile(const char* path);
 	static GLenum checkError_(const char* file, int line);
 	static std::string getISOCurrentTimestamp();
+	static inline std::string arr2str(const std::vector<std::string> v) {
+		std::string str;
+		for (const auto& s : v) {
+			if (s.empty()) continue;
+			str += s + ", ";
+		}
+
+		auto l = str.length();
+		return str.substr(0, l - 2);
+	}
 	static inline constexpr unsigned int str2int(const char* str, int h = 0)
 	{
 		return !str[h] ? 5381 : (str2int(str, h + 1) * 33) ^ str[h];

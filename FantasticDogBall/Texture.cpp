@@ -26,26 +26,7 @@ Texture::Texture::Texture(std::string filePath_)
 	}
 	else
 	{
-		defined = true;
-		int comp;
-		filePath = filePath_;
-		data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
-		stbi_set_flip_vertically_on_load(true);
-
-		if(data == nullptr)
-		{
-			Loggger::error("failed to load image %s\nReason: %s", filePath.c_str(), stbi_failure_reason());
-			defined = false;
-			substituteValue = .8f;
-
-			Loggger::error("Setting substitute value because of an error");
-		} 
-
-		Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
-		
-		createTexture(width, height, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 3);
-
-		stbi_image_free(data);
+		load(filePath_);
 	}
 }
 
@@ -86,6 +67,7 @@ void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum i
 		glBindTexture(GL_TEXTURE_2D, glID);
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width_, height_, 0, colorFormat, type, 0);
 		Utils::checkError();
+		//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width_, height_, colorFormat, type, data);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -95,6 +77,30 @@ void Texture::Texture::createTexture(unsigned width_, unsigned height_, GLenum i
 		glGenerateMipmap(GL_TEXTURE_2D);
 		Utils::checkError();
 	}
+}
+
+void Texture::Texture::load(std::string filePath_)
+{
+	defined = true;
+	int comp;
+	filePath = filePath_;
+	data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
+	stbi_set_flip_vertically_on_load(true);
+
+	if (data == nullptr)
+	{
+		Loggger::error("failed to load image %s\nReason: %s", filePath.c_str(), stbi_failure_reason());
+		defined = false;
+		substituteValue = .8f;
+
+		Loggger::error("Setting substitute value because of an error");
+	}
+
+	Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);
+
+	createTexture(width, height, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 3);
+
+	stbi_image_free(data);
 }
 
 void Texture::Texture::bind(unsigned location) const

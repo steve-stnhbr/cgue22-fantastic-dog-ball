@@ -86,6 +86,7 @@ namespace Shaders
 		void setMatrix4(const std::string& name, glm::mat4) const;
 		void setUniform(const std::string& name, UncheckedUniformBuffer buffer);
 		void setUniform(const int binding, UncheckedUniformBuffer buffer) const;
+		bool checkLocation(unsigned location, std::string name) const;
 		template <typename V>
 		void setUniform(const std::string& name, UniformBuffer<V> buffer)
 		{

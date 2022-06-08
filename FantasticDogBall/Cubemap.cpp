@@ -144,9 +144,6 @@ void Cubemap::draw(Camera camera)
 	if(cubemapProgram.ID == 0) 
 		cubemapProgram = { {"cubemap.vert", "cubemap.frag"} };
 
-	if (skybox == nullptr)
-		skybox = new RenderObject(Render::Cube(0, 0, 0, 2, 2, 2), new Material::StaticMaterial({0,0,0,0},0,0,0,0), "Skybox");
-
 	glDepthFunc(GL_LEQUAL);
 	cubemapProgram.use();
 	camera.bindCubemap(cubemapProgram);
