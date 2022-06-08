@@ -7,16 +7,21 @@ class LevelManager
 {
 private:
 public:
+	enum State {
+		START_MENU,
+		PLAYING,
+		GAME_OVER,
+		TIME_OVER,
+		LEVEL_FINISHED
+	} state = PLAYING;
+
 	static Level* current;
-	static HUD* hud;
+	static Player* playerTemplate;
 	std::vector<Level*> levels;
 
 	LevelManager();
 
 	void load(unsigned short);
 	void render();
-
-	static void start2D();
-	static void end2D();
 };
 

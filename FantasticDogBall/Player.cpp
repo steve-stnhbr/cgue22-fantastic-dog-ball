@@ -2,17 +2,12 @@
 
 #include "LevelManager.h"
 
-Player::Player(btDynamicsWorld* pWorld) : Player(pWorld, {0,0,0})
+Player::Player() : Player({0,0,0})
 {
 }
 
-Player::Player(btDynamicsWorld* pWorld, glm::vec3 position)
+Player::Player(glm::vec3 position)
 {
-	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .4);
-	ball = new RenderObject{ Render::Sphere(1, 16, 32), ball_mat, "PlayerBall" };
-	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 20);
-	ball->add(physics); 
-
 	auto* dog_material = new Material::TextureMaterial();
 	dog_material->color = { "../res/dog/color.png" };
 	dog_material->normal = { "../res/dog/normal.png" };
@@ -77,5 +72,20 @@ void Player::update(unsigned long frame, float dTime)
 }
 
 void Player::draw(Shaders::Program prog)
-{
+{ 
+	// here goes nothing
 }
+
+void Player::init()
+{
+	RenderObject::init();
+}
+
+void Player::init(btDynamicsWorld* pWorld)
+{
+	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .4);
+	ball = new RenderObject{ Render::Sphere(1, 16, 32), ball_mat, "PlayerBall" };
+	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 20);
+	ball->add(physics);
+}
+

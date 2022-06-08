@@ -5,9 +5,15 @@
 const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
 const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
 
-Level::Level() : scene()
+Level::Level(Player* playerTemp) : scene()
 {
 	setupPhysics();
+	// copy value of player, so it does not have to be loaded again
+	player = (Player*) malloc(sizeof(Player));
+	memcpy(player, playerTemp, sizeof(Player));
+
+	hud = new HUD();
+	hud->init();
 }
 
 Level::~Level()
@@ -20,8 +26,7 @@ Level::~Level()
 }
 
 void Level::finalize() {
-	player = new Player(pWorld);
-	player->init();
+	player->init(pWorld);
 	add(player->dog);
 	add(player->ball);
 	add(player);
@@ -43,6 +48,9 @@ void Level::render()
 	*/
 	scene.render(dt);
 	//pWorld->debugDrawWorld();
+	Utils::start2D();
+	hud->draw(std::to_string(time), std::to_string(bones));
+	Utils::end2D();
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);

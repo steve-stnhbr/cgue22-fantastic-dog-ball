@@ -24,6 +24,8 @@ public:
 	static std::string readFile(const char* path);
 	static GLenum checkError_(const char* file, int line);
 	static std::string getISOCurrentTimestamp();
+	static void start2D();
+	static void end2D();
 	static inline std::string arr2str(const std::vector<std::string> v) {
 		std::string str;
 		for (const auto& s : v) {

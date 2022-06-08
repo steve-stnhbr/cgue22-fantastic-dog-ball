@@ -64,6 +64,23 @@ GLenum Utils::checkError_(const char* file, int line)
     return errorCode;
 }
 
+void Utils::start2D()
+{
+    glUseProgram(0);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_LIGHTING);
+    glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+}
+
+void Utils::end2D()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+}
+
 char asciitolower(char in) {
     if (in <= 'Z' && in >= 'A')
         return in - ('Z' - 'z');

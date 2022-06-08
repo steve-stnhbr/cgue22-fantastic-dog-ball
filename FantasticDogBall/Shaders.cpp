@@ -152,12 +152,12 @@ Shaders::ShaderCompilationException::ShaderCompilationException(const char* mess
 Shaders::ShaderCompilationException::ShaderCompilationException(const char* message, const char* _shaderName): base(message), shaderName(_shaderName)
 {}
 
-Shaders::Program::Program() : location(0), binding(20), ID(0)
+Shaders::Program::Program() : location(0), binding(10), ID(0)
 {
 }
 
 Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	location(0),
-																				binding(20),
+																				binding(10),
 																				vertexPath(vertexPath),
 																				fragmentPath(fragmentPath)
 {
@@ -185,7 +185,7 @@ Shaders::Program::Program(std::string& vertexPath, std::string& fragmentPath) :	
 	}
 }
 
-Shaders::Program::Program(std::vector<std::string> paths) : binding(20), location(30), paths(paths)
+Shaders::Program::Program(std::vector<std::string> paths) : binding(10), location(0), paths(paths)
 {
 	std::vector<GLenum> types;
 	for (std::string s : paths) {

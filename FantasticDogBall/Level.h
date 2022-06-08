@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Inputs.h"
+#include "HUD.h"
 
 class Level : public Inputs::Processor
 {
@@ -21,8 +22,11 @@ public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
 	Player* player;
+	HUD* hud;
+
+	unsigned time, bones;
 	
-	Level();
+	Level(Player* player);
 	~Level();
 	
 	void finalize();

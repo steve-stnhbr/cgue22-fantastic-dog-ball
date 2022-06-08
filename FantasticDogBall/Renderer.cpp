@@ -33,11 +33,9 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*
 	if (cubemap != nullptr) {
 		cubemap->draw(camera);
 	}
-	*/
 
 	for (auto* element : objects)
 	{

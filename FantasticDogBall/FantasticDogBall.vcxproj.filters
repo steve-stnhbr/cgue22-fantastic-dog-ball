@@ -93,6 +93,9 @@
     <ClCompile Include="HUD.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -221,6 +224,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="HUD.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
