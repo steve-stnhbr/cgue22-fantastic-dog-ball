@@ -48,7 +48,6 @@ void RenderObject::draw(Shaders::Program prog)
 	glBindVertexArray(vaoID);
 	mesh.bind(prog);
 	material->bind(prog);
-
 	Utils::checkError();
 
 	glDrawElements(GL_TRIANGLES, mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);

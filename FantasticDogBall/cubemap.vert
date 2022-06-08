@@ -10,13 +10,9 @@ layout(std140) uniform CameraData {
     mat4 projection;
     vec4 viewPos;
 };
-/*
-uniform mat4 view;
-uniform mat4 projection;
-*/
 
 void main() {
     TexCoords = aPos;
-    vec4 pos = projection * view * vec4(aPos, 1);
-    gl_Position = pos;
+    vec4 pos = projection * view * vec4(aPos, 1.0);
+    gl_Position = pos.xyww;
 }

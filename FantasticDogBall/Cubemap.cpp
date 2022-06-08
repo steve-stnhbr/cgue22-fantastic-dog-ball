@@ -147,13 +147,18 @@ void Cubemap::draw(Camera camera)
 	if (skybox == nullptr)
 		skybox = new RenderObject(Render::Cube(0, 0, 0, 2, 2, 2), new Material::StaticMaterial({0,0,0,0},0,0,0,0), "Skybox");
 
-	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_LEQUAL);
 	cubemapProgram.use();
 	camera.bindCubemap(cubemapProgram);
 	glBindVertexArray(skyboxVAO);
 	cubemapProgram.setTexture("cubemap", *this);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
+	glActiveTexture(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
+
+	Utils::checkError();
 }
 
 bool Cubemap::Bounds::inside(int x, int y)
