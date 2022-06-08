@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
         glfwTerminate();
         return -1;
     }
-    Loggger::setLevel(Loggger::INFO);
+    Loggger::setLevel(Loggger::WARN);
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

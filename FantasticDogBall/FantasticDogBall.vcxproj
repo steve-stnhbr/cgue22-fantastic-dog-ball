@@ -74,6 +74,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Inputs.h" />

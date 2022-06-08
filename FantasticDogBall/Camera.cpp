@@ -22,6 +22,11 @@ void Camera::setPosition(const glm::vec3 position_)
 	data.position = glm::vec4(position_.x, position_.y, position_.z, 0);
 }
 
+void Camera::setPlayerPosition(const glm::vec3 p)
+{
+	playerPos = p;
+}
+
 void Camera::setDirection(const glm::vec3 direction_)
 {
 	direction = direction_;
@@ -82,7 +87,7 @@ void Camera::update() {
 	direction = glm::vec3(glm::sin(yRotation), -.47, glm::cos(yRotation));
 	
 	// move camera away from the player 
-	data.position = glm::vec4(glm::vec3(data.position) - glm::normalize(direction) * 5.0f, 1);
+	data.position = glm::vec4(glm::vec3(playerPos) - glm::normalize(direction) * 5.0f, 1);
 
 	// rotate camera depending on gravity 
 	// todo x rotation on w and s

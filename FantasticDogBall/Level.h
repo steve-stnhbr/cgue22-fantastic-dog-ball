@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Inputs.h"
 #include "HUD.h"
+#include "State.h"
 
 class Level : public Inputs::Processor
 {
@@ -24,13 +25,14 @@ public:
 	Player* player;
 	HUD* hud;
 
-	unsigned time, bones;
+	float time;
+	unsigned bones;
 	
-	Level(Player* player);
+	Level(Player* player, unsigned initialTime);
 	~Level();
 	
 	void finalize();
-	void render();
+	State render();
 
 	void cleanup();
 	void setupPhysics();

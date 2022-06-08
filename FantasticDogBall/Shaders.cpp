@@ -314,7 +314,7 @@ void Shaders::Program::setUniform(const int binding, UncheckedUniformBuffer buff
 bool Shaders::Program::checkLocation(unsigned location, std::string name) const
 {
 	if (location < 0 || location == GL_INVALID_INDEX) {
-		Loggger::warn("The location for %s was not found in shader %u (%s)", name.c_str(), ID, Utils::arr2str(paths).c_str());
+		Loggger::info("The location for %s was not found in shader %u (%s)", name.c_str(), ID, Utils::arr2str(paths).c_str());
 		return false;
 	}
 	return true;

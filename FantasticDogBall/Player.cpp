@@ -15,6 +15,7 @@ Player::Player(glm::vec3 position)
 	dog_material->specular = { .5 };
 	dog = new RenderObject{ Render::Mesh::fromFile("../res/dog/dog.obj")[0], dog_material, "PlayerDog" };
 
+	/* todo uncomment
 	stand = new Decoration::Animation(std::vector<std::string>{ "../res/dog/dog.obj" }, 0, false);
 	stand->init(dog);
 	walk = new Decoration::Animation("../res/dog/dog_walk", .6);
@@ -23,6 +24,7 @@ Player::Player(glm::vec3 position)
 	trot->init(dog);
 	canter = new Decoration::Animation("../res/dog/dog_canter", .6);
 	canter->init(dog);
+	*/
 
 	//ball->init(); 
 	//dog->init();
@@ -38,6 +40,7 @@ void Player::update(unsigned long frame, float dTime)
 	velocity = glm::normalize(velocity);
 
 	// change animation based on the size of the velocity
+	/* todo uncomment
 	if (speed > 17)
 		dog->add(canter);
 	else if (speed > 9)
@@ -46,16 +49,16 @@ void Player::update(unsigned long frame, float dTime)
 		dog->add(walk);
 	else
 		dog->add(stand);
-
+	*/
 	// set transformations of player-ball and dog to the same
 	ball->update(frame, dTime);
 	dog->update(frame, dTime);
-	directionAngle = glm::atan(velocity.x / velocity.z);
+	Loggger::error("Velocity x: %f z: %f", velocity.x, velocity.z);
+	if (glm::length(velocity) > 0)
+		directionAngle = glm::atan(velocity.x / velocity.z);
 
 	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
-
-	// change camera to follow player
 
 	const auto oldCamDirection = LevelManager::current->scene.renderer.camera.direction;
 	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
@@ -67,7 +70,7 @@ void Player::update(unsigned long frame, float dTime)
 		newCamAngle = oldCamAngle + diffAngle * .1;
 	const auto ballPos = ballBody->getWorldTransform().getOrigin();
 	LevelManager::current->scene.renderer.camera.setYaw(newCamAngle);
-	LevelManager::current->scene.renderer.camera.setPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
+	LevelManager::current->scene.renderer.camera.setPlayerPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
 	LevelManager::current->scene.renderer.camera.update();
 }
 

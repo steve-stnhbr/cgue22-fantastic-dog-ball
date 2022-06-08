@@ -2,18 +2,13 @@
 
 #include "Level.h"
 #include "HUD.h"
+#include "State.h"
 
 class LevelManager
 {
 private:
 public:
-	enum State {
-		START_MENU,
-		PLAYING,
-		GAME_OVER,
-		TIME_OVER,
-		LEVEL_FINISHED
-	} state = PLAYING;
+	State state = PLAYING;
 
 	static Level* current;
 	static Player* playerTemplate;

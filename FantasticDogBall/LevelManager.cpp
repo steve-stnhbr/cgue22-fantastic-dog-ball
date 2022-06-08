@@ -17,7 +17,7 @@ void LevelManager::load(unsigned short levelNr)
 {
 	switch (levelNr) {
 	case 0:
-        Level* level = new Level(playerTemplate);
+        Level* level = new Level(playerTemplate, 100);
 
         Light::Point p = {
             glm::vec3(0, 1, 0),
@@ -27,7 +27,7 @@ void LevelManager::load(unsigned short levelNr)
             glm::vec3(2,2,2)
         };
 
-        //level0->scene.lights.add(p);
+        level->scene.lights.add(p);
 
         Light::Directional d = {
             glm::vec3(2, -8, 1),
@@ -53,8 +53,6 @@ void LevelManager::load(unsigned short levelNr)
         ground->translate({ 0, -1, 0 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
-        auto* cube = new RenderObject(Render::Cube(0, 0, 0, 1, 1, 1), ground_mat, "Cube");
-        level->add(cube);
         level->finalize();
         levels[levelNr] = level;
         current = level;
@@ -67,7 +65,12 @@ void LevelManager::render()
 {
     switch (state) {
     case PLAYING:
-        current->render();
+        state = current->render();
         break;
+    case GAME_OVER:
+
+        exit;
+    case TIME_OVER:
+        exit;
     }
 }

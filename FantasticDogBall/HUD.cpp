@@ -71,6 +71,8 @@ void HUD::Clock::init()
 
 void HUD::Clock::draw(std::string time)
 {
+	if (time.length() < 2) time = "0" + time;
+
 	//draw clock
 	hudProgram.use();
 	hudProgram.setTexture("hudImage", *texture);
@@ -82,6 +84,7 @@ void HUD::Clock::draw(std::string time)
 	gltSetText(glText, time.c_str());
 	gltColor(1, 1, 1, 1.0f);
 	gltDrawText2D(glText, centerX - 18, 40, 2.4);
+	//gltDrawText2DAligned(glText, centerX - 18, 40, 2.4, GLT_CENTER, GLT_CENTER);
 	gltEndDraw();
 	Utils::checkError();
 }

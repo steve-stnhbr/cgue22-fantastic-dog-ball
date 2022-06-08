@@ -5,7 +5,7 @@
 const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
 const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
 
-Level::Level(Player* playerTemp) : scene()
+Level::Level(Player* playerTemp, unsigned initialTime) : scene(), time(initialTime)
 {
 	setupPhysics();
 	// copy value of player, so it does not have to be loaded again
@@ -32,8 +32,9 @@ void Level::finalize() {
 	add(player);
 }
 
-void Level::render()
+State Level::render()
 {
+	Loggger::error("Gravity: (%f, %f, %f)", pWorld->getGravity().x(), pWorld->getGravity().y(), pWorld->getGravity().z());
 	float dt = clock.getTimeMilliseconds();
 	// reset the clock to 0
 	clock.reset();
@@ -42,15 +43,23 @@ void Level::render()
 	if (pWorld) {
 		pWorld->stepSimulation(dt);
 	}
+
+	time -= dt / 1000;
+
+	if (time < 0)
+		return State::TIME_OVER;
+
 	/*
 	debugDrawer.debugProgram.use();
 	debugDrawer.setCamera(scene.renderer.camera);
 	*/
 	scene.render(dt);
+	if (player->ball->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin().y() < -20) return State::GAME_OVER;
 	//pWorld->debugDrawWorld();
 	Utils::start2D();
-	hud->draw(std::to_string(time), std::to_string(bones));
+	hud->draw(std::to_string((int) time), std::to_string(bones));
 	Utils::end2D();
+	return State::PLAYING;
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);

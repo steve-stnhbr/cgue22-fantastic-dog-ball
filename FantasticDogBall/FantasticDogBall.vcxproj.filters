@@ -229,5 +229,8 @@
     <ClInclude Include="Menu.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
