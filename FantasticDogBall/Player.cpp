@@ -63,15 +63,14 @@ void Player::update(unsigned long frame, float dTime)
 
 	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
-
-	//todo if angle is 0 degrees camera turns around
 	 
 	const auto oldCamDirection = glm::vec3(LevelManager::current->scene.renderer.camera.direction.x, 0, LevelManager::current->scene.renderer.camera.direction.z);
 	const auto oldCamAngle = Utils::getAngle(oldCamDirection.x, oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;
 
 	auto newCamAngle = .0f;
-	if (abs(diffAngle) < glm::radians(2.f) || 360 - abs(glm::degrees(diffAngle)) < 3) // if difference is less than 2° end interpolation
+	if (abs(diffAngle) < glm::radians(2.f)			// if difference is less than 2° end interpolation
+		|| 360 - abs(glm::degrees(diffAngle)) < 3)	// if the difference is 3° around 360° we say its computational error, prevents camera twitching around straigt headings
 		newCamAngle = directionAngle;
 	else
 		newCamAngle = oldCamAngle + diffAngle * .1;
