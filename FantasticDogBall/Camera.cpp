@@ -46,6 +46,10 @@ void Camera::setYaw(const float angle_)
 	yRotation = angle_;
 }
 
+void Camera::addYaw(const float angle_)
+{
+	yRotation += angle_;
+}
 void Camera::setRoll(const float roll_) {
 	zRotation = roll_;
 }

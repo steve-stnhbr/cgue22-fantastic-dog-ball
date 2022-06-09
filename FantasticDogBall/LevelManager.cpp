@@ -64,13 +64,13 @@ void LevelManager::load(unsigned short levelNr)
 void LevelManager::render()
 {
     switch (state) {
-    case PLAYING:
+    case State::PLAYING:
         state = current->render();
         break;
-    case GAME_OVER:
+    case State::GAME_OVER:
 
         exit;
-    case TIME_OVER:
+    case State::TIME_OVER:
         exit;
     }
 }

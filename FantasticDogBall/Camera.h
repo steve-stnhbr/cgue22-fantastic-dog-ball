@@ -57,6 +57,7 @@ public:
 
 	void setPitch(const float);
 	void setYaw(const float);
+	void addYaw(const float);
 	void setRoll(const float);
 
 	void setProjection(const glm::mat4);

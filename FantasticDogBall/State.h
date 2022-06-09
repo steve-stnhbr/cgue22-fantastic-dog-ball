@@ -1,6 +1,6 @@
 #pragma once
 
-enum State {
+enum class State {
 	START_MENU,
 	PLAYING,
 	GAME_OVER,

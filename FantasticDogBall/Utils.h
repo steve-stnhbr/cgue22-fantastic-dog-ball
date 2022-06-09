@@ -77,7 +77,28 @@ public:
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
 		unsigned int severity, const char* message);
+	static inline float getAngle(float y, float x) {
+		const unsigned short roundPlaces = 6;
+		y = Utils::round(y, roundPlaces);
+		x = Utils::round(x, roundPlaces);
+		// todo make right calculation
+		/*
+		auto angle = atan2(y, x);
+		if (y < 0) angle = glm::two_pi<float>() + angle;
+		*/
+		auto angle = glm::mod(atan2(y, x) + glm::two_pi<float>(), glm::two_pi<float>());
+		return angle;
+	}
 
+	template <typename T> static inline int sgn(T val) {
+		return (T(0) < val) - (val < T(0));
+	}
+
+	template <typename T>
+	static inline T round(const T val, int places) {
+		const auto roundFactor = pow(10, places);
+		return floor(val * roundFactor) / roundFactor;
+	}
 
 	#define checkError() checkError_(__FILE__, __LINE__) 
 	

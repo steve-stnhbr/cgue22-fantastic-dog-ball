@@ -19,6 +19,7 @@ class Level : public Inputs::Processor
 {
 private:
 	const static glm::mat4 rotateA, rotateD;
+	const float gravityMultiplier = 8.0f;
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
@@ -42,6 +43,8 @@ public:
 	void add(Light::Point);
 	void add(Light::Spot);
 	void set(Cubemap* cubemap);
+
+	void addGravity(btVector3 vec);
 
 	void pressW() override;
 	void pressA() override;

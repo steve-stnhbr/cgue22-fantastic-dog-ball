@@ -34,7 +34,11 @@ void Player::update(unsigned long frame, float dTime)
 {
 	// get information about players state
 	auto ballBody = ball->getDecoration<Decoration::Physics>()->pBody;
-	auto velocity = glm::vec3(ballBody->getLinearVelocity().x(), 0, ballBody->getLinearVelocity().z());
+	glm::vec3 velocity = {
+		Utils::round(ballBody->getLinearVelocity().x(), 3),
+		0,
+		Utils::round(ballBody->getLinearVelocity().z(), 3)
+	};
 
 	const auto speed = glm::length(velocity);
 	velocity = glm::normalize(velocity);
@@ -53,23 +57,27 @@ void Player::update(unsigned long frame, float dTime)
 	// set transformations of player-ball and dog to the same
 	ball->update(frame, dTime);
 	dog->update(frame, dTime);
-	Loggger::error("Velocity x: %f z: %f", velocity.x, velocity.z);
-	if (glm::length(velocity) > 0)
-		directionAngle = glm::atan(velocity.x / velocity.z);
+	if (Utils::round(glm::length(velocity), 6) >= 0) {
+		directionAngle = Utils::getAngle(velocity.x, velocity.z);
+	}
 
 	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
 
-	const auto oldCamDirection = LevelManager::current->scene.renderer.camera.direction;
-	const auto oldCamAngle = glm::atan(oldCamDirection.x / oldCamDirection.z);
+	//todo if angle is 0 degrees camera turns around
+	 
+	const auto oldCamDirection = glm::vec3(LevelManager::current->scene.renderer.camera.direction.x, 0, LevelManager::current->scene.renderer.camera.direction.z);
+	const auto oldCamAngle = Utils::getAngle(oldCamDirection.x, oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;
-	auto newCamAngle = .0;
-	if (abs(diffAngle) < .05)
+
+	auto newCamAngle = .0f;
+	if (abs(diffAngle) < glm::radians(2.f) || 360 - abs(glm::degrees(diffAngle)) < 3) // if difference is less than 2° end interpolation
 		newCamAngle = directionAngle;
 	else
 		newCamAngle = oldCamAngle + diffAngle * .1;
-	const auto ballPos = ballBody->getWorldTransform().getOrigin();
 	LevelManager::current->scene.renderer.camera.setYaw(newCamAngle);
+
+	const auto ballPos = ballBody->getWorldTransform().getOrigin();
 	LevelManager::current->scene.renderer.camera.setPlayerPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
 	LevelManager::current->scene.renderer.camera.update();
 }

@@ -34,7 +34,6 @@ void Level::finalize() {
 
 State Level::render()
 {
-	Loggger::error("Gravity: (%f, %f, %f)", pWorld->getGravity().x(), pWorld->getGravity().y(), pWorld->getGravity().z());
 	float dt = clock.getTimeMilliseconds();
 	// reset the clock to 0
 	clock.reset();
@@ -135,34 +134,35 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 	}
 }
 
+void Level::addGravity(btVector3 vec) {
+	pWorld->setGravity(pWorld->getGravity() + vec);
+}
 
 void Level::pressW()
 {
-	const auto dir = glm::normalize(scene.renderer.camera.direction) * 5.0f;
-	//const auto dir = glm::normalize(glm::vec3(0, 0, 1)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z});
+	const auto dir = glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z});
 	scene.renderer.camera.setLeaning(.5);
 }
 
 void Level::pressA()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(90)) * 5.0f;
-	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(90)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+		glm::radians<float>(90)) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressS()
 {
-	const auto dir = -glm::normalize(scene.renderer.camera.direction) * 5.0f;
-	//const auto dir = -glm::vec3(0,0,1) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressD()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(-90)) * 5.0f;
-	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(-90)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+		glm::radians<float>(-90)) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 

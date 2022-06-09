@@ -8,7 +8,7 @@ class LevelManager
 {
 private:
 public:
-	State state = PLAYING;
+	State state = State::PLAYING;
 
 	static Level* current;
 	static Player* playerTemplate;
