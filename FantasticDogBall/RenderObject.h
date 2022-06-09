@@ -117,6 +117,7 @@ namespace Decoration
 		btCollisionShape* pShape;
 		float pMass;
 		btMotionState* pTransform;
+		std::function<void(RenderObject*)> collidingFunc;
 
 	public:
 		btRigidBody* pBody;
@@ -125,12 +126,13 @@ namespace Decoration
 		void init(RenderObject*) override;
 		void update(RenderObject* object, unsigned frame, float dTime) override;
 
-		void onCollide(RenderObject* other);
+		virtual void onCollide(RenderObject* other);
 
 		/*
 		 *	if pShape is nullptr the mesh of the object bound will be used
 		 */
 		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass);
+		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass, std::function<void(RenderObject*)>);
 	};
 
 	class Animation : public Decoration
@@ -154,7 +156,7 @@ namespace Decoration
 		std::function<void(RenderObject*, unsigned, float)> updateFunc;
 		std::function<void(RenderObject*)> initFunc;
 
-		Custom(std::function<void(RenderObject*, unsigned, float)> func);
+		Custom(std::function<void(RenderObject*, unsigned, float)> update);
 		Custom(std::function<void(RenderObject*, unsigned, float)> update, std::function<void(RenderObject*)> init);
 
 		void init(RenderObject*) override;

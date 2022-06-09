@@ -6,6 +6,8 @@
 #include "Utils.h"
 #include "LevelManager.h"
 
+unsigned Camera::FOV = 65;
+
 Camera::Camera(): data({ glm::mat4(1), glm::mat4(1) })
 {
 	buffer.create(sizeof(Data));
@@ -79,7 +81,7 @@ void Camera::bindWithModel(Shaders::Program& prog, glm::mat4 model)
 void Camera::bindCubemap(Shaders::Program& prog)
 {
 	Data dataCopy;
-	dataCopy.projection = glm::perspective<float>(45, 1, .1f, 100.0f);
+	dataCopy.projection = glm::perspective<float>(FOV, 1, .1f, 100.0f);
 	dataCopy.view = glm::mat4(glm::mat3(glm::lookAt<float>(glm::vec3(data.position), glm::vec3(data.position) + direction, { 0, 1, 0 })));
 	buffer.update(sizeof(Data), &dataCopy);
 	prog.setUniform("CameraData", buffer);

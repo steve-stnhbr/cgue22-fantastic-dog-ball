@@ -65,6 +65,14 @@ namespace Material
 
 		static Shaders::Program program;
 
+		TextureMaterial() = default;
+		TextureMaterial(Texture::Texture* color,
+			Texture::Texture* normal,
+			Texture::Texture* diffuse,
+			Texture::Texture* specular,
+			Texture::Texture* reflectiveness,
+			float shininess);
+
 		Shaders::Program& getProgram() override;
 		void assignVertexAttributes(unsigned vao) override;
 		void bind(Shaders::Program&) override;

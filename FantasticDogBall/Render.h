@@ -27,6 +27,7 @@ namespace Render
 		void createBuffers(unsigned int vaoID) const;
 		void bind(Shaders::Program prog);
 
+		static std::map<std::string, std::vector<Render::Mesh>> meshCache;
 
 		static std::vector<Render::Mesh> fromFile(const std::string& path);
 		static std::vector<Render::Mesh> fromFile(const std::string& path, const unsigned flags);

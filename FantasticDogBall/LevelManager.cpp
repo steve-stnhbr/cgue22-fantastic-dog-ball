@@ -1,9 +1,11 @@
 #include "LevelManager.h"
 
 #include "Utils.h"
+#include "Items.h"
 
 Level* LevelManager::current = nullptr;
 Player* LevelManager::playerTemplate;
+State LevelManager::state = State::PLAYING;
 
 LevelManager::LevelManager()
 {
@@ -26,8 +28,6 @@ void LevelManager::load(unsigned short levelNr)
             glm::vec3(5,5,5),
             glm::vec3(2,2,2)
         };
-
-        level->scene.lights.add(p);
 
         Light::Directional d = {
             glm::vec3(2, -8, 1),
@@ -53,6 +53,9 @@ void LevelManager::load(unsigned short levelNr)
         ground->translate({ 0, -1, 0 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
+        auto* treat = new Items::DogTreat(level->pWorld, glm::vec3(2,10,2));
+        level->add(treat);
+
         level->finalize();
         levels[levelNr] = level;
         current = level;

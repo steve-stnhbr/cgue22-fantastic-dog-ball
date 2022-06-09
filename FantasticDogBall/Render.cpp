@@ -39,6 +39,8 @@ void Render::Mesh::bind(Shaders::Program prog)
 	Utils::checkError();
 }
 
+std::map<std::string, std::vector<Render::Mesh>> Render::Mesh::meshCache;
+
 std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 {
 	return fromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
@@ -46,6 +48,11 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 
 std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const unsigned flags)
 {
+	auto cached = meshCache.find(path);
+	if (cached != meshCache.end()) {
+		return cached->second;
+	}
+
 	std::vector<Mesh> meshes;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
@@ -85,6 +92,8 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 
 		meshes.push_back(m);
 	}
+
+	meshCache[path] = meshes;
 
 	return meshes;
 }

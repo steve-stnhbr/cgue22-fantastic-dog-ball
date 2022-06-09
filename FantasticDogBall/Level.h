@@ -39,12 +39,14 @@ public:
 	void setupPhysics();
 	void add(RenderObject&);
 	void add(RenderObject*);
+	void remove(RenderObject*);
 	void add(Light::Directional);
 	void add(Light::Point);
 	void add(Light::Spot);
 	void set(Cubemap* cubemap);
 
 	void addGravity(btVector3 vec);
+	void collision(RenderObject* obj, RenderObject* other);
 
 	void pressW() override;
 	void pressA() override;

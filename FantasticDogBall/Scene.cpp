@@ -11,6 +11,11 @@ void Scene::addObject(RenderObject* object)
     objects.push_back(object);
 }
 
+void Scene::removeObject(RenderObject* object)
+{
+    objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+}
+
 void Scene::render(float dTime)
 {
     renderer.render(objects, lights, cubemap, dTime);

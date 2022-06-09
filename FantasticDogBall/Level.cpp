@@ -70,6 +70,8 @@ void Level::cleanup()
 	}
 }
 
+void physicsTick(btDynamicsWorld* world, btScalar timeStep);
+
 void Level::setupPhysics()
 {
 	// create the collision configuration
@@ -98,6 +100,10 @@ void Level::add(RenderObject* obj)
 {
 	scene.addObject(obj);
 	obj->init();
+}
+
+void Level::remove(RenderObject* obj) {
+	scene.removeObject(obj);
 }
 
 void Level::add(Light::Directional l)
