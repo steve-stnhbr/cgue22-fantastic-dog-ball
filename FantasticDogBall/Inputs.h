@@ -4,14 +4,14 @@
 class Inputs {
 public:
 	struct Processor {
-		virtual void pressW() = 0;
-		virtual void pressA() = 0;
-		virtual void pressS() = 0;
-		virtual void pressD() = 0;
-		virtual void releaseW() = 0;
-		virtual void releaseA() = 0;
-		virtual void releaseS() = 0;
-		virtual void releaseD() = 0;
+		virtual void pressW() {}
+		virtual void pressA() {}
+		virtual void pressS() {}
+		virtual void pressD() {}
+		virtual void releaseW() {}
+		virtual void releaseA() {}
+		virtual void releaseS() {}
+		virtual void releaseD() {}
 	};
 
 	inline static Processor* processor = nullptr;

@@ -87,6 +87,15 @@
     <ClCompile Include="Cubemap.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -129,6 +138,12 @@
     </None>
     <None Include="ClassDiagram1.cd" />
     <None Include="cubemap.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="2d.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="2d.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
   </ItemGroup>
@@ -203,6 +218,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Cubemap.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,21 +12,28 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Inputs.h"
+#include "HUD.h"
+#include "State.h"
 
 class Level : public Inputs::Processor
 {
 private:
 	const static glm::mat4 rotateA, rotateD;
+	const float gravityMultiplier = 8.0f;
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
 	Player* player;
+	HUD* hud;
+
+	float time;
+	unsigned bones;
 	
-	Level();
+	Level(Player* player, unsigned initialTime);
 	~Level();
 	
 	void finalize();
-	void render();
+	State render();
 
 	void cleanup();
 	void setupPhysics();
@@ -36,6 +43,8 @@ public:
 	void add(Light::Point);
 	void add(Light::Spot);
 	void set(Cubemap* cubemap);
+
+	void addGravity(btVector3 vec);
 
 	void pressW() override;
 	void pressA() override;

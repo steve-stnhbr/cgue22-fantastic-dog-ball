@@ -22,7 +22,7 @@ public:
 		glm::vec4 position;
 	} data;
 
-	glm::vec3 direction;
+	glm::vec3 direction, playerPos;
 	float a_leaning, leaning;
 	/*
 	 * These variables hold the desired values for rotations
@@ -49,6 +49,7 @@ public:
 	void setData(Data);
 
 	void setPosition(const glm::vec3);
+	void setPlayerPosition(const glm::vec3);
 
 	void setDirection(const glm::vec3);
 
@@ -56,6 +57,7 @@ public:
 
 	void setPitch(const float);
 	void setYaw(const float);
+	void addYaw(const float);
 	void setRoll(const float);
 
 	void setProjection(const glm::mat4);

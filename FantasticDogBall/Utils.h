@@ -24,6 +24,18 @@ public:
 	static std::string readFile(const char* path);
 	static GLenum checkError_(const char* file, int line);
 	static std::string getISOCurrentTimestamp();
+	static void start2D();
+	static void end2D();
+	static inline std::string arr2str(const std::vector<std::string> v) {
+		std::string str;
+		for (const auto& s : v) {
+			if (s.empty()) continue;
+			str += s + ", ";
+		}
+
+		auto l = str.length();
+		return str.substr(0, l - 2);
+	}
 	static inline constexpr unsigned int str2int(const char* str, int h = 0)
 	{
 		return !str[h] ? 5381 : (str2int(str, h + 1) * 33) ^ str[h];
@@ -65,7 +77,28 @@ public:
 	static void CheckDebugLog();
 	static void DebugOutputToFile(unsigned int source, unsigned int type, unsigned int id,
 		unsigned int severity, const char* message);
+	static inline float getAngle(float y, float x) {
+		const unsigned short roundPlaces = 6;
+		y = Utils::round(y, roundPlaces);
+		x = Utils::round(x, roundPlaces);
+		// todo make right calculation
+		/*
+		auto angle = atan2(y, x);
+		if (y < 0) angle = glm::two_pi<float>() + angle;
+		*/
+		auto angle = glm::mod(atan2(y, x) + glm::two_pi<float>(), glm::two_pi<float>());
+		return angle;
+	}
 
+	template <typename T> static inline int sgn(T val) {
+		return (T(0) < val) - (val < T(0));
+	}
+
+	template <typename T>
+	static inline T round(const T val, int places) {
+		const auto roundFactor = pow(10, places);
+		return floor(val * roundFactor) / roundFactor;
+	}
 
 	#define checkError() checkError_(__FILE__, __LINE__) 
 	

@@ -72,13 +72,15 @@ void Cubemap::initGL()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glCreateVertexArrays(1, &skyboxVAO);
+	glCreateBuffers(1, &skyboxVBO);
+	glNamedBufferStorage(skyboxVBO, sizeof(skyboxVertices), skyboxVertices, GL_CLIENT_STORAGE_BIT);
+	glEnableVertexArrayAttrib(skyboxVAO, 0);
+	glVertexArrayAttribFormat(skyboxVAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
+	glVertexArrayAttribBinding(skyboxVAO, 0, 0);
+	glVertexArrayVertexBuffer(skyboxVAO, 0, skyboxVBO, 0, sizeof(float) * 3);
+	Utils::checkError();
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 std::vector<unsigned char*> Cubemap::loadPaths(std::vector<std::string> paths)
@@ -106,7 +108,7 @@ Cubemap::Cubemap(float substitute)
 
 Cubemap::Cubemap(std::string path)
 {
-	if (path.find(".") == std::string::npos) {
+	if (path.substr(path.find_last_of("/"), std::string::npos).find(".") != std::string::npos) { // if given path is folder
 		int width, height, nrChannels;
 
 		data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
@@ -143,20 +145,16 @@ void Cubemap::draw(Camera camera)
 {
 	if(cubemapProgram.ID == 0) 
 		cubemapProgram = { {"cubemap.vert", "cubemap.frag"} };
-
-	if (skybox == nullptr)
-		skybox = new RenderObject(Render::Cube(0, 0, 0, 2, 2, 2), new Material::StaticMaterial({0,0,0,0},0,0,0,0), "Skybox");
-
 	glDepthFunc(GL_LEQUAL);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, glID);
 	cubemapProgram.use();
 	camera.bindCubemap(cubemapProgram);
 	glBindVertexArray(skyboxVAO);
 	cubemapProgram.setTexture("cubemap", *this);
+	Utils::checkError();
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDepthFunc(GL_LESS);
-	glActiveTexture(0);
-	glBindVertexArray(0);
-	glUseProgram(0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	Utils::checkError();
 }

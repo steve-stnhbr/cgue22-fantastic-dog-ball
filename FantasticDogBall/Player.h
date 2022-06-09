@@ -10,8 +10,11 @@ private:
 public:
 	float directionAngle;
 	RenderObject *dog, *ball;
-	Player(btDynamicsWorld* pWorld);
-	Player(btDynamicsWorld* pWorld, glm::vec3 position);
+	Player();
+	Player(glm::vec3 position);
+
+	void init();
+	void init(btDynamicsWorld* world);
 	void update(unsigned long frame, float dTime);
 	void draw(Shaders::Program prog) override;
 };

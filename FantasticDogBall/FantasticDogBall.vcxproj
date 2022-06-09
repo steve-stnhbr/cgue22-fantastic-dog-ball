@@ -23,6 +23,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="Loggger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -40,6 +42,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shaders.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UI.cpp" />
     <ClCompile Include="UncheckedUniformBuffer.cpp" />
     <ClCompile Include="UniformBuffer.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -47,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\x64\Debug\assimp-vc143-mtd.dll" />
+    <None Include="2d.frag" />
+    <None Include="2d.vert" />
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
     <None Include="cubemap.frag" />
@@ -69,6 +74,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cubemap.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Inputs.h" />
     <ClInclude Include="Level.h" />
@@ -77,6 +84,7 @@
     <ClInclude Include="LightSource_alt.h" />
     <ClInclude Include="Loggger.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Render.h" />
@@ -84,6 +92,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="UncheckedUniformBuffer.h" />
     <ClInclude Include="UniformBuffer.h" />
     <ClInclude Include="Utils.h" />

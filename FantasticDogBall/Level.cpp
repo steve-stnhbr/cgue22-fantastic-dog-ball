@@ -5,9 +5,15 @@
 const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
 const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
 
-Level::Level() : scene()
+Level::Level(Player* playerTemp, unsigned initialTime) : scene(), time(initialTime)
 {
 	setupPhysics();
+	// copy value of player, so it does not have to be loaded again
+	player = (Player*) malloc(sizeof(Player));
+	memcpy(player, playerTemp, sizeof(Player));
+
+	hud = new HUD();
+	hud->init();
 }
 
 Level::~Level()
@@ -20,14 +26,13 @@ Level::~Level()
 }
 
 void Level::finalize() {
-	player = new Player(pWorld);
-	player->init();
+	player->init(pWorld);
 	add(player->dog);
 	add(player->ball);
 	add(player);
 }
 
-void Level::render()
+State Level::render()
 {
 	float dt = clock.getTimeMilliseconds();
 	// reset the clock to 0
@@ -37,12 +42,23 @@ void Level::render()
 	if (pWorld) {
 		pWorld->stepSimulation(dt);
 	}
+
+	time -= dt / 1000;
+
+	if (time < 0)
+		return State::TIME_OVER;
+
 	/*
 	debugDrawer.debugProgram.use();
 	debugDrawer.setCamera(scene.renderer.camera);
 	*/
 	scene.render(dt);
+	if (player->ball->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin().y() < -20) return State::GAME_OVER;
 	//pWorld->debugDrawWorld();
+	Utils::start2D();
+	hud->draw(std::to_string((int) time), std::to_string(bones));
+	Utils::end2D();
+	return State::PLAYING;
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);
@@ -118,34 +134,35 @@ void physicsTick(btDynamicsWorld* world, btScalar timeStep)
 	}
 }
 
+void Level::addGravity(btVector3 vec) {
+	pWorld->setGravity(pWorld->getGravity() + vec);
+}
 
 void Level::pressW()
 {
-	const auto dir = glm::normalize(scene.renderer.camera.direction) * 5.0f;
-	//const auto dir = glm::normalize(glm::vec3(0, 0, 1)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z});
+	const auto dir = glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z});
 	scene.renderer.camera.setLeaning(.5);
 }
 
 void Level::pressA()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(90)) * 5.0f;
-	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(90)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+		glm::radians<float>(90)) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressS()
 {
-	const auto dir = -glm::normalize(scene.renderer.camera.direction) * 5.0f;
-	//const auto dir = -glm::vec3(0,0,1) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressD()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1), glm::radians<float>(-90)) * 5.0f;
-	//const auto dir = glm::rotateY(glm::vec4(0,0,1,1), glm::radians<float>(-90)) * 5.0f;
-	pWorld->setGravity({ dir.x, GRAVITY.y(), dir.z });
+	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+		glm::radians<float>(-90)) * gravityMultiplier;
+	addGravity({ dir.x, 0, dir.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 

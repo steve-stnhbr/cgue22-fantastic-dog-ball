@@ -21,6 +21,7 @@
 #include "Inputs.h"
 #include "Player.h"
 #include "LevelManager.h"
+#include "UI.h"
 
 #define NUM_LEVELS = 1
 
@@ -79,12 +80,17 @@ int main(int argc, char* argv[])
     Loggger::info("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
     initGl();
-    initBullet();
+    initBullet(); 
+
     LevelManager mgr;
 
     mgr.load(0);
     mgr.current->scene.renderer.camera.setPosition({ 0, 1, -6 });
     mgr.current->scene.renderer.camera.setDirection({ 0, -1, .1 });
+
+    UI ui;
+    ui.init();
+    ui.display("");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -93,7 +99,7 @@ int main(int argc, char* argv[])
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Utils::checkError();
-
+        
         mgr.render();
 
         /* Swap front and back buffers */
