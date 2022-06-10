@@ -1,6 +1,7 @@
 #include "Level.h"
 
 #include "glm/gtx/rotate_vector.hpp"
+#include "LevelManager.h"
 
 const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
 const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
@@ -58,7 +59,7 @@ State Level::render()
 	Utils::start2D();
 	hud->draw(std::to_string((int) time), std::to_string(bones));
 	Utils::end2D();
-	return State::PLAYING;
+	return LevelManager::state;
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);
@@ -104,6 +105,7 @@ void Level::add(RenderObject* obj)
 
 void Level::remove(RenderObject* obj) {
 	scene.removeObject(obj);
+	pWorld->removeCollisionObject(obj->getDecoration<Decoration::Physics>()->pBody);
 }
 
 void Level::add(Light::Directional l)

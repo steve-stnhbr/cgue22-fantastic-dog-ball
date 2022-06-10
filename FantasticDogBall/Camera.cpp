@@ -10,6 +10,8 @@ unsigned Camera::FOV = 65;
 
 Camera::Camera(): data({ glm::mat4(1), glm::mat4(1) })
 {
+	setPosition({ 0, 1, -6 });
+	setDirection({ 0, -1, .1 });
 	buffer.create(sizeof(Data));
 }
 
@@ -90,7 +92,7 @@ void Camera::bindCubemap(Shaders::Program& prog)
 void Camera::update() {
 	// interpolate the leaning for smooth transition
 	a_leaning += (leaning - a_leaning) * .14;
-	direction = glm::vec3(glm::sin(yRotation), -.47, glm::cos(yRotation));
+	direction = glm::vec3(glm::sin(yRotation), -.37, glm::cos(yRotation));
 	
 	// move camera away from the player 
 	data.position = glm::vec4(glm::vec3(playerPos) - glm::normalize(direction) * 5.0f, 1);

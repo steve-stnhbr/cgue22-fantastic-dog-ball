@@ -26,8 +26,11 @@ Items::DogTreat::DogTreat(btDynamicsWorld* world, glm::vec3 position) : RenderOb
 	});
 
 	auto custom = new Decoration::Custom([](RenderObject* obj, unsigned frame, float deltaTime) {
-		obj->rotate(deltaTime, { 0, 1, 0 });
+		obj->rotate(glm::radians(2.f), {0, 1, 0});
 	});
+
+	add(physics);
+	add(custom);
 }
 
 void Items::DogTreat::onCollide(RenderObject* other)
@@ -43,7 +46,7 @@ Items::Goal::Goal() : Goal({0,0,0})
 Items::Goal::Goal(glm::vec3 position) : RenderObject(
 	Render::Mesh::fromFile("../res/goal/goal.obj")[0],
 	new Material::TextureMaterial(
-		new Texture::Texture{ "../res/goal/goal.obj"},
+		new Texture::Texture{ "../res/goal/color.png"},
 		new Texture::Texture{ "" },
 		new Texture::Texture{ .4f },
 		new Texture::Texture{ .2f },
@@ -55,11 +58,15 @@ Items::Goal::Goal(glm::vec3 position) : RenderObject(
 {
 	translate(position);
 
-	auto custom = new Decoration::Custom([](RenderObject* obj, unsigned frame, float deltaTime) {
-		const auto playerPos = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin();
-		const auto goalPos = obj->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin();
-		if (playerPos.x() == goalPos.x() && playerPos.z() == goalPos.z()) {
+	auto custom = new Decoration::Custom([position = position](RenderObject* obj, unsigned frame, float deltaTime) {
+		const auto playerPos = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
+			->pBody->getWorldTransform().getOrigin();
+		// if the player ball has the same position as the goal it is inside the goal
+		Loggger::error("distance: " + std::to_string(glm::distance(glm::vec2(playerPos.x(), playerPos.z()), glm::vec2(position.x, position.z))));
+		if (glm::distance(glm::vec2(playerPos.x(), playerPos.z()), glm::vec2(position.x, position.z)) < .5) {
 			LevelManager::state = State::LEVEL_FINISHED;
 		}
 	});
+
+	add(custom);
 }

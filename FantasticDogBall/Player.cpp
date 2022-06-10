@@ -60,7 +60,11 @@ void Player::update(unsigned long frame, float dTime)
 	if (directionAngle != directionAngle) directionAngle = 0;
 	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
 	 
-	const auto oldCamDirection = glm::vec3(LevelManager::current->scene.renderer.camera.direction.x, 0, LevelManager::current->scene.renderer.camera.direction.z);
+	const auto oldCamDirection = glm::vec3(
+		LevelManager::current->scene.renderer.camera.direction.x, 
+		0,
+		LevelManager::current->scene.renderer.camera.direction.z
+	);
 	const auto oldCamAngle = Utils::getAngle(oldCamDirection.x, oldCamDirection.z);
 	const auto diffAngle = directionAngle - oldCamAngle;
 

@@ -54,9 +54,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="LightSource_alt.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -79,9 +76,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="LevelManager.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Inputs.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Items.cpp">
@@ -185,9 +179,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="LightSource_alt.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
