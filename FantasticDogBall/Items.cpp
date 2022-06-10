@@ -62,7 +62,6 @@ Items::Goal::Goal(glm::vec3 position) : RenderObject(
 		const auto playerPos = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
 			->pBody->getWorldTransform().getOrigin();
 		// if the player ball has the same position as the goal it is inside the goal
-		Loggger::error("distance: " + std::to_string(glm::distance(glm::vec2(playerPos.x(), playerPos.z()), glm::vec2(position.x, position.z))));
 		if (glm::distance(glm::vec2(playerPos.x(), playerPos.z()), glm::vec2(position.x, position.z)) < .5) {
 			LevelManager::state = State::LEVEL_FINISHED;
 		}

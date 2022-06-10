@@ -16,9 +16,10 @@ public:
 	static Player* playerTemplate;
 	static std::vector<Level*> levels;
 
-	Menu::StartMenu* startMenu;
+	Menu::StartMenu*	startMenu;
 	Menu::TimeOverMenu* timeOverMenu;
 	Menu::GameOverMenu* gameOverMenu;
+	Menu::FinishedMenu* finishedMenu;
 
 	LevelManager();
 

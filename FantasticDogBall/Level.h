@@ -26,7 +26,9 @@ public:
 	Player* player;
 	HUD* hud;
 
-	float time;
+	glm::vec3 wGravity, aGravity, sGravity, dGravity;
+
+	float initialTime, time;
 	unsigned bones;
 	
 	Level(Player* player, unsigned initialTime);

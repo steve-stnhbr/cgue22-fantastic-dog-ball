@@ -92,7 +92,8 @@ void Camera::bindCubemap(Shaders::Program& prog)
 void Camera::update() {
 	// interpolate the leaning for smooth transition
 	a_leaning += (leaning - a_leaning) * .14;
-	direction = glm::vec3(glm::sin(yRotation), -.37, glm::cos(yRotation));
+	a_xRotation += (xRotation - a_xRotation) * .14;
+	direction = glm::vec3(glm::sin(yRotation), -.37 - a_xRotation, glm::cos(yRotation));
 	
 	// move camera away from the player 
 	data.position = glm::vec4(glm::vec3(playerPos) - glm::normalize(direction) * 5.0f, 1);

@@ -27,6 +27,15 @@ namespace Menu {
 		void draw();
 		void on(int key) override;
 	};
+	class FinishedMenu : public Inputs::Processor {
+	private:
+		GLTtext* heading, *text;
+	public:
+		FinishedMenu();
+
+		void draw(unsigned time, unsigned score);
+		void on(int key) override;
+	};
 	class TimeOverMenu : public Inputs::Processor {
 	private:
 		GLTtext* heading, *text;
