@@ -70,6 +70,9 @@ void LevelManager::load(unsigned short levelNr)
         auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 7));
         level->add(treat2);
 
+        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, 0, 10));
+        level->add(jumpPad);
+
         auto* goal = new Items::Goal(glm::vec3(0, 0, 12));
         level->add(goal);
 

@@ -31,6 +31,8 @@ namespace Render
 
 		static std::vector<Render::Mesh> fromFile(const std::string& path);
 		static std::vector<Render::Mesh> fromFile(const std::string& path, const unsigned flags);
+		static Render::Mesh allFromFile(const std::string& path);
+		static Render::Mesh allFromFile(const std::string& path, const unsigned flags);
 	};
 
 	struct Cube: public Mesh

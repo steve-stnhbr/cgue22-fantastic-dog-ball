@@ -98,6 +98,25 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 	return meshes;
 }
 
+Render::Mesh Render::Mesh::allFromFile(const std::string& path)
+{
+	return allFromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
+}
+
+Render::Mesh Render::Mesh::allFromFile(const std::string& path, const unsigned flags)
+{
+	std::vector<Render::Mesh> meshes = fromFile(path, flags);
+	std::vector<Vertex> vertices;
+	std::vector<unsigned> indices;
+
+	for (const auto& mesh : meshes) {
+		vertices.insert(vertices.begin(), mesh.vertex_array.begin(), mesh.vertex_array.end());
+		indices.insert(indices.begin(), mesh.index_array.begin(), mesh.index_array.end());
+	}
+
+	return Mesh(vertices, indices);
+}
+
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({
 	                                                                                                               // front
 	                                                                                                               Vertex {
