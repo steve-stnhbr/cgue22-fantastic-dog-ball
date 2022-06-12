@@ -18,7 +18,7 @@ RenderObject::RenderObject() : material(new Material::StaticMaterial()), name(""
 {
 }
 
-RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, const std::string& name_) :
+RenderObject::RenderObject(Render::Mesh* mesh_, Material::Material* material_, const std::string& name_) :
 	mesh(mesh_),
 	material(material_),
 	name(name_),
@@ -27,6 +27,11 @@ RenderObject::RenderObject(Render::Mesh mesh_, Material::Material* material_, co
 {
 	buildVAO();
 	decorations = Utils::Map<size_t, Decoration::Decoration*>();
+}
+
+RenderObject::~RenderObject()
+{
+
 }
 
 void RenderObject::init()
@@ -46,11 +51,11 @@ void RenderObject::update(unsigned long frame, float dTime)
 void RenderObject::draw(Shaders::Program prog)
 {
 	glBindVertexArray(vaoID);
-	mesh.bind(prog);
+	mesh->bind(prog);
 	material->bind(prog);
 	Utils::checkError();
 
-	glDrawElements(GL_TRIANGLES, mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, mesh->index_array.size(), GL_UNSIGNED_INT, nullptr);
 	Utils::checkError();
 }
 
@@ -70,7 +75,7 @@ void RenderObject::buildVAO() const
 {
 	Loggger::trace("Creating RenderObject %s", name.c_str());
 	glCreateVertexArrays(1, (GLuint*)&vaoID);
-	mesh.createBuffers(vaoID);
+	mesh->createBuffers(vaoID);
 	material->assignVertexAttributes(vaoID);
 }
 
@@ -161,9 +166,9 @@ void Decoration::Physics::init(RenderObject* object)
 	if (pShape == nullptr) {
 		Loggger::trace("Using Convex hull of mesh for %s", object->name.c_str());
 		pShape = new btConvexHullShape();
-		for (int i = 0; i < object->mesh.vertex_array.size(); i++)
+		for (int i = 0; i < object->mesh->vertex_array.size(); i++)
 		{
-			Vertex v = object->mesh.vertex_array[i];
+			Vertex v = object->mesh->vertex_array[i];
 			btVector3 btv = btVector3(v.position.x, v.position.y, v.position.z);
 			((btConvexHullShape*) pShape)->addPoint(btv);
 		}
@@ -215,7 +220,7 @@ Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_
 {
 }
 
-Decoration::Animation::Animation() : meshes({Render::Mesh()}), paths{""}
+Decoration::Animation::Animation() : meshes({new Render::Mesh()}), paths{""}
 {
 }
 
@@ -235,7 +240,7 @@ void Decoration::Animation::init(RenderObject* obj)
 	Loggger::trace("Initializing Animation for RenderObject %s", obj->name.c_str());
 	for (const auto& file : paths) {
 		auto mesh = Render::Mesh::fromFile(file)[0];
-		mesh.createBuffers(obj->vaoID);
+		mesh->createBuffers(obj->vaoID);
 		meshes.push_back(mesh);
 	}
 }

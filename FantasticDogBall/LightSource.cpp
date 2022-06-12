@@ -329,17 +329,19 @@ Texture::Texture Light::Light::generateShadowMap2D(const RenderObject::renderLis
 	//glEnable(GL_RASTERIZER_DISCARD);
 	SHADOW_PROGRAM.use();
 	SHADOW_PROGRAM.setMatrix4("lightSpace", getLightSpace());
-	for (RenderObject* elementP : objects) {
-		auto element = *elementP;
-		SHADOW_PROGRAM.setMatrix4("model", element.transform);
+	for (RenderObject* element : objects) {
+		SHADOW_PROGRAM.setMatrix4("model", element->transform);
+		element->draw(SHADOW_PROGRAM);
+		/*
 		Utils::checkError();
-		glBindVertexArray(element.vaoID);
-		glBindVertexBuffer(0, element.mesh.vboID, 0, sizeof(Vertex));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element.mesh.eboID);
+		glBindVertexArray(element->vaoID);
+		glBindVertexBuffer(0, element->mesh->vboID, 0, sizeof(Vertex));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element->mesh->eboID);
 		Utils::checkError();
 		// draw
-		glDrawElements(GL_TRIANGLES, element.mesh.index_array.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, element->mesh->index_array.size(), GL_UNSIGNED_INT, nullptr);
 		Utils::checkError();
+		*/
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

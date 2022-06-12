@@ -13,6 +13,8 @@ Level::Level(Player* playerTemp, unsigned initialTime) : scene(), initialTime(in
 	player = (Player*) malloc(sizeof(Player));
 	memcpy(player, playerTemp, sizeof(Player));
 
+	player->init(pWorld);
+
 	hud = new HUD();
 	hud->init();
 }
@@ -24,6 +26,7 @@ Level::~Level()
 	delete pCollisionConfiguration;
 	delete pDispatcher;
 	delete pSolver;
+	delete player;
 }
 
 void Level::finalize() {

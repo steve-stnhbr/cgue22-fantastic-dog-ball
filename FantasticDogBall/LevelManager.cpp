@@ -59,7 +59,7 @@ void LevelManager::load(unsigned short levelNr)
         ground_mat->diffuse = { .2 };
         ground_mat->specular = { .5 };
         ground_mat->shininess = .3;
-        auto ground = new RenderObject(Render::Plane(20, 100), ground_mat, "Ground");
+        auto ground = new RenderObject(new Render::Plane(20, 100), ground_mat, "Ground");
         ground->translate({ 0, -1, 0 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);

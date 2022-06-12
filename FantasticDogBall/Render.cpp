@@ -39,34 +39,34 @@ void Render::Mesh::bind(Shaders::Program prog)
 	Utils::checkError();
 }
 
-std::map<std::string, std::vector<Render::Mesh>> Render::Mesh::meshCache;
+std::map<std::string, std::vector<Render::Mesh*>> Render::Mesh::meshCache;
 
-std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
+std::vector<Render::Mesh*> Render::Mesh::fromFile(const std::string& path)
 {
 	return fromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
 }
 
-std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const unsigned flags)
+std::vector<Render::Mesh*> Render::Mesh::fromFile(const std::string& path, const unsigned flags)
 {
 	auto cached = meshCache.find(path);
 	if (cached != meshCache.end()) {
 		return cached->second;
 	}
 
-	std::vector<Mesh> meshes;
+	std::vector<Mesh*> meshes;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
   
 	if (scene == nullptr) {
 		Loggger::error(importer.GetErrorString());
-		meshes.push_back({});
+		meshes.push_back(new Render::Mesh());
 		return meshes;
 	}
 
 	for(unsigned i = 0; i < scene->mNumMeshes; i++)
 	{
-		Mesh m;
-		m.fileName = path;
+		auto m = new Mesh();
+		m->fileName = path;
 		const aiMesh* mesh = scene->mMeshes[i];
 		for (unsigned j = 0; j < mesh->mNumVertices; ++j)
 		{
@@ -74,7 +74,7 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 			const aiVector3D n = mesh->HasNormals() ? mesh->mNormals[j] : aiVector3D {0};
 			const aiVector3D t = mesh->HasTextureCoords(0) ? mesh->mTextureCoords[0][j] : aiVector3D{ 0 };
 
-			m.vertex_array.push_back({
+			m->vertex_array.push_back({
 				{v.x, v.y, v.z},
 				{n.x, n.y, n.z},
 				{t.x, t.y}
@@ -86,7 +86,7 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 			const aiFace face = mesh->mFaces[j];
 			for (unsigned k = 0; k < face.mNumIndices; ++k)
 			{
-				m.index_array.push_back(face.mIndices[k]);
+				m->index_array.push_back(face.mIndices[k]);
 			}
 		}
 
@@ -98,23 +98,23 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 	return meshes;
 }
 
-Render::Mesh Render::Mesh::allFromFile(const std::string& path)
+Render::Mesh* Render::Mesh::allFromFile(const std::string& path)
 {
 	return allFromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
 }
 
-Render::Mesh Render::Mesh::allFromFile(const std::string& path, const unsigned flags)
+Render::Mesh* Render::Mesh::allFromFile(const std::string& path, const unsigned flags)
 {
-	std::vector<Render::Mesh> meshes = fromFile(path, flags);
+	std::vector<Render::Mesh*> meshes = fromFile(path, flags);
 	std::vector<Vertex> vertices;
 	std::vector<unsigned> indices;
 
 	for (const auto& mesh : meshes) {
-		vertices.insert(vertices.begin(), mesh.vertex_array.begin(), mesh.vertex_array.end());
-		indices.insert(indices.begin(), mesh.index_array.begin(), mesh.index_array.end());
+		vertices.insert(vertices.begin(), mesh->vertex_array.begin(), mesh->vertex_array.end());
+		indices.insert(indices.begin(), mesh->index_array.begin(), mesh->index_array.end());
 	}
 
-	return Mesh(vertices, indices);
+	return new Mesh(vertices, indices);
 }
 
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({

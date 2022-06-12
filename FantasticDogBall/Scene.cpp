@@ -1,5 +1,14 @@
 #include "Scene.h"
 
+Scene::~Scene()
+{
+    for (auto&& child : objects) {
+
+        delete child;
+    }
+    delete cubemap;
+}
+
 void Scene::addObject(RenderObject object)
 {
     addObject(&object);

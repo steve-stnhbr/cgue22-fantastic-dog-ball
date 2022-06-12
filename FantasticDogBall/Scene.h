@@ -26,6 +26,7 @@ public:
 	Renderer renderer;
 
 	Scene() = default;
+	~Scene();
 
 	void addObject(RenderObject object);
 	void addObject(RenderObject* object);

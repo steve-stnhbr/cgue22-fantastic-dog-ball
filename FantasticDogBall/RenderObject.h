@@ -36,7 +36,7 @@ public:
 	/**
 	 * The Mesh containing the vertecies and indices used to draw
 	 */
-	Render::Mesh		mesh;
+	Render::Mesh		*mesh;
 	/*
 	 * A pointer to the material the RenderObject is using
 	 */
@@ -66,7 +66,9 @@ public:
 	btVector3 pScale;
 
 	RenderObject();
-	RenderObject(Render::Mesh, Material::Material*, const std::string&);
+	RenderObject(Render::Mesh*, Material::Material*, const std::string&);
+
+	~RenderObject();
 	
 	virtual void init();
 	virtual void update(unsigned long frame, float dTime);
@@ -141,7 +143,7 @@ namespace Decoration
 		bool loop, played, started;
 		unsigned started_frame;
 		float speed;
-		std::vector<Render::Mesh> meshes;
+		std::vector<Render::Mesh*> meshes;
 		std::vector<std::string> paths;
 	public:
 		Animation();
