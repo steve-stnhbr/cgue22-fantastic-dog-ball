@@ -373,6 +373,7 @@ external/*doc
 !*.dll
 !res/*
 !res
+!res/*.obj
 
 *.rar
 *.zip
