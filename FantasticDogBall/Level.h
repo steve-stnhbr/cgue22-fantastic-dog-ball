@@ -26,7 +26,9 @@ public:
 	Player* player;
 	HUD* hud;
 
-	float time;
+	glm::vec3 wGravity, aGravity, sGravity, dGravity;
+
+	float initialTime, time;
 	unsigned bones;
 	
 	Level(Player* player, unsigned initialTime);
@@ -39,12 +41,14 @@ public:
 	void setupPhysics();
 	void add(RenderObject&);
 	void add(RenderObject*);
+	void remove(RenderObject*);
 	void add(Light::Directional);
 	void add(Light::Point);
 	void add(Light::Spot);
 	void set(Cubemap* cubemap);
 
 	void addGravity(btVector3 vec);
+	void collision(RenderObject* obj, RenderObject* other);
 
 	void pressW() override;
 	void pressA() override;

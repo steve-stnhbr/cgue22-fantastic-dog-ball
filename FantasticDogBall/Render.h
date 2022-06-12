@@ -27,9 +27,12 @@ namespace Render
 		void createBuffers(unsigned int vaoID) const;
 		void bind(Shaders::Program prog);
 
+		static std::map<std::string, std::vector<Render::Mesh>> meshCache;
 
 		static std::vector<Render::Mesh> fromFile(const std::string& path);
 		static std::vector<Render::Mesh> fromFile(const std::string& path, const unsigned flags);
+		static Render::Mesh allFromFile(const std::string& path);
+		static Render::Mesh allFromFile(const std::string& path, const unsigned flags);
 	};
 
 	struct Cube: public Mesh

@@ -12,6 +12,8 @@ public:
 		virtual void releaseA() {}
 		virtual void releaseS() {}
 		virtual void releaseD() {}
+		virtual void on(int key) {};
+		virtual void off(int key) {};
 	};
 
 	inline static Processor* processor = nullptr;
@@ -19,6 +21,7 @@ public:
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		if (processor == nullptr) return;
 		if (action == GLFW_PRESS) {
+			processor->on(key);
 			switch (key) {
 			case GLFW_KEY_W:
 				processor->pressW();
@@ -35,6 +38,7 @@ public:
 			}
 		}
 		else if (action == GLFW_RELEASE) {
+			processor->off(key);
 			switch (key) {
 			case GLFW_KEY_W:
 				processor->releaseW();

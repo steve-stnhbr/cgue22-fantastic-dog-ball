@@ -94,6 +94,7 @@ void Texture::Texture::load(std::string filePath_)
 		substituteValue = .8f;
 
 		Loggger::error("Setting substitute value because of an error");
+		return;
 	}
 
 	Loggger::debug("Read image %s (%u w, %u h) %u channels", filePath.c_str(), width, height, nrChannels, 4);

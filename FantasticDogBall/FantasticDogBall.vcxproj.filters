@@ -54,9 +54,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="LightSource_alt.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -81,7 +78,7 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Inputs.cpp">
+    <ClCompile Include="Items.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Cubemap.cpp">
@@ -184,9 +181,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="LightSource_alt.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -230,6 +224,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Items.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

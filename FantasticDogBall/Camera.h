@@ -9,6 +9,7 @@
 class Camera
 {
 public:
+	static unsigned FOV;
 	/**
 	 * Struct for representing the camera data in shaders
 	 */

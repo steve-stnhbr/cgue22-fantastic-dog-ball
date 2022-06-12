@@ -1,11 +1,12 @@
 #include "Level.h"
 
 #include "glm/gtx/rotate_vector.hpp"
+#include "LevelManager.h"
 
 const glm::mat4 Level::rotateD = glm::rotate(glm::mat4(1), -glm::half_pi<float>(), { 0, 1, 0 });
 const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>(), { 0, 1, 0 });
 
-Level::Level(Player* playerTemp, unsigned initialTime) : scene(), time(initialTime)
+Level::Level(Player* playerTemp, unsigned initialTime) : scene(), initialTime(initialTime), time(initialTime)
 {
 	setupPhysics();
 	// copy value of player, so it does not have to be loaded again
@@ -58,7 +59,7 @@ State Level::render()
 	Utils::start2D();
 	hud->draw(std::to_string((int) time), std::to_string(bones));
 	Utils::end2D();
-	return State::PLAYING;
+	return LevelManager::state;
 }
 
 void physicsTick(btDynamicsWorld* world, btScalar timeStep);
@@ -69,6 +70,8 @@ void Level::cleanup()
 		obj->cleanup();
 	}
 }
+
+void physicsTick(btDynamicsWorld* world, btScalar timeStep);
 
 void Level::setupPhysics()
 {
@@ -98,6 +101,11 @@ void Level::add(RenderObject* obj)
 {
 	scene.addObject(obj);
 	obj->init();
+}
+
+void Level::remove(RenderObject* obj) {
+	scene.removeObject(obj);
+	pWorld->removeCollisionObject(obj->getDecoration<Decoration::Physics>()->pBody);
 }
 
 void Level::add(Light::Directional l)
@@ -140,49 +148,57 @@ void Level::addGravity(btVector3 vec) {
 
 void Level::pressW()
 {
-	const auto dir = glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
-	addGravity({ dir.x, 0, dir.z});
-	scene.renderer.camera.setLeaning(.5);
+	//if (wGravity.length() > 0) return;
+	wGravity = glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ wGravity.x, 0, wGravity.z});
+	scene.renderer.camera.setPitch(.15);
 }
 
 void Level::pressA()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+	//if (aGravity.length() > 0) return;
+	aGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
 		glm::radians<float>(90)) * gravityMultiplier;
-	addGravity({ dir.x, 0, dir.z });
+	addGravity({ aGravity.x, 0, aGravity.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 void Level::pressS()
 {
-	const auto dir = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
-	addGravity({ dir.x, 0, dir.z });
-	scene.renderer.camera.setLeaning(.5);
+	//if (sGravity.length() > 0) return;
+	sGravity = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	addGravity({ sGravity.x, 0, sGravity.z });
+	scene.renderer.camera.setPitch(-.15);
 }
 void Level::pressD()
 {
-	const auto dir = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+	//if (dGravity.length() > 0) return;
+	dGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
 		glm::radians<float>(-90)) * gravityMultiplier;
-	addGravity({ dir.x, 0, dir.z });
+	addGravity({ dGravity.x, 0, dGravity.z });
 	scene.renderer.camera.setLeaning(.5);
 }
 
 void Level::releaseW() {
-	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setLeaning(0);
+	addGravity({-wGravity.x, 0, -wGravity.z});
+	wGravity = glm::vec3(0);
+	scene.renderer.camera.setPitch(0);
 }
 
 void Level::releaseA() {
-	pWorld->setGravity(GRAVITY);
+	addGravity({ -aGravity.x, 0, -aGravity.z });
+	aGravity = glm::vec3(0);
 	scene.renderer.camera.setLeaning(0);
 }
 
 void Level::releaseS() {
-	pWorld->setGravity(GRAVITY);
-	scene.renderer.camera.setLeaning(0);
+	addGravity({ -sGravity.x, 0, -sGravity.z });
+	sGravity = glm::vec3(0);
+	scene.renderer.camera.setPitch(0);
 }
 
 void Level::releaseD() {
-	pWorld->setGravity(GRAVITY);
+	addGravity({ -dGravity.x, 0, -dGravity.z });
+	dGravity = glm::vec3(0);
 	scene.renderer.camera.setLeaning(0);
 }
 

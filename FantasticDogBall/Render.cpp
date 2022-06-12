@@ -39,6 +39,8 @@ void Render::Mesh::bind(Shaders::Program prog)
 	Utils::checkError();
 }
 
+std::map<std::string, std::vector<Render::Mesh>> Render::Mesh::meshCache;
+
 std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 {
 	return fromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
@@ -46,6 +48,11 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path)
 
 std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const unsigned flags)
 {
+	auto cached = meshCache.find(path);
+	if (cached != meshCache.end()) {
+		return cached->second;
+	}
+
 	std::vector<Mesh> meshes;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), flags);
@@ -86,7 +93,28 @@ std::vector<Render::Mesh> Render::Mesh::fromFile(const std::string& path, const 
 		meshes.push_back(m);
 	}
 
+	meshCache[path] = meshes;
+
 	return meshes;
+}
+
+Render::Mesh Render::Mesh::allFromFile(const std::string& path)
+{
+	return allFromFile(path, aiProcess_Triangulate | aiProcess_OptimizeMeshes | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords);
+}
+
+Render::Mesh Render::Mesh::allFromFile(const std::string& path, const unsigned flags)
+{
+	std::vector<Render::Mesh> meshes = fromFile(path, flags);
+	std::vector<Vertex> vertices;
+	std::vector<unsigned> indices;
+
+	for (const auto& mesh : meshes) {
+		vertices.insert(vertices.begin(), mesh.vertex_array.begin(), mesh.vertex_array.end());
+		indices.insert(indices.begin(), mesh.index_array.begin(), mesh.index_array.end());
+	}
+
+	return Mesh(vertices, indices);
 }
 
 Render::Cube::Cube(float centerX, float centerY, float centerZ, float width, float height, float depth) : Mesh({

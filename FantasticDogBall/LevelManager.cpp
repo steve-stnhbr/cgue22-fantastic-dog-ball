@@ -1,9 +1,13 @@
 #include "LevelManager.h"
 
 #include "Utils.h"
+#include "Items.h"
 
 Level* LevelManager::current = nullptr;
 Player* LevelManager::playerTemplate;
+State LevelManager::state = State::START_MENU;
+std::vector<Level*> LevelManager::levels;
+unsigned LevelManager::currentIndex = -1;
 
 LevelManager::LevelManager()
 {
@@ -11,12 +15,20 @@ LevelManager::LevelManager()
 
     playerTemplate = new Player();
     playerTemplate->init();
+
+    gameOverMenu = new Menu::GameOverMenu();
+    startMenu = new Menu::StartMenu();
+    timeOverMenu = new Menu::TimeOverMenu();
+    finishedMenu = new Menu::FinishedMenu();
 }
 
 void LevelManager::load(unsigned short levelNr)
 {
+    delete current;
+    currentIndex = levelNr;
 	switch (levelNr) {
-	case 0:
+    case 0: {
+        state = State::PLAYING;
         Level* level = new Level(playerTemplate, 100);
 
         Light::Point p = {
@@ -26,8 +38,6 @@ void LevelManager::load(unsigned short levelNr)
             glm::vec3(5,5,5),
             glm::vec3(2,2,2)
         };
-
-        level->scene.lights.add(p);
 
         Light::Directional d = {
             glm::vec3(2, -8, 1),
@@ -53,24 +63,50 @@ void LevelManager::load(unsigned short levelNr)
         ground->translate({ 0, -1, 0 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
+        auto* treat = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 5));
+        level->add(treat);
+        auto* treat1 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 6));
+        level->add(treat1);
+        auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 7));
+        level->add(treat2);
+
+        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, 0, 10), 20);
+        level->add(jumpPad);
+
+        auto* goal = new Items::Goal(glm::vec3(0, 0, 24));
+        level->add(goal);
+
         level->finalize();
-        levels[levelNr] = level;
         current = level;
         Inputs::setProcessor(current);
-        break;
+    }
+    break;
+    default:
+        Loggger::error("Level %i not defined", levelNr);
 	}
 }
 
 void LevelManager::render()
 {
     switch (state) {
+    case State::LEVEL_FINISHED:
+        finishedMenu->draw(current->initialTime - current->time, current->bones);
+        Inputs::setProcessor(finishedMenu);
+        break;
+    case State::START_MENU:
+        startMenu->draw();
+        Inputs::setProcessor(startMenu);
+        break;
     case State::PLAYING:
         state = current->render();
         break;
     case State::GAME_OVER:
-
-        exit;
+        gameOverMenu->draw();
+        Inputs::setProcessor(gameOverMenu);
+        break;
     case State::TIME_OVER:
-        exit;
+        timeOverMenu->draw();
+        Inputs::setProcessor(timeOverMenu);
+        break;
     }
 }

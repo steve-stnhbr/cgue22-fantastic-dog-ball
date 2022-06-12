@@ -29,6 +29,7 @@ public:
 
 	void addObject(RenderObject object);
 	void addObject(RenderObject* object);
+	void removeObject(RenderObject* object);
 
 	void render(float dTime);
 };
