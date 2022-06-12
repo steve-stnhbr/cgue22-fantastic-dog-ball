@@ -148,6 +148,7 @@ void Level::addGravity(btVector3 vec) {
 
 void Level::pressW()
 {
+	//if (wGravity.length() > 0) return;
 	wGravity = glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
 	addGravity({ wGravity.x, 0, wGravity.z});
 	scene.renderer.camera.setPitch(.15);
@@ -155,6 +156,7 @@ void Level::pressW()
 
 void Level::pressA()
 {
+	//if (aGravity.length() > 0) return;
 	aGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
 		glm::radians<float>(90)) * gravityMultiplier;
 	addGravity({ aGravity.x, 0, aGravity.z });
@@ -162,12 +164,14 @@ void Level::pressA()
 }
 void Level::pressS()
 {
+	//if (sGravity.length() > 0) return;
 	sGravity = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
 	addGravity({ sGravity.x, 0, sGravity.z });
 	scene.renderer.camera.setPitch(-.15);
 }
 void Level::pressD()
 {
+	//if (dGravity.length() > 0) return;
 	dGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
 		glm::radians<float>(-90)) * gravityMultiplier;
 	addGravity({ dGravity.x, 0, dGravity.z });

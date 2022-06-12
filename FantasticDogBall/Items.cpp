@@ -70,9 +70,7 @@ Items::Goal::Goal(glm::vec3 position) : RenderObject(
 	add(custom);
 }
 
-Items::JumpPad::JumpPad(btDynamicsWorld* pWorld) : JumpPad(pWorld, { 0,0,0 }) {}
-
-Items::JumpPad::JumpPad(btDynamicsWorld* pWorld, glm::vec3 position) : RenderObject(
+Items::JumpPad::JumpPad(btDynamicsWorld* pWorld, glm::vec3 position = {0,0,0}, float strength = 20) : RenderObject(
 	Render::Mesh::allFromFile("../res/jump_pad/jump_pad.obj"),
 	new Material::TextureMaterial(
 		new Texture::Texture("../res/jump_pad/color.png"),
@@ -83,22 +81,30 @@ Items::JumpPad::JumpPad(btDynamicsWorld* pWorld, glm::vec3 position) : RenderObj
 		1.2
 	),
 	"JumpPad"
-), active(false) {
+), active(false), strength(strength) {
 	translate(position);
-	auto anim = new Decoration::Animation("../res/jump_pad/anim", 1.f, true);
+	auto anim = new Decoration::Animation("../res/jump_pad/anim", .5f, false);
+	anim->init(this);
 	auto custom = new Decoration::Custom([active = active, anim = anim,position = position](RenderObject* obj, unsigned frame, float deltaTime) {
 		const auto playerPos = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
 			->pBody->getWorldTransform().getOrigin();
 		// if the player ball has the same position as the goal it is inside the goal
 		if (glm::distance(glm::vec3(playerPos.x(), playerPos.y(), playerPos.z()), position) < .5) {
 			if (!active) {
+				const auto test = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
+					->pBody;
+
+				test->setLinearVelocity({ 0, 5, 0 });
+				/*
 				LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
-					->pBody->applyCentralForce({ 0, 3, 0 });
+					->pBody->applyCentralPushImpulse({ 0, 0, 0 });
+				*/
+				anim->reset();
 				obj->add(anim);
 				((JumpPad*)obj)->active = true;
 			}
 		}
 	});
-	add(anim);
 	add(custom);
 }
+

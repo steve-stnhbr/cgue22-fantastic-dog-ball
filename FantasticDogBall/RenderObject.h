@@ -138,7 +138,8 @@ namespace Decoration
 	class Animation : public Decoration
 	{
 	private:
-		bool loop;
+		bool loop, played, started;
+		unsigned started_frame;
 		float speed;
 		std::vector<Render::Mesh> meshes;
 		std::vector<std::string> paths;
@@ -149,6 +150,7 @@ namespace Decoration
 
 		void init(RenderObject*) override;
 		void update(RenderObject*, unsigned frame, float dTime) override;
+		void reset();
 	};
 
 	class Custom : public Decoration {

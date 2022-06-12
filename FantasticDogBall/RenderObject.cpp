@@ -219,14 +219,14 @@ Decoration::Animation::Animation() : meshes({Render::Mesh()}), paths{""}
 {
 }
 
-Decoration::Animation::Animation(std::string path, float speed, bool loop) : loop(loop), speed(speed)
+Decoration::Animation::Animation(std::string path, float speed, bool loop) : loop(loop), speed(speed), played(false), started(false), started_frame(0)
 {
 	for (const auto& file : std::filesystem::directory_iterator(path.c_str()))
 		if(file.path().extension() == ".obj")
 			paths.push_back(file.path().string());
 }
 
-Decoration::Animation::Animation(std::vector<std::string> paths, float speed, bool loop) : paths(paths), loop(loop), speed(speed)
+Decoration::Animation::Animation(std::vector<std::string> paths, float speed, bool loop) : paths(paths), loop(loop), speed(speed), played(false), started(false), started_frame(0)
 {
 }
 
@@ -242,10 +242,21 @@ void Decoration::Animation::init(RenderObject* obj)
 
 void Decoration::Animation::update(RenderObject* obj,unsigned frame, float dTime)
 {
-	if (!loop && frame > meshes.size() * (1 / speed))
+	if (!started) {
+		started = true;
+		started_frame = frame;
+	}
+	if (!loop && played)
 		return;
-	auto index = static_cast<unsigned>(floor(frame * speed)) % meshes.size();
+	auto index = static_cast<unsigned>(floor(frame - started_frame * speed)) % meshes.size();
+	if (index == 0 && started_frame < frame) played = true;
 	obj->mesh = meshes[index];
+}
+
+void Decoration::Animation::reset()
+{
+	started = false;
+	played = false;
 }
 
 Decoration::Custom::Custom(std::function<void(RenderObject*, unsigned, float)> update) : updateFunc(update)

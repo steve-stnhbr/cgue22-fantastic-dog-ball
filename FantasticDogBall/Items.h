@@ -27,9 +27,10 @@ namespace Items
 	class JumpPad : public RenderObject {
 	private:
 		bool active;
+		float strength;
 	public:
-		JumpPad(btDynamicsWorld* pWorld);
-		JumpPad(btDynamicsWorld* pWorld, glm::vec3 position);
+		JumpPad(btDynamicsWorld* pWorld, glm::vec3 position, float strength);
+
 	};
 };
 
