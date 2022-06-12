@@ -150,7 +150,7 @@ void Cubemap::draw(Camera camera)
 	cubemapProgram.use();
 	camera.bindCubemap(cubemapProgram);
 	glBindVertexArray(skyboxVAO);
-	cubemapProgram.setTexture("cubemap", *this);
+	cubemapProgram.setTexture("cubemap", this);
 	Utils::checkError();
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDepthFunc(GL_LESS);

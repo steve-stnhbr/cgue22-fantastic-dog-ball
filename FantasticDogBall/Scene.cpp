@@ -2,9 +2,9 @@
 
 Scene::~Scene()
 {
-    for (auto&& child : objects) {
-
-        delete child;
+    for (auto child : objects) {
+        if(child->toDelete)
+            delete child;
     }
     delete cubemap;
 }
@@ -22,7 +22,8 @@ void Scene::addObject(RenderObject* object)
 
 void Scene::removeObject(RenderObject* object)
 {
-    objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+    //  objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+    objects.remove(object);
 }
 
 void Scene::render(float dTime)

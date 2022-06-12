@@ -332,13 +332,13 @@ void Shaders::Program::setTexture(const unsigned location, const Texture::Textur
 	Utils::checkError();
 }
 
-void Shaders::Program::setTexture(const std::string& name, const Texture::Texture& texture)
+void Shaders::Program::setTexture(const std::string& name, const Texture::Texture* texture)
 {
 	use();
-	if (!texture.defined)
+	if (!texture->defined)
 	{
 		this->setInt("s_" + name, 0);
-		this->setFloat("value_" + name, texture.substituteValue);
+		this->setFloat("value_" + name, texture->substituteValue);
 		return;
 	}
 	this->setInt("s_" + name, 1);
@@ -367,7 +367,7 @@ void Shaders::Program::setTexture(const std::string& name, const Texture::Textur
 
 	glUniform1i(ul, location_);
 	Utils::checkError();
-	texture.bind(location_);
+	texture->bind(location_);
 	Utils::checkError();
 }
 

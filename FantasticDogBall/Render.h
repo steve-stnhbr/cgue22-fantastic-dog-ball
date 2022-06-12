@@ -21,8 +21,10 @@ namespace Render
 		std::vector<Vertex> vertex_array;
 		std::vector<unsigned int> index_array;
 
-		Render::Mesh() = default;
+		Render::Mesh();
 		Render::Mesh(std::vector<Vertex>, std::vector<unsigned>);
+
+		~Mesh();
 
 		void createBuffers(unsigned int vaoID) const;
 		void bind(Shaders::Program prog);

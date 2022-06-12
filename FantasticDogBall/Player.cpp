@@ -8,12 +8,13 @@ Player::Player() : Player({0,0,0})
 
 Player::Player(glm::vec3 position)
 {
+	material = new Material::StaticMaterial();
 	auto* dog_material = new Material::TextureMaterial();
-	dog_material->color = { "../res/dog/color.png" };
-	dog_material->normal = { "../res/dog/normal.png" };
+	dog_material->color = new Texture::Texture{ "../res/dog/color.png" };
+	dog_material->normal = new Texture::Texture{ "../res/dog/normal.png" };
 	dog_material->shininess = .8;
-	dog_material->specular = { .5 };
-	dog = new RenderObject{ Render::Mesh::fromFile("../res/dog/dog.obj")[0], dog_material, "PlayerDog" };
+	dog_material->specular = new Texture::Texture{ .5 };
+	dog = new RenderObject{ Render::Mesh::fromFile("../res/dog/dog.obj")[0], dog_material, "PlayerDog", false };
 
 	stand = new Decoration::Animation(std::vector<std::string>{ "../res/dog/dog.obj" }, 0, false);
 	stand->init(dog);
@@ -58,7 +59,9 @@ void Player::update(unsigned long frame, float dTime)
 	}
 
 	if (directionAngle != directionAngle) directionAngle = 0;
-	dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
+	auto ballPos = ballBody->getWorldTransform().getOrigin();
+	dog->transform = glm::rotate(glm::translate(glm::mat4(1), { ballPos.x(), ballPos.y() - .6, ballPos.z() }), directionAngle, { 0, 1, 0 });
+	//dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
 	 
 	const auto oldCamDirection = glm::vec3(
 		LevelManager::current->scene.renderer.camera.direction.x, 
@@ -76,7 +79,6 @@ void Player::update(unsigned long frame, float dTime)
 		newCamAngle = oldCamAngle + diffAngle * .1;
 	LevelManager::current->scene.renderer.camera.setYaw(newCamAngle);
 
-	const auto ballPos = ballBody->getWorldTransform().getOrigin();
 	LevelManager::current->scene.renderer.camera.setPlayerPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
 	LevelManager::current->scene.renderer.camera.update();
 }
@@ -93,9 +95,14 @@ void Player::init()
 
 void Player::init(btDynamicsWorld* pWorld)
 {
+	transform = glm::mat4(1);
+	dog->transform = transform;
+
 	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .4);
-	ball = new RenderObject{ new Render::Sphere(1, 16, 32), ball_mat, "PlayerBall" };
+	ball = new RenderObject{ new Render::Sphere(1, 16, 32), ball_mat, "PlayerBall", false };
 	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 20);
 	ball->add(physics);
+
+	ball->transform = transform;
 }
 

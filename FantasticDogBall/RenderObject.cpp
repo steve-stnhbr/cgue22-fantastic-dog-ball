@@ -14,16 +14,15 @@
 
 #include "Utils.h"
 
-RenderObject::RenderObject() : material(new Material::StaticMaterial()), name("")
-{
-}
+RenderObject::RenderObject() = default;
 
-RenderObject::RenderObject(Render::Mesh* mesh_, Material::Material* material_, const std::string& name_) :
+RenderObject::RenderObject(Render::Mesh* mesh_, Material::Material* material_, const std::string& name_, bool toDelete) :
 	mesh(mesh_),
 	material(material_),
 	name(name_),
 	transform(glm::mat4(1)),
-	pScale({1, 1, 1})
+	pScale({1, 1, 1}),
+	toDelete(toDelete)
 {
 	buildVAO();
 	decorations = Utils::Map<size_t, Decoration::Decoration*>();
@@ -31,7 +30,8 @@ RenderObject::RenderObject(Render::Mesh* mesh_, Material::Material* material_, c
 
 RenderObject::~RenderObject()
 {
-
+	name.~basic_string();
+	delete material;
 }
 
 void RenderObject::init()
@@ -185,7 +185,7 @@ void Decoration::Physics::init(RenderObject* object)
 		pMass,              // mass, in kg. 
 		pTransform,
 		pShape,				// collision shape of body
-		btVector3(0, 0, 0)	// local inertia
+		btVector3(1, 1, 1)	// local inertia
 	);
 	rigidBodyCI.m_restitution = .7;
 
@@ -212,16 +212,36 @@ void Decoration::Physics::onCollide(RenderObject* other)
 	if (collidingFunc) collidingFunc(other);
 }
 
-Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_), collidingFunc(nullptr)
+Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_) : 
+	pShape(pShape_), 
+	pMass(pMass_), 
+	pWorld(pWorld_), 
+	collidingFunc(nullptr)
 {
 }
 
-Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_, std::function<void(RenderObject*)> collidingFunc_) : pShape(pShape_), pMass(pMass_), pWorld(pWorld_), collidingFunc(collidingFunc_)
+Decoration::Physics::Physics(btDynamicsWorld* pWorld_, btCollisionShape* pShape_, float pMass_, std::function<void(RenderObject*)> collidingFunc_) : 
+	pShape(pShape_), 
+	pMass(pMass_), 
+	pWorld(pWorld_), 
+	collidingFunc(collidingFunc_)
 {
 }
 
-Decoration::Animation::Animation() : meshes({new Render::Mesh()}), paths{""}
+Decoration::Physics::~Physics()
 {
+	delete pShape;
+}
+
+Decoration::Animation::Animation() : 
+	meshes({new Render::Mesh()}), 
+	paths({ "" }),
+	speed(1),
+	started(false),
+	played(false),
+	started_frame(0)
+{
+	initialized = false;
 }
 
 Decoration::Animation::Animation(std::string path, float speed, bool loop) : loop(loop), speed(speed), played(false), started(false), started_frame(0)

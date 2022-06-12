@@ -65,8 +65,10 @@ public:
 	btVector3 pTranslate;
 	btVector3 pScale;
 
+	bool toDelete;
+
 	RenderObject();
-	RenderObject(Render::Mesh*, Material::Material*, const std::string&);
+	RenderObject(Render::Mesh*, Material::Material*, const std::string&, bool toDelete = true);
 
 	~RenderObject();
 	
@@ -135,6 +137,8 @@ namespace Decoration
 		 */
 		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass);
 		Physics(btDynamicsWorld* pWorld, btCollisionShape* pShape, float mass, std::function<void(RenderObject*)>);
+
+		~Physics();
 	};
 
 	class Animation : public Decoration
@@ -149,6 +153,8 @@ namespace Decoration
 		Animation();
 		Animation(std::string path, float = 1.0f, bool = true);
 		Animation(std::vector<std::string> paths, float = 1.0f, bool = true);
+
+		~Animation() = default;
 
 		void init(RenderObject*) override;
 		void update(RenderObject*, unsigned frame, float dTime) override;

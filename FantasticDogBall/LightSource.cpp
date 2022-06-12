@@ -314,9 +314,9 @@ void Light::Light::initProgram() {
 	}
 }
 
-Texture::Texture Light::Light::generateShadowMap2D(const RenderObject::renderList& objects)
+Texture::Texture* Light::Light::generateShadowMap2D(const RenderObject::renderList& objects)
 { 
-	if (!castShadow) return false;
+	if (!castShadow) return new Texture::Texture(1);
 	glBindFramebuffer(GL_FRAMEBUFFER, SHADOW_FRAMEBUFFER);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapID, 0);
 	glDrawBuffer(GL_NONE);
@@ -346,9 +346,9 @@ Texture::Texture Light::Light::generateShadowMap2D(const RenderObject::renderLis
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glDisable(GL_RASTERIZER_DISCARD);
-	Texture::Texture tex;
-	tex.defined = true;
-	tex.glID = shadowMapID;
+	Texture::Texture* tex = new Texture::Texture();
+	tex->defined = true;
+	tex->glID = shadowMapID;
 	shadowMap = tex;
 	return shadowMap;
 }

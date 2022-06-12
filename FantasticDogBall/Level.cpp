@@ -9,9 +9,8 @@ const glm::mat4 Level::rotateA = glm::rotate(glm::mat4(1), glm::half_pi<float>()
 Level::Level(Player* playerTemp, unsigned initialTime) : scene(), initialTime(initialTime), time(initialTime)
 {
 	setupPhysics();
+	player = playerTemp;
 	// copy value of player, so it does not have to be loaded again
-	player = (Player*) malloc(sizeof(Player));
-	memcpy(player, playerTemp, sizeof(Player));
 
 	player->init(pWorld);
 
@@ -26,7 +25,6 @@ Level::~Level()
 	delete pCollisionConfiguration;
 	delete pDispatcher;
 	delete pSolver;
-	delete player;
 }
 
 void Level::finalize() {
@@ -47,6 +45,9 @@ State Level::render()
 		pWorld->stepSimulation(dt);
 	}
 
+	Loggger::fatal("Gravity: %f, %f, %f", 
+		pWorld->getGravity().x(), pWorld->getGravity().y(), pWorld->getGravity().z());
+
 	time -= dt / 1000;
 
 	if (time < 0)
@@ -57,8 +58,8 @@ State Level::render()
 	debugDrawer.setCamera(scene.renderer.camera);
 	*/
 	scene.render(dt);
-	if (player->ball->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin().y() < -20) return State::GAME_OVER;
-	//pWorld->debugDrawWorld();
+	if (player->ball->getDecoration<Decoration::Physics>()->pBody->getWorldTransform().getOrigin().y() < -20) 
+		return State::GAME_OVER;
 	Utils::start2D();
 	hud->draw(std::to_string((int) time), std::to_string(bones));
 	Utils::end2D();

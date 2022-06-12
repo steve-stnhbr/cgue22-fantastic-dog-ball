@@ -98,7 +98,7 @@ namespace Shaders
 		}
 
 		void setTexture(const unsigned, const Texture::Texture& texture) const;
-		void setTexture(const std::string&, const Texture::Texture& texture);
+		void setTexture(const std::string&, const Texture::Texture* texture);
 
 
 		std::string getLog();

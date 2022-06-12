@@ -9,9 +9,20 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : vertex_array(std::move(v_)), index_array(
-	                                                                       std::move(i_))
+Render::Mesh::Mesh() : Mesh({}, {}) {}
+
+Render::Mesh::Mesh(std::vector<Vertex> v_, std::vector<unsigned> i_) : 
+	vertex_array(std::move(v_)),
+	index_array(std::move(i_)),
+	eboID(0),
+	vboID(0)
 {
+}
+
+Render::Mesh::~Mesh()
+{
+	glDeleteBuffers(1, &vboID);
+	glDeleteBuffers(1, &eboID);
 }
 
 void Render::Mesh::createBuffers(unsigned int vaoID) const

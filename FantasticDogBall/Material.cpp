@@ -79,17 +79,27 @@ Shaders::Program& Material::TextureMaterial::getProgram()
 	return program;
 }
 
+Material::TextureMaterial::TextureMaterial() :
+	color(new Texture::Texture()),
+	normal(new Texture::Texture()),
+	diffuse(new Texture::Texture()),
+	specular(new Texture::Texture()),
+	reflectiveness(new Texture::Texture()),
+	shininess(1)
+{
+}
+
 Material::TextureMaterial::TextureMaterial(Texture::Texture* color,
 	Texture::Texture* normal,
 	Texture::Texture* diffuse,
 	Texture::Texture* specular,
 	Texture::Texture* reflectiveness,
 	float shininess) :
-	color(*color),
-	normal(*normal),
-	diffuse(*diffuse),
-	specular(*specular),
-	reflectiveness(*reflectiveness),
+	color(color),
+	normal(normal),
+	diffuse(diffuse),
+	specular(specular),
+	reflectiveness(reflectiveness),
 	shininess(shininess)
 {
 }

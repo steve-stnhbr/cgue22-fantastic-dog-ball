@@ -49,15 +49,15 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
-        level->set(new Cubemap("../res/cubemaps/Storforsen4"));
+        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
 
         level->scene.lights.finalize();
 
         auto* ground_mat = new Material::TextureMaterial;
-        ground_mat->color = { "../res/concrete.jpg" };
-        ground_mat->normal = { "../res/concrete_norm.jpg" };
-        ground_mat->diffuse = { .2 };
-        ground_mat->specular = { .5 };
+        ground_mat->color = new Texture::Texture{ "../res/concrete.jpg" };
+        ground_mat->normal = new Texture::Texture{ "../res/concrete_norm.jpg" };
+        ground_mat->diffuse = new Texture::Texture{ .2 };
+        ground_mat->specular = new Texture::Texture{ .5 };
         ground_mat->shininess = .3;
         auto ground = new RenderObject(new Render::Plane(20, 100), ground_mat, "Ground");
         ground->translate({ 0, -1, 0 });
@@ -70,7 +70,7 @@ void LevelManager::load(unsigned short levelNr)
         auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 7));
         level->add(treat2);
 
-        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, 0, 10), 20);
+        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, 0, 10), 5);
         level->add(jumpPad);
 
         auto* goal = new Items::Goal(glm::vec3(0, 0, 24));
@@ -109,4 +109,14 @@ void LevelManager::render()
         Inputs::setProcessor(timeOverMenu);
         break;
     }
+}
+
+LevelManager::~LevelManager()
+{
+    delete current->player;
+    delete current;
+    delete startMenu;
+    delete timeOverMenu;
+    delete gameOverMenu;
+    delete finishedMenu;
 }

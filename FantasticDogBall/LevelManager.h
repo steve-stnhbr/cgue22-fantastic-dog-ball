@@ -22,6 +22,7 @@ public:
 	Menu::FinishedMenu* finishedMenu;
 
 	LevelManager();
+	~LevelManager();
 
 	static void load(unsigned short);
 	void render();

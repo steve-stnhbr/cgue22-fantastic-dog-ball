@@ -22,7 +22,7 @@ namespace Light
 		static void initProgram();
 
 		bool castShadow;
-		Texture::Texture shadowMap;
+		Texture::Texture* shadowMap;
 		unsigned shadowMapID;
 
 		Light();
@@ -30,7 +30,7 @@ namespace Light
 
 		//Texture::Texture generateShadowMap(const std::vector<RenderObject>&);
 
-		Texture::Texture generateShadowMap2D(const RenderObject::renderList&);
+		Texture::Texture* generateShadowMap2D(const RenderObject::renderList&);
 
 		virtual void generateShadowMap(const RenderObject::renderList&) = 0;
 		virtual glm::mat4 getLightSpace() const = 0;

@@ -75,7 +75,7 @@ void HUD::Clock::draw(std::string time)
 
 	//draw clock
 	hudProgram.use();
-	hudProgram.setTexture("hudImage", *texture);
+	hudProgram.setTexture("hudImage", texture);
 	hudProgram.setMatrix4("projection", projection);
 	glBindVertexArray(vaoID);
  	glDrawArrays(GL_QUADS, 0, 5);
@@ -131,7 +131,7 @@ void HUD::Bones::draw(std::string amount)
 {
 	//draw bone counter
 	hudProgram.use();
-	hudProgram.setTexture("hudImage", *texture);
+	hudProgram.setTexture("hudImage", texture);
 	hudProgram.setMatrix4("projection", projection);
 	glBindVertexArray(vaoID);
 	glDrawArrays(GL_QUADS, 0, 5);
