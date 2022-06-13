@@ -29,7 +29,7 @@ void LevelManager::load(unsigned short levelNr)
 	switch (levelNr) {
     case 0: {
         state = State::PLAYING;
-        Level* level = new Level(playerTemplate, 100);
+        Level* level = new Level(playerTemplate, 30);
 
         Light::Point p = {
             glm::vec3(0, 1, 0),
@@ -87,6 +87,66 @@ void LevelManager::load(unsigned short levelNr)
         Inputs::setProcessor(current);
     }
     break;
+    case 1: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, 1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->scene.lights.finalize();
+
+        auto ground_material = new Material::TextureMaterial(
+            new Texture::Texture("../res/grass/color.jpg"),
+            new Texture::Texture("../res/grass/normal.jpg"),
+            new Texture::Texture(.3),
+            new Texture::Texture(.05),
+            new Texture::Texture(.05),
+            0
+        );
+
+        auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
+
+        auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform1->translate({ 0, -2, 10 });
+        platform1->add(physics);
+        auto platform2 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform2");
+        platform2
+            ->rotate(glm::radians(15.f), { 0, 0, 1 })
+            ->translate({ 0,-4,12 })
+            ->rotate(glm::radians(30.f), { 0, 1,0 });
+        platform2->add(physics);
+        auto platform3 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform3");
+        platform3
+            ->rotate(glm::radians(15.f), { 0, 0, 1 })
+            ->translate({ 0,-6,12 })
+            ->rotate(glm::radians(60.f), { 0, 1,0 });
+        platform3->add(physics);
+        auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
+        platform4
+            ->rotate(glm::radians(15.f), { 0, 0, 1 })
+            ->translate({ 0,-8,12 })
+            ->rotate(glm::radians(90.f), { 0, 1,0 });
+        platform4->add(physics);
+
+        level->add(platform1);
+        level->add(platform2);
+        level->add(platform3);
+        level->add(platform4);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
+    }
     default:
         Loggger::error("Level %i not defined", levelNr);
 	}
