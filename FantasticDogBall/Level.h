@@ -19,7 +19,7 @@ class Level : public Inputs::Processor
 {
 private:
 	const static glm::mat4 rotateA, rotateD;
-	const float gravityMultiplier = 2.0f;
+	const float gravityMultiplier = 3.8f;
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;
@@ -61,7 +61,7 @@ public:
 
 protected:
 	// core Bullet components
-	const btVector3 GRAVITY = { 0, -9.81f, 0 };
+	const btVector3 GRAVITY = { 0, -6.2f, 0 };
 	btBroadphaseInterface* pBroadphase;
 	btCollisionConfiguration* pCollisionConfiguration;
 	btCollisionDispatcher* pDispatcher;

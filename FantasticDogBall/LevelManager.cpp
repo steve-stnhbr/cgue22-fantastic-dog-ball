@@ -24,7 +24,7 @@ LevelManager::LevelManager()
 
 void LevelManager::load(unsigned short levelNr)
 {
-    delete current;
+    //delete current;
     currentIndex = levelNr;
 	switch (levelNr) {
     case 0: {
@@ -87,6 +87,68 @@ void LevelManager::load(unsigned short levelNr)
         Inputs::setProcessor(current);
     }
     break;
+    case 2: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, 1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->scene.lights.finalize();
+
+        auto ground_material = new Material::TextureMaterial(
+            new Texture::Texture("../res/grass/color.jpeg"),
+            new Texture::Texture("../res/grass/normal.jpeg"),
+            new Texture::Texture(.3),
+            new Texture::Texture(.05),
+            new Texture::Texture("../res/grass/shininess.jpeg"),
+            1
+        );
+        auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
+
+        const int offset = 25;
+        const float rotation = glm::radians(10.f);
+
+        auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform1->translate({ 0, -2,  10});
+        platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform2 = new RenderObject(new Render::Plane(18, 30), ground_material, "Platform2");
+        platform2
+            ->rotate(rotation, { 0, 0, 1 })
+            ->translate({ 10,-4, offset})
+            ->rotate(glm::radians(30.f), { 0, 1,0 });
+        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform3 = new RenderObject(new Render::Plane(18, 30), ground_material, "Platform3");
+        platform3
+            ->rotate(rotation * 2, { 0, 0, 1 })
+            ->translate({ 10,-6, offset * 2})
+            ->rotate(glm::radians(60.f), { 0, 1,0 });
+        platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
+        platform4
+            ->rotate(rotation * 3, { 0, 0, 1 })
+            ->translate({ 10,-8, offset * 3})
+            ->rotate(glm::radians(90.f), { 0, 1,0 });
+        platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+
+        level->add(platform1);
+        level->add(platform2);
+        level->add(platform3);
+        level->add(platform4);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
+    }
     case 1: {
         auto level = new Level(playerTemplate, 50);
 
@@ -104,38 +166,35 @@ void LevelManager::load(unsigned short levelNr)
         level->scene.lights.finalize();
 
         auto ground_material = new Material::TextureMaterial(
-            new Texture::Texture("../res/grass/color.jpg"),
-            new Texture::Texture("../res/grass/normal.jpg"),
+            new Texture::Texture("../res/grass/color.jpeg"),
+            new Texture::Texture("../res/grass/normal.jpeg"),
             new Texture::Texture(.3),
             new Texture::Texture(.05),
-            new Texture::Texture(.05),
-            0
+            new Texture::Texture("../res/grass/shininess.jpeg"),
+            1
         );
-
         auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
 
+        const int offset = 25;
+        const float rotation = glm::radians(10.f);
+
         auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
-        platform1->translate({ 0, -2, 10 });
-        platform1->add(physics);
-        auto platform2 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform2");
+        platform1->translate({ 0, -2,  10 });
+        platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform2 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform2");
         platform2
-            ->rotate(glm::radians(15.f), { 0, 0, 1 })
-            ->translate({ 0,-4,12 })
-            ->rotate(glm::radians(30.f), { 0, 1,0 });
-        platform2->add(physics);
-        auto platform3 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform3");
+            ->rotate(rotation, { 0, 0, 1 })
+            ->translate({ 10,-4, offset });
+        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform3 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform3");
         platform3
-            ->rotate(glm::radians(15.f), { 0, 0, 1 })
-            ->translate({ 0,-6,12 })
-            ->rotate(glm::radians(60.f), { 0, 1,0 });
-        platform3->add(physics);
+            ->rotate(-rotation, { 0, 0, 1 })
+            ->translate({ 10,-4, offset * 2 });
+        platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
         auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
         platform4
-            ->rotate(glm::radians(15.f), { 0, 0, 1 })
-            ->translate({ 0,-8,12 })
-            ->rotate(glm::radians(90.f), { 0, 1,0 });
-        platform4->add(physics);
-
+            ->translate({ 10,-8, offset * 3 });
+        platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(platform1);
         level->add(platform2);
         level->add(platform3);
@@ -180,7 +239,7 @@ void LevelManager::render()
 LevelManager::~LevelManager()
 {
     delete current->player;
-    delete current;
+    //delete current;
     delete startMenu;
     delete timeOverMenu;
     delete gameOverMenu;

@@ -76,9 +76,8 @@ void Player::update(unsigned long frame, float dTime)
 		|| 360 - abs(glm::degrees(diffAngle)) < 3)	// if the difference is 3° around 360° we say its computational error, prevents camera twitching around straigt headings
 		newCamAngle = directionAngle;
 	else
-		newCamAngle = oldCamAngle + diffAngle * .1;
+		newCamAngle = oldCamAngle + diffAngle * .03;
 	LevelManager::current->scene.renderer.camera.setYaw(newCamAngle);
-
 	LevelManager::current->scene.renderer.camera.setPlayerPosition(glm::vec3(ballPos.x(), ballPos.y(), ballPos.z()));
 	LevelManager::current->scene.renderer.camera.update();
 }
@@ -100,7 +99,7 @@ void Player::init(btDynamicsWorld* pWorld)
 
 	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .4);
 	ball = new RenderObject{ new Render::Sphere(1, 16, 32), ball_mat, "PlayerBall", false };
-	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 20);
+	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 10);
 	ball->add(physics);
 
 	ball->transform = transform;

@@ -185,15 +185,15 @@ void Decoration::Physics::init(RenderObject* object)
 		pMass,					// mass, in kg. 
 		pTransform,				// worldTransform of body
 		pShape,					// collision shape of body
-		btVector3(1, 1, 1)	// local inertia
+		btVector3(1, 1, 1)		// local inertia
 	);
 	rigidBodyCI.m_restitution = .5;
 
 	pBody = new btRigidBody(rigidBodyCI);
 	pBody->setUserPointer(object);
-	pBody->setRollingFriction(.2);
+	pBody->setRollingFriction(.6);
 	pBody->setDeactivationTime(0);
-	pBody->setSleepingThresholds(0.f, 0.f);
+	pBody->setSleepingThresholds(1.f, 1.f);
 
 	pWorld->addRigidBody(pBody);
 }
@@ -277,7 +277,7 @@ void Decoration::Animation::update(RenderObject* obj,unsigned frame, float dTime
 	}
 	if (!loop && played)
 		return;
-	auto index = static_cast<unsigned>(floor(frame - started_frame * speed)) % meshes.size();
+	auto index = static_cast<unsigned>(floor((frame - started_frame) * speed)) % meshes.size();
 	if (index == 0 && started_frame < frame) played = true;
 	obj->mesh = meshes[index];
 }

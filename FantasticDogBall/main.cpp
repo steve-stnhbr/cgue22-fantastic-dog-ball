@@ -35,7 +35,7 @@ void gl_error_callback(GLenum source​, GLenum type​, GLuint id​,
 std::vector<std::string> getFirstNGLMessages(GLuint numMsgs);
 
 const float
-	FOV = 45.0f;
+	FOV = 55.0f;
 const char*
 NAME = "Fantastic Dog Ball";
 
