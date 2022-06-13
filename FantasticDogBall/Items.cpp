@@ -89,7 +89,7 @@ Items::JumpPad::JumpPad(btDynamicsWorld* pWorld, glm::vec3 position = {0,0,0}, f
 		const auto playerPos = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
 			->pBody->getWorldTransform().getOrigin();
 		// if the player ball has the same position as the goal it is inside the goal
-		if (glm::distance(glm::vec3(playerPos.x(), playerPos.y(), playerPos.z()), position) < .5) {
+		if (glm::distance(glm::vec3(playerPos.x(), playerPos.y(), playerPos.z()), position) < 2) {
 			if (!active) {
 				const auto test = LevelManager::current->player->ball->getDecoration<Decoration::Physics>()
 					->pBody;

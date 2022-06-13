@@ -70,7 +70,6 @@ void Utils::start2D()
     glClear(GL_DEPTH_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glDisable(GL_LIGHTING);
     glViewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 }
 
@@ -78,7 +77,6 @@ void Utils::end2D()
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHTING);
 }
 
 char asciitolower(char in) {

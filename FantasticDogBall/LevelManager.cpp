@@ -59,21 +59,27 @@ void LevelManager::load(unsigned short levelNr)
         ground_mat->diffuse = new Texture::Texture{ .2 };
         ground_mat->specular = new Texture::Texture{ .5 };
         ground_mat->shininess = .3;
-        auto ground = new RenderObject(new Render::Plane(20, 100), ground_mat, "Ground");
-        ground->translate({ 0, -1, 0 });
+        auto ground = new RenderObject(new Render::Plane(20, 50), ground_mat, "Ground");
+        ground->translate({ 0, -1, 20 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         level->add(ground);
+
+        auto elevated = new RenderObject(new Render::Cube(0, 0, 0, 20, 2, 40), ground_mat, "Elevated Ground");
+        elevated->translate({ 0, 2, 65 });
+        elevated->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        level->add(elevated);
         auto* treat = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 5));
         level->add(treat);
-        auto* treat1 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 6));
+        auto* treat1 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 10));
         level->add(treat1);
-        auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 7));
+        auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 15));
         level->add(treat2);
 
-        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, 0, 10), 5);
+        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, -1, 40), 5);
         level->add(jumpPad);
 
-        auto* goal = new Items::Goal(glm::vec3(0, 0, 24));
+        auto* goal = new Items::Goal(glm::vec3(0, 4, 75));
+        goal->rotate(glm::radians(90.f), {0, 1, 0});
         level->add(goal);
 
         level->finalize();

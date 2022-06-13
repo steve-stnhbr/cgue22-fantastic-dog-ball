@@ -182,21 +182,25 @@ void Decoration::Physics::init(RenderObject* object)
 	pShape->setLocalScaling(object->pScale);
 	
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-		pMass,              // mass, in kg. 
-		pTransform,
-		pShape,				// collision shape of body
+		pMass,					// mass, in kg. 
+		pTransform,				// worldTransform of body
+		pShape,					// collision shape of body
 		btVector3(1, 1, 1)	// local inertia
 	);
-	rigidBodyCI.m_restitution = .7;
+	rigidBodyCI.m_restitution = .5;
 
 	pBody = new btRigidBody(rigidBodyCI);
 	pBody->setUserPointer(object);
+	pBody->setRollingFriction(.2);
+	pBody->setDeactivationTime(0);
+	pBody->setSleepingThresholds(0.f, 0.f);
 
 	pWorld->addRigidBody(pBody);
 }
 
 void Decoration::Physics::update(RenderObject* obj, unsigned frame, float dTime)
 {
+	pBody->activate(true);
 	if(onUpdate)
 		onUpdate(obj, frame, dTime);
 

@@ -19,7 +19,7 @@ class Level : public Inputs::Processor
 {
 private:
 	const static glm::mat4 rotateA, rotateD;
-	const float gravityMultiplier = 8.0f;
+	const float gravityMultiplier = 2.0f;
 public:
 	Scene scene;
 	btDynamicsWorld* pWorld;

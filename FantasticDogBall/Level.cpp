@@ -45,9 +45,6 @@ State Level::render()
 		pWorld->stepSimulation(dt);
 	}
 
-	Loggger::fatal("Gravity: %f, %f, %f", 
-		pWorld->getGravity().x(), pWorld->getGravity().y(), pWorld->getGravity().z());
-
 	time -= dt / 1000;
 
 	if (time < 0)
