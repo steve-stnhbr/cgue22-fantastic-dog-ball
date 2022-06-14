@@ -165,13 +165,25 @@ void Decoration::Physics::init(RenderObject* object)
 
 	if (pShape == nullptr) {
 		Loggger::trace("Using Convex hull of mesh for %s", object->name.c_str());
-		pShape = new btConvexHullShape();
-		for (int i = 0; i < object->mesh->vertex_array.size(); i++)
-		{
-			Vertex v = object->mesh->vertex_array[i];
-			btVector3 btv = btVector3(v.position.x, v.position.y, v.position.z);
-			((btConvexHullShape*) pShape)->addPoint(btv);
+
+		auto mesh = new btTriangleMesh();
+
+		for (auto i = 0; i < object->mesh->index_array.size(); i += 3) {
+			auto vert0 = object->mesh->vertex_array[object->mesh->index_array[i]];
+			auto vert1 = object->mesh->vertex_array[object->mesh->index_array[i + 1]];
+			auto vert2 = object->mesh->vertex_array[object->mesh->index_array[i + 2]];
+
+			auto vector0 = btVector3(vert0.position.x, vert0.position.y, vert0.position.z);
+			if (vector0.fuzzyZero() && !vector0.isZero()) vector0.setZero();
+			auto vector1 = btVector3(vert1.position.x, vert1.position.y, vert1.position.z);
+			if (vector1.fuzzyZero() && !vector1.isZero()) vector1.setZero();
+			auto vector2 = btVector3(vert2.position.x, vert2.position.y, vert2.position.z);
+			if (vector2.fuzzyZero() && !vector2.isZero()) vector2.setZero();
+
+			mesh->addTriangle(vector0, vector1, vector2);
 		}
+
+		pShape = new btBvhTriangleMeshShape(mesh, false);
 	}
 
 	btTransform t;
