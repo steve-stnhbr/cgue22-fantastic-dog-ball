@@ -18,6 +18,10 @@ unsigned Globals::NUM_SHADOW_MAPS = 0;
 unsigned Globals::WINDOW_WIDTH = 1920;
 unsigned Globals::WINDOW_HEIGHT = 1080;
 unsigned Globals::NUM_LEVELS = 2;
+unsigned Globals::FOV = 45;
+
+float Globals::MAX_PLAYER_SPEED = 4.3f;
+float Globals::INPUT_ROTATION = 40.f;
 
 std::string Utils::readFile(const char* path)
 {

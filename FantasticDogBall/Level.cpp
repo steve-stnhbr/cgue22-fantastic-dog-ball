@@ -60,6 +60,8 @@ State Level::render()
 	Utils::start2D();
 	hud->draw(std::to_string((int) time), std::to_string(bones));
 	Utils::end2D();
+
+	pWorld->setGravity(GRAVITY);
 	return LevelManager::state;
 }
 
@@ -147,6 +149,40 @@ void Level::addGravity(btVector3 vec) {
 	pWorld->setGravity(pWorld->getGravity() + vec);
 }
 
+void Level::on(int key) {
+	switch (key) {
+	case GLFW_KEY_W:
+		pressW();
+		break;
+	case GLFW_KEY_A:
+		pressA();
+		break;
+	case GLFW_KEY_S:
+		pressS();
+		break;
+	case GLFW_KEY_D:
+		pressD();
+		break;
+	}
+}
+
+void Level::off(int key) {
+	switch (key) {
+	case GLFW_KEY_W:
+		releaseW();
+		break;
+	case GLFW_KEY_A:
+		releaseA();
+		break;
+	case GLFW_KEY_S:
+		releaseS();
+		break;
+	case GLFW_KEY_D:
+		releaseD();
+		break;
+	}
+}
+
 void Level::pressW()
 {
 	//if (wGravity.length() > 0) return;
@@ -159,7 +195,7 @@ void Level::pressA()
 {
 	//if (aGravity.length() > 0) return;
 	aGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
-		glm::radians<float>(90)) * gravityMultiplier;
+		glm::radians<float>(Globals::INPUT_ROTATION)) * gravityMultiplier;
 	addGravity({ aGravity.x, 0, aGravity.z });
 	scene.renderer.camera.setLeaning(.5);
 }
@@ -174,7 +210,7 @@ void Level::pressD()
 {
 	//if (dGravity.length() > 0) return;
 	dGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
-		glm::radians<float>(-90)) * gravityMultiplier;
+		glm::radians<float>(-Globals::INPUT_ROTATION)) * gravityMultiplier;
 	addGravity({ dGravity.x, 0, dGravity.z });
 	scene.renderer.camera.setLeaning(.5);
 }

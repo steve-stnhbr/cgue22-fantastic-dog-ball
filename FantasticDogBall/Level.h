@@ -21,6 +21,7 @@ private:
 	const static glm::mat4 rotateA, rotateD;
 	const float gravityMultiplier = 3.8f;
 public:
+	const static inline btVector3 GRAVITY = { 0, -6.2f, 0 };
 	Scene scene;
 	btDynamicsWorld* pWorld;
 	Player* player;
@@ -50,18 +51,19 @@ public:
 	void addGravity(btVector3 vec);
 	void collision(RenderObject* obj, RenderObject* other);
 
-	void pressW() override;
-	void pressA() override;
-	void pressS() override;
-	void pressD() override;
-	void releaseW() override;
-	void releaseA() override;
-	void releaseS() override;
-	void releaseD() override;
+	void pressW();
+	void pressA();
+	void pressS();
+	void pressD();
+	void releaseW();
+	void releaseA();
+	void releaseS();
+	void releaseD();
+	void on(int key) override;
+	void off(int key) override;
 
 protected:
 	// core Bullet components
-	const btVector3 GRAVITY = { 0, -6.2f, 0 };
 	btBroadphaseInterface* pBroadphase;
 	btCollisionConfiguration* pCollisionConfiguration;
 	btCollisionDispatcher* pDispatcher;

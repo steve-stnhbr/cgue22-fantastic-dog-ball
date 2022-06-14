@@ -26,7 +26,7 @@ Items::DogTreat::DogTreat(btDynamicsWorld* world, glm::vec3 position) : RenderOb
 	});
 
 	auto custom = new Decoration::Custom([](RenderObject* obj, unsigned frame, float deltaTime) {
-		obj->rotate(glm::radians(2.f), {0, 1, 0});
+		obj->rotate(frame * glm::radians(2.f), {0, 1, 0});
 	});
 
 	add(physics);

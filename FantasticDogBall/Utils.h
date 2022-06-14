@@ -16,6 +16,10 @@ public:
 	static unsigned WINDOW_WIDTH;
 	static unsigned WINDOW_HEIGHT;
 	static unsigned NUM_LEVELS;
+	static unsigned FOV;
+
+	static float MAX_PLAYER_SPEED;
+	static float INPUT_ROTATION;
 };
 
 class Utils
@@ -81,12 +85,12 @@ public:
 		const unsigned short roundPlaces = 6;
 		y = Utils::round(y, roundPlaces);
 		x = Utils::round(x, roundPlaces);
-		// todo make right calculation
 		/*
 		auto angle = atan2(y, x);
 		if (y < 0) angle = glm::two_pi<float>() + angle;
 		*/
-		auto angle = glm::mod(atan2(y, x) + glm::two_pi<float>(), glm::two_pi<float>());
+		//auto angle = glm::mod(atan2(y, x) + glm::two_pi<float>(), glm::two_pi<float>());
+		auto angle = atan2(y, x);
 		return angle;
 	}
 

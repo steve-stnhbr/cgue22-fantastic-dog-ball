@@ -105,6 +105,6 @@ void Camera::update() {
 	const auto up = glm::vec3(glm::rotate(glm::mat4(1.0f), a_leaning, rotationAxis) * glm::vec4(0,1.0f,0,0));
 
 	const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
-	data.projection = glm::perspective<float>(45, ratio, .1f, 100.0f);
+	data.projection = glm::perspective<float>(Globals::FOV, ratio, .1f, 100.0f);
 	data.view = glm::lookAt<float>(glm::vec3(data.position), glm::vec3(data.position) + direction, up);
 }

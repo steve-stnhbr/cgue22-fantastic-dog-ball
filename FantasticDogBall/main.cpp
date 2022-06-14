@@ -91,6 +91,7 @@ int main(int argc, char* argv[])
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        processInput(window);
         /* Render here */
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -124,8 +125,17 @@ void error_callback(int error, const char* msg) {
 
 void processInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    for (auto i = 48; i < 90; i++) {
+        if (glfwGetKey(window, i) == GLFW_PRESS) {
+            if (Inputs::processor) 
+                Inputs::processor->on(i);
+        }
+        else if (glfwGetKey(window, i) == GLFW_RELEASE) {
+            if (Inputs::processor) 
+                Inputs::processor->off(i);
+        }
+    }
+
 }
 
 

@@ -40,6 +40,9 @@ void Player::update(unsigned long frame, float dTime)
 	};
 
 	const auto speed = glm::length(velocity);
+	if (speed > Globals::MAX_PLAYER_SPEED) {
+		ballBody->setLinearVelocity(ballBody->getLinearVelocity() * (Globals::MAX_PLAYER_SPEED / speed));
+	}
 	velocity = glm::normalize(velocity);
 
 	// change animation based on the size of the velocity
@@ -54,26 +57,30 @@ void Player::update(unsigned long frame, float dTime)
 	// set transformations of player-ball and dog to the same
 	ball->update(frame, dTime);
 	dog->update(frame, dTime);
-	if (Utils::round(glm::length(velocity), 6) >= 0) {
+	if (speed >= .5f) {	// check if the angle is NaN
 		directionAngle = Utils::getAngle(velocity.x, velocity.z);
 	}
 
-	if (directionAngle != directionAngle) directionAngle = 0;
+
+
 	auto ballPos = ballBody->getWorldTransform().getOrigin();
 	dog->transform = glm::rotate(glm::translate(glm::mat4(1), { ballPos.x(), ballPos.y() - .6, ballPos.z() }), directionAngle, { 0, 1, 0 });
-	//dog->transform = glm::rotate(glm::translate(ball->transform, { 0, -.6, 0 }), directionAngle, { 0, 1, 0 });
 	 
 	const auto oldCamDirection = glm::vec3(
-		LevelManager::current->scene.renderer.camera.direction.x, 
+		LevelManager::current->scene.renderer.camera.direction.x,
 		0,
 		LevelManager::current->scene.renderer.camera.direction.z
 	);
+
+	float threeSixty = glm::two_pi<float>();
+	float oneEighty = glm::pi<float>();
 	const auto oldCamAngle = Utils::getAngle(oldCamDirection.x, oldCamDirection.z);
-	const auto diffAngle = directionAngle - oldCamAngle;
+	float diffAngle = directionAngle - oldCamAngle;
+	diffAngle += (diffAngle > oneEighty) ? -threeSixty : (diffAngle < -oneEighty) ? threeSixty : 0;
 
 	auto newCamAngle = .0f;
 	if (abs(diffAngle) < glm::radians(2.f)			// if difference is less than 2° end interpolation
-		|| 360 - abs(glm::degrees(diffAngle)) < 3)	// if the difference is 3° around 360° we say its computational error, prevents camera twitching around straigt headings
+		|| 360 - abs(glm::degrees(diffAngle)) < -10)	// if the difference is 3° around 360° we say its computational error, prevents camera twitching around straigt headings
 		newCamAngle = directionAngle;
 	else
 		newCamAngle = oldCamAngle + diffAngle * .03;

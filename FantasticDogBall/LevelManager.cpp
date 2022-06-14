@@ -74,6 +74,12 @@ void LevelManager::load(unsigned short levelNr)
         level->add(treat1);
         auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 15));
         level->add(treat2);
+        auto* treat3 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 35));
+        level->add(treat3);
+        auto* treat4 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 40));
+        level->add(treat4);
+        auto* treat5 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 45));
+        level->add(treat5);
 
         auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, -1, 40), 5);
         level->add(jumpPad);
@@ -91,7 +97,7 @@ void LevelManager::load(unsigned short levelNr)
         auto level = new Level(playerTemplate, 50);
 
         Light::Directional d = {
-            glm::vec3(2, -8, 1),
+            glm::vec3(2, -8, -1),
             glm::vec3(.5),
             glm::vec3(1.3),
             glm::vec3(1.9),
@@ -138,10 +144,13 @@ void LevelManager::load(unsigned short levelNr)
             ->rotate(glm::radians(90.f), { 0, 1,0 });
         platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
 
+        auto goal = new Items::Goal({ 0, -8, offset * 3 + 20 });
+
         level->add(platform1);
         level->add(platform2);
         level->add(platform3);
         level->add(platform4);
+        level->add(goal);
 
         level->finalize();
         Inputs::setProcessor(level);
@@ -153,7 +162,7 @@ void LevelManager::load(unsigned short levelNr)
         auto level = new Level(playerTemplate, 50);
 
         Light::Directional d = {
-            glm::vec3(2, -8, 1),
+            glm::vec3(2, -8, -1),
             glm::vec3(.5),
             glm::vec3(1.3),
             glm::vec3(1.9),
@@ -166,16 +175,16 @@ void LevelManager::load(unsigned short levelNr)
         level->scene.lights.finalize();
 
         auto ground_material = new Material::TextureMaterial(
-            new Texture::Texture("../res/grass/color.jpeg"),
-            new Texture::Texture("../res/grass/normal.jpeg"),
+            new Texture::Texture("../res/terazzo/color.jpg"),
+            new Texture::Texture("../res/terazzo/normal.jpg"),
             new Texture::Texture(.3),
-            new Texture::Texture(.05),
-            new Texture::Texture("../res/grass/shininess.jpeg"),
-            1
+            new Texture::Texture(.5),
+            new Texture::Texture("../res/terazzo/shininess.jpg"),
+            1.2
         );
         auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
 
-        const int offset = 25;
+        const int offset = 30;
         const float rotation = glm::radians(10.f);
 
         auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
@@ -189,16 +198,19 @@ void LevelManager::load(unsigned short levelNr)
         auto platform3 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform3");
         platform3
             ->rotate(-rotation, { 0, 0, 1 })
-            ->translate({ 10,-4, offset * 2 });
+            ->translate({ 10,-6, offset * 2 });
         platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
         auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
         platform4
-            ->translate({ 10,-8, offset * 3 });
+            ->translate({ 10,-10, offset * 2 + 32});
         platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto goal = new Items::Goal({ 0, -8, offset * 3 });
+
         level->add(platform1);
         level->add(platform2);
         level->add(platform3);
         level->add(platform4);
+        level->add(goal);
 
         level->finalize();
         Inputs::setProcessor(level);
