@@ -202,7 +202,8 @@ void Level::pressA()
 void Level::pressS()
 {
 	//if (sGravity.length() > 0) return;
-	sGravity = -glm::normalize(scene.renderer.camera.direction) * gravityMultiplier;
+	sGravity = glm::rotateY(glm::vec4(glm::normalize(scene.renderer.camera.direction), 1),
+		glm::radians<float>(179)) * gravityMultiplier;
 	addGravity({ sGravity.x, 0, sGravity.z });
 	scene.renderer.camera.setPitch(-.15);
 }

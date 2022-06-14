@@ -101,7 +101,7 @@ void LevelManager::load(unsigned short levelNr)
             glm::vec3(.5),
             glm::vec3(1.3),
             glm::vec3(1.9),
-            true
+            false
         };
 
         level->add(d);
@@ -211,6 +211,87 @@ void LevelManager::load(unsigned short levelNr)
         level->add(platform3);
         level->add(platform4);
         level->add(goal);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
+    }
+    case 3: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, -1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->scene.lights.finalize();
+        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+
+        auto slide = new RenderObject(
+            Render::Mesh::fromFile("../res/Slide.obj")[0],
+            new Material::TextureMaterial(
+                new Texture::Texture("../res/terracotta/color.jpg"),
+                new Texture::Texture("../res/terracotta/normal.jpg"),
+                new Texture::Texture(.5),
+                new Texture::Texture(.4),
+                new Texture::Texture("../res/terracotta/shininess.jpg"),
+                1.4f
+            ),
+            "Slide"
+        );
+
+        slide->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+
+        auto goal = new Items::Goal({ 0, 33, -7.8 });
+
+        level->add(goal);
+        level->add(slide);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
+    }
+    case 4: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, -1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->scene.lights.finalize();
+        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+
+        auto ground = new RenderObject(
+            Render::Mesh::fromFile("../res/HoleLevel.obj")[0],
+            new Material::TextureMaterial(
+                new Texture::Texture("../res/emerald_tiles/color.jpg"),
+                new Texture::Texture("../res/emerald_tiles/normal.jpg"),
+                new Texture::Texture(.5f),
+                new Texture::Texture(.7f),
+                new Texture::Texture("../res/emerald_tiles/shininess.jpg"),
+                2.3
+            ),
+            "HoleyGround"
+        );
+
+        ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+
+        level->add(ground);
 
         level->finalize();
         Inputs::setProcessor(level);
