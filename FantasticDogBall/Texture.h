@@ -26,7 +26,7 @@ namespace Texture
 		~Texture();
 
 		void load(std::string);
-		void bind(unsigned location) const;
+		virtual void bind(unsigned location) const;
 		void createTexture(unsigned width_, unsigned height_, GLenum colorFormat, GLenum internalFormat, GLenum type, unsigned mipmapLevels, bool dsa = true);
 	};
 }

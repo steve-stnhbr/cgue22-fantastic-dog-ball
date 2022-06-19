@@ -113,12 +113,10 @@ void main() {
         result += CalcSpotLight(sLights[i], norm, fragPos, viewDir);
     }
 
-    result += s_cubemap * CubemapReflection(norm, viewDir) * (s_reflectiveness == 1 ? texture(reflectiveness, texCoords).r : value_reflectiveness);
+    result += s_cubemap * CubemapReflection(norm, viewDir) *
+        (s_reflectiveness == 1 ? texture(reflectiveness, texCoords).r : value_reflectiveness);
 
-    //outColor = texture(color, texCoords) * vec4(result, 1);
     outColor = vec4(texture(color, texCoords).xyz * result, texture(color,texCoords).a);
-
-    //outColor = texture(dLights[0].shadowMap, texCoords);
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D shadowMap)

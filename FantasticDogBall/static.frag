@@ -58,7 +58,8 @@ layout(std140) uniform Material {
 } material;
 
 uniform samplerCube cubemap;
-uniform int s_cubemap = 1;
+uniform int s_cubemap;
+uniform float value_cubemap;
 
 in vec4 fragColor;
 in vec3 fragPos;

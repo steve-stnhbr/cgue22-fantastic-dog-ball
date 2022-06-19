@@ -48,7 +48,7 @@ void Renderer::render(const RenderObject::renderList& objects, Light::Lights lig
 		
 		// bind uniforms here
 		if (cubemap == nullptr)
-			cubemap = new Cubemap{ .1 };
+			cubemap = new Cubemap{ 0.f };
 		prog.setTexture("cubemap", cubemap);
 		camera.bindWithModel(prog, element->transform);
 		lights.bind(prog);

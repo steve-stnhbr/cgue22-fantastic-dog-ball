@@ -132,6 +132,8 @@ Cubemap::Cubemap(std::string path)
 			return;
 	}
 
+	defined = true;
+
 	initGL();
 }
 
@@ -157,6 +159,12 @@ void Cubemap::draw(Camera camera)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	Utils::checkError();
+}
+
+void Cubemap::bind(unsigned location) const
+{
+	glActiveTexture(GL_TEXTURE0 + location);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, glID);
 }
 
 bool Cubemap::Bounds::inside(int x, int y)

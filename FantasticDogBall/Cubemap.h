@@ -29,7 +29,7 @@ public:
 	Cubemap(std::vector<std::string> paths);
 
 	void draw(Camera camera);
-
+	void bind(unsigned location) const override;
 
 	struct Coordinate
 	{
