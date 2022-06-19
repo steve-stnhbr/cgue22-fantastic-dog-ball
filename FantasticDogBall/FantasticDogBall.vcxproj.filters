@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Ressourcendateien\res">
+      <UniqueIdentifier>{0a474c5a-f3fe-47b7-b0d8-ad9f73515e63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -96,19 +99,539 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="..\x64\Debug\assimp-vc143-mtd.dll">
-      <Filter>Ressourcendateien</Filter>
+    <None Include="packages.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="..\res\dog\dog.robj">
+      <Filter>Ressourcendateien\res</Filter>
     </None>
-    <None Include="static.frag">
-      <Filter>Ressourcendateien</Filter>
+    <None Include="..\res\HoleLevel..robj">
+      <Filter>Ressourcendateien\res</Filter>
     </None>
-    <None Include="texture.frag">
-      <Filter>Ressourcendateien</Filter>
+    <None Include="..\res\Slide..robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\treat\treat.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\jump_pad.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\goal\goal.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000032.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000031.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000029.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000030.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000027.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000028.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000022.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000023.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000024.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000025.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000026.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000019.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000020.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000021.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000016.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000017.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000018.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000015.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_walk_dec\walk_anim_decimated_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000019.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000020.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000021.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000022.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000023.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000024.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000018.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000017.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000015.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000016.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_trot_dec\trot_anim_decimated_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\canter_anim_decimated_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000032.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000030.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000031.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000029.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000028.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000027.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000026.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000025.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000023.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000024.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000022.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000020.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000021.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000018.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000019.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000017.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000016.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000015.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_walk\walk_anim_mid_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000024.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000023.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000021.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000022.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000020.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000019.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000017.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000018.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000016.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000015.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_trot\trot_anim_mid_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000014.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000013.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000012.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000011.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000010.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000009.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000008.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000007.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000006.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000005.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000004.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000002.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000003.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog\dog_canter\canter_anim_mid_000001.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_14.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_15.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_16.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_17.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_18.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_19.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_20.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_10.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_11.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_12.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_13.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_06.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_07.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_08.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_09.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_03.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_04.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_05.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_00.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_01.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\jump_pad\anim\jump_pad_02.robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\ui\main_menu.html">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\duck..robj">
+      <Filter>Ressourcendateien\res</Filter>
+    </None>
+    <None Include="..\res\dog_canter_dec\desktop.ini">
+      <Filter>Ressourcendateien\res</Filter>
     </None>
     <None Include="VertexShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="packages.config" />
+    <None Include="2d.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\x64\Debug\assimp-vc143-mtd.dll">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cubemap.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cubemap.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="debug.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="debug.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
     <None Include="shadow.frag">
       <Filter>Ressourcendateien</Filter>
     </None>
@@ -118,29 +641,19 @@
     <None Include="shadowCube.frag">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="shadowCube.vert">
-      <Filter>Ressourcendateien</Filter>
-    </None>
     <None Include="shadowCube.geom">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="debug.frag">
+    <None Include="shadowCube.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="debug.vert">
+    <None Include="static.frag">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="cubemap.frag">
-      <Filter>Ressourcendateien</Filter>
-    </None>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="cubemap.vert">
+    <None Include="texture.frag">
       <Filter>Ressourcendateien</Filter>
     </None>
     <None Include="2d.frag">
-      <Filter>Ressourcendateien</Filter>
-    </None>
-    <None Include="2d.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
   </ItemGroup>
@@ -229,5 +742,202 @@
     <ClInclude Include="Items.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\res\sci-fi\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\sci-fi\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\sci-fi\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terazzo\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terazzo\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terazzo\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\emerald_tiles\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\emerald_tiles\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\emerald_tiles\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\muddy\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\muddy\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\muddy\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass\shininess.jpeg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass\normal.jpeg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass\color.jpeg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\metal\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\metal\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\metal\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\metal\metallic.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terracotta\normal.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terracotta\color.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\terracotta\shininess.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass_1.jfif">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass.jfif">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\jump_pad\specular.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\jump_pad\reflectiveness.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\jump_pad\color.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\jump_pad\diffuse.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\goal\color.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\texture-liso-b.tif">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\texture-liso-b.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\grass.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\texture-liso-b.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\dog\normal.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\dog\color.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\5posz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\sky_sunset.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\sky_water.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\1posx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\3posy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\4negy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\6negz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Yokohama2\2negx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\4posz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\5negz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\0posx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\1negx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\2posy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen4\3negy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\5posz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\1posx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\2negx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\3posy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\4negy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Storforsen2\6negz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\6posz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\1posx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\2negx.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\3posy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\4negy.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\cubemaps\Lycksele3\5negz.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\concrete.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\concrete_norm.jpg">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\bone.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
+    <Image Include="..\res\clock.png">
+      <Filter>Ressourcendateien\res</Filter>
+    </Image>
   </ItemGroup>
 </Project>

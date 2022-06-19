@@ -10,19 +10,19 @@ Player::Player(glm::vec3 position)
 {
 	material = new Material::StaticMaterial();
 	auto* dog_material = new Material::TextureMaterial();
-	dog_material->color = new Texture::Texture{ "../res/dog/color.png" };
-	dog_material->normal = new Texture::Texture{ "../res/dog/normal.png" };
+	dog_material->color = new Texture::Texture{ Globals::RESOURCES + "/dog/color.png" };
+	dog_material->normal = new Texture::Texture{ Globals::RESOURCES + "/dog/normal.png" };
 	dog_material->shininess = .8;
 	dog_material->specular = new Texture::Texture{ .5 };
-	dog = new RenderObject{ Render::Mesh::fromFile("../res/dog/dog.obj")[0], dog_material, "PlayerDog", false };
+	dog = new RenderObject{ Render::Mesh::fromFile(Globals::RESOURCES + "/dog/dog.robj")[0], dog_material, "PlayerDog", false };
 
-	stand = new Decoration::Animation(std::vector<std::string>{ "../res/dog/dog.obj" }, 0, false);
+	stand = new Decoration::Animation(std::vector<std::string>{ Globals::RESOURCES + "/dog/dog.robj" }, 0, false);
 	stand->init(dog);
-	walk = new Decoration::Animation("../res/dog/dog_walk", .6);
+	walk = new Decoration::Animation(Globals::RESOURCES + "/dog/dog_walk", .6);
 	walk->init(dog);
-	trot = new Decoration::Animation("../res/dog/dog_trot", .6);
+	trot = new Decoration::Animation(Globals::RESOURCES + "/dog/dog_trot", .6);
 	trot->init(dog);
-	canter = new Decoration::Animation("../res/dog/dog_canter", .6);
+	canter = new Decoration::Animation(Globals::RESOURCES + "/dog/dog_canter", .6);
 	canter->init(dog);
 
 	//ball->init(); 

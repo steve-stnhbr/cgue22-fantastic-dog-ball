@@ -32,7 +32,7 @@ void HUD::Clock::init()
 {
 	glText = gltCreateText();
 
-	texture = new Texture::Texture("../res/clock.png");
+	texture = new Texture::Texture(Globals::RESOURCES + "/clock.png");
 
 	projection = glm::ortho(0.0f, (float) Globals::WINDOW_WIDTH, (float)Globals::WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
 
@@ -93,7 +93,7 @@ void HUD::Bones::init()
 {
 	glText = gltCreateText();
 
-	texture = new Texture::Texture("../res/bone.png");
+	texture = new Texture::Texture(Globals::RESOURCES + "/bone.png");
 
 	projection = glm::ortho(0.0f, (float)Globals::WINDOW_WIDTH, (float)Globals::WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
 	size = 70;
