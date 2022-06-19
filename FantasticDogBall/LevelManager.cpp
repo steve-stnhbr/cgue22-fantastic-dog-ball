@@ -49,13 +49,13 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
-        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
 
         level->scene.lights.finalize();
 
         auto* ground_mat = new Material::TextureMaterial;
-        ground_mat->color = new Texture::Texture{ "../res/concrete.jpg" };
-        ground_mat->normal = new Texture::Texture{ "../res/concrete_norm.jpg" };
+        ground_mat->color = new Texture::Texture{ Globals::RESOURCES + "/concrete.jpg" };
+        ground_mat->normal = new Texture::Texture{ Globals::RESOURCES + "/concrete_norm.jpg" };
         ground_mat->diffuse = new Texture::Texture{ .2 };
         ground_mat->specular = new Texture::Texture{ .5 };
         ground_mat->shininess = .3;
@@ -106,15 +106,15 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
-        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
         level->scene.lights.finalize();
 
         auto ground_material = new Material::TextureMaterial(
-            new Texture::Texture("../res/grass/color.jpeg"),
-            new Texture::Texture("../res/grass/normal.jpeg"),
+            new Texture::Texture(Globals::RESOURCES + "/sci-fi/color.jpg"),
+            new Texture::Texture(Globals::RESOURCES + "/sci-fi/normal.jpg"),
             new Texture::Texture(.3),
             new Texture::Texture(.05),
-            new Texture::Texture("../res/grass/shininess.jpeg"),
+            new Texture::Texture(Globals::RESOURCES + "/sci-fi/shininess.jpg"),
             1
         );
         auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
@@ -123,28 +123,19 @@ void LevelManager::load(unsigned short levelNr)
         const float rotation = glm::radians(10.f);
 
         auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
-        platform1->translate({ 0, -2,  10});
+        platform1->translate({ 0, 0,  10 });
         platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto platform2 = new RenderObject(new Render::Plane(18, 30), ground_material, "Platform2");
-        platform2
-            ->rotate(rotation, { 0, 0, 1 })
-            ->translate({ 10,-4, offset})
-            ->rotate(glm::radians(30.f), { 0, 1,0 });
-        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto platform3 = new RenderObject(new Render::Plane(18, 30), ground_material, "Platform3");
-        platform3
-            ->rotate(rotation * 2, { 0, 0, 1 })
-            ->translate({ 10,-6, offset * 2})
-            ->rotate(glm::radians(60.f), { 0, 1,0 });
+        auto platform2 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform2->translate({ 0, -5,  20 });
+        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
+        auto platform3 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform3->translate({ 0, -10,  10 });
         platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
-        platform4
-            ->rotate(rotation * 3, { 0, 0, 1 })
-            ->translate({ 10,-8, offset * 3})
-            ->rotate(glm::radians(90.f), { 0, 1,0 });
+        auto platform4 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform4->translate({ 0, -15,  20 });
         platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
 
-        auto goal = new Items::Goal({ 0, -8, offset * 3 + 20 });
+        auto goal = new Items::Goal({ 0, -15, 20 });
 
         level->add(platform1);
         level->add(platform2);
@@ -171,15 +162,15 @@ void LevelManager::load(unsigned short levelNr)
 
         level->add(d);
 
-        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/NissiBeach"));
         level->scene.lights.finalize();
 
         auto ground_material = new Material::TextureMaterial(
-            new Texture::Texture("../res/terazzo/color.jpg"),
-            new Texture::Texture("../res/terazzo/normal.jpg"),
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/color.jpg"),
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/normal.jpg"),
             new Texture::Texture(.3),
             new Texture::Texture(.5),
-            new Texture::Texture("../res/terazzo/shininess.jpg"),
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/shininess.jpg"),
             1.2
         );
         auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
@@ -202,9 +193,9 @@ void LevelManager::load(unsigned short levelNr)
         platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
         auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
         platform4
-            ->translate({ 10,-10, offset * 2 + 32});
+            ->translate({ 10,-10, offset * 2 + 20});
         platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto goal = new Items::Goal({ 0, -8, offset * 3 });
+        auto goal = new Items::Goal({ 5, -10, offset * 2 + 20 });
 
         level->add(platform1);
         level->add(platform2);
@@ -232,16 +223,16 @@ void LevelManager::load(unsigned short levelNr)
         level->add(d);
 
         level->scene.lights.finalize();
-        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
 
         auto slide = new RenderObject(
-            Render::Mesh::fromFile("../res/Slide.obj")[0],
+            Render::Mesh::fromFile(Globals::RESOURCES + "/Slide.robj")[0],
             new Material::TextureMaterial(
-                new Texture::Texture("../res/terracotta/color.jpg"),
-                new Texture::Texture("../res/terracotta/normal.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/color.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/normal.jpg"),
                 new Texture::Texture(.5),
                 new Texture::Texture(.4),
-                new Texture::Texture("../res/terracotta/shininess.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/shininess.jpg"),
                 1.4f
             ),
             "Slide"
@@ -274,24 +265,49 @@ void LevelManager::load(unsigned short levelNr)
         level->add(d);
 
         level->scene.lights.finalize();
-        level->set(new Cubemap("../res/cubemaps/Yokohama2"));
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
 
         auto ground = new RenderObject(
-            Render::Mesh::fromFile("../res/HoleLevel.obj")[0],
+            Render::Mesh::fromFile(Globals::RESOURCES + "/HoleLevel.robj")[0],
             new Material::TextureMaterial(
-                new Texture::Texture("../res/emerald_tiles/color.jpg"),
-                new Texture::Texture("../res/emerald_tiles/normal.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/emerald_tiles/color.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/emerald_tiles/normal.jpg"),
                 new Texture::Texture(.5f),
                 new Texture::Texture(.7f),
-                new Texture::Texture("../res/emerald_tiles/shininess.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/emerald_tiles/shininess.jpg"),
                 2.3
             ),
             "HoleyGround"
         );
-
+        ground->translate({ 0,0, 18 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
 
+        auto goal = new Items::Goal({ 5, 0, 36 });
+
+
+        std::vector<glm::vec3> bones = {
+            {0, 0, 0},
+            {5, 0, 0},
+            {10, 0, 4},
+            {7, 0, 3},
+            {18, 0, 0},
+            {5, 0, 12},
+            {9, 0, 10},
+            {18, 0, 18},
+            {5, 0, 7},
+            {25, 0, 0},
+            {23, 0, 18},
+            {21, 0, 9},
+            {15, 0, 18},
+        };
+
+        for (auto vec : bones) {
+            auto* bone = new Items::DogTreat(level->pWorld, vec + glm::vec3{0, 1, 0});
+            level->add(bone);
+        }
+
         level->add(ground);
+        level->add(goal);
 
         level->finalize();
         Inputs::setProcessor(level);

@@ -263,7 +263,7 @@ Decoration::Animation::Animation() :
 Decoration::Animation::Animation(std::string path, float speed, bool loop) : loop(loop), speed(speed), played(false), started(false), started_frame(0)
 {
 	for (const auto& file : std::filesystem::directory_iterator(path.c_str()))
-		if(file.path().extension() == ".obj")
+		if(file.path().extension() == ".robj")
 			paths.push_back(file.path().string());
 }
 

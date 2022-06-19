@@ -20,6 +20,8 @@ public:
 
 	static float MAX_PLAYER_SPEED;
 	static float INPUT_ROTATION;
+
+	static std::string RESOURCES;
 };
 
 class Utils
