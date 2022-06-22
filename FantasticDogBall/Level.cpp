@@ -45,7 +45,7 @@ State Level::render()
 		pWorld->stepSimulation(dt);
 	}
 
-	time -= dt / 1000;
+ 	time -= dt / 1000;
 
 	if (time < 0)
 		return State::TIME_OVER;
@@ -149,7 +149,7 @@ void Level::addGravity(btVector3 vec) {
 	pWorld->setGravity(pWorld->getGravity() + vec);
 }
 
-void Level::on(int key) {
+void Level::pressed(int key) {
 	switch (key) {
 	case GLFW_KEY_W:
 		pressW();
@@ -166,7 +166,7 @@ void Level::on(int key) {
 	}
 }
 
-void Level::off(int key) {
+void Level::release(int key) {
 	switch (key) {
 	case GLFW_KEY_W:
 		releaseW();

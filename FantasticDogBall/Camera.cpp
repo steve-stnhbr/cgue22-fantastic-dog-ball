@@ -12,6 +12,7 @@ Camera::Camera(): data({ glm::mat4(1), glm::mat4(1) })
 {
 	setPosition({ 0, 1, -6 });
 	setDirection({ 0, -1, .1 });
+	gravityAxisBefore = { 0, -1, 0 };
 	buffer.create(sizeof(Data));
 }
 
@@ -39,6 +40,11 @@ void Camera::setDirection(const glm::vec3 direction_)
 void Camera::setLeaning(const float leaning_)
 {
 	leaning = leaning_;
+}
+
+void Camera::setActualLeaning(const float leaning_) {
+	leaning = leaning_;
+	a_leaning = leaning_;
 }
 
 void Camera::setPitch(const float pitch_) {
@@ -94,15 +100,17 @@ void Camera::update() {
 	a_leaning += (leaning - a_leaning) * .14;
 	a_xRotation += (xRotation - a_xRotation) * .14;
 	direction = glm::vec3(glm::sin(yRotation), -.37 - a_xRotation, glm::cos(yRotation));
-	
 	// move camera away from the player 
 	data.position = glm::vec4(glm::vec3(playerPos) - glm::normalize(direction) * 5.0f, 1);
 
-	// rotate camera depending on gravity 
-	// todo x rotation on w and s
-	const auto gravityAxis = glm::vec3(LevelManager::current->pWorld->getGravity().x(), LevelManager::current->pWorld->getGravity().z(), 1);
+	// rotate camera depending on gravity
+	auto gravityAxis = glm::vec3(LevelManager::current->pWorld->getGravity().x(), -1, LevelManager::current->pWorld->getGravity().z());
+	if (glm::length(gravityAxis) == 1) {
+		gravityAxis = gravityAxisBefore;
+	}
+	else gravityAxisBefore = gravityAxis;
 	const auto rotationAxis = glm::cross(direction, gravityAxis);
-	const auto up = glm::vec3(glm::rotate(glm::mat4(1.0f), a_leaning, rotationAxis) * glm::vec4(0,1.0f,0,0));
+	const auto up = glm::vec3(glm::rotate(glm::mat4(1.0f), a_leaning, rotationAxis) * glm::vec4(0, 1.0f, 0, 0));
 
 	const float ratio = static_cast<float>(Globals::WINDOW_WIDTH) / static_cast<float>(Globals::WINDOW_HEIGHT);
 	data.projection = glm::perspective<float>(Globals::FOV, ratio, .1f, 100.0f);

@@ -123,16 +123,23 @@ void error_callback(int error, const char* msg) {
     Loggger::error("(%i) %s", error, msg);
 }
 
+std::map<int, int> keyActionMap;
+
 void processInput(GLFWwindow* window)
 {
-    for (auto i = 48; i < 90; i++) {
-        if (glfwGetKey(window, i) == GLFW_PRESS) {
-            if (Inputs::processor) 
-                Inputs::processor->on(i);
+    if (!Inputs::processor) return;
+    for (auto key = 48; key < 90; key++) {
+        if (glfwGetKey(window, key) == GLFW_PRESS) {
+            Inputs::processor->pressed(key);
+            if (keyActionMap[key] == GLFW_RELEASE)
+                Inputs::processor->press(key);
+            keyActionMap[key] = GLFW_PRESS;
         }
-        else if (glfwGetKey(window, i) == GLFW_RELEASE) {
-            if (Inputs::processor) 
-                Inputs::processor->off(i);
+        else if (glfwGetKey(window, key) == GLFW_RELEASE) {
+            Inputs::processor->released(key);
+            if (keyActionMap[key] == GLFW_PRESS)
+                Inputs::processor->release(key);
+            keyActionMap[key] = GLFW_RELEASE;
         }
     }
 

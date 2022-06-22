@@ -209,7 +209,7 @@ void LevelManager::load(unsigned short levelNr)
         current = level;
         break;
     }
-    case 3: {
+    case 10: {
         auto level = new Level(playerTemplate, 50);
 
         Light::Directional d = {
@@ -251,7 +251,7 @@ void LevelManager::load(unsigned short levelNr)
         current = level;
         break;
     }
-    case 4: {
+    case 3: {
         auto level = new Level(playerTemplate, 50);
 
         Light::Directional d = {
@@ -279,30 +279,29 @@ void LevelManager::load(unsigned short levelNr)
             ),
             "HoleyGround"
         );
-        ground->translate({ 0,0, 18 });
         ground->add(new Decoration::Physics(level->pWorld, nullptr, 0));
 
         auto goal = new Items::Goal({ 5, 0, 36 });
 
 
         std::vector<glm::vec3> bones = {
-            {0, 0, 0},
-            {5, 0, 0},
-            {10, 0, 4},
-            {7, 0, 3},
-            {18, 0, 0},
-            {5, 0, 12},
-            {9, 0, 10},
-            {18, 0, 18},
-            {5, 0, 7},
-            {25, 0, 0},
-            {23, 0, 18},
-            {21, 0, 9},
-            {15, 0, 18},
+            {-3, 0, 22},
+            {-4.3, 0, 17},
+            {9, 0, 20},
+            {6.8, 0, 13},
+            {12, 0, .6},
+            {-6.7, 0, 1.87},
+            {-7.18, 0, 9.93},
+            {-11.8, 0, 17.3},
+            {-7, 0, 21},
+            {-1.14, 0, 13},
+            {2.96, 0, 22},
+            {-11.69, 0, 6.5},
+            {-2.96, 0, -9.11},
         };
 
         for (auto vec : bones) {
-            auto* bone = new Items::DogTreat(level->pWorld, vec + glm::vec3{0, 1, 0});
+            auto* bone = new Items::DogTreat(level->pWorld, vec * glm::vec3(-1.4, 1.4, 1.4) + glm::vec3{0, 1, 0});
             level->add(bone);
         }
 
@@ -313,6 +312,61 @@ void LevelManager::load(unsigned short levelNr)
         Inputs::setProcessor(level);
         state = State::PLAYING;
         current = level;
+        break;
+    }
+    case 4: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, -1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->scene.lights.finalize();
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
+
+        auto slide = new RenderObject(
+            Render::Mesh::fromFile(Globals::RESOURCES + "/SlideSubdiv_.robj")[0],
+            new Material::TextureMaterial(
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/color.jpg"),
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/normal.jpg"),
+                new Texture::Texture(.5),
+                new Texture::Texture(.4),
+                new Texture::Texture(Globals::RESOURCES + "/terracotta/shininess.jpg"),
+                1.4f
+            ),
+            "Slide"
+        );
+
+        slide->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+
+        auto goal = new Items::Goal({ 50, -12, 50 });
+
+        level->add(new Items::DogTreat(level->pWorld, { 0, -2       +1, 3.16 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -2.716 + 1, 6 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -3.9 + 1, 9 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -7.15 + 1, 18 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -7.62 + 1, 21 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -5.5 + 1, 37 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -5.54 + 1 , 40 }));
+        level->add(new Items::DogTreat(level->pWorld, { 0, -5.54 + 1, 43 }));
+        level->add(new Items::DogTreat(level->pWorld, { 14.15, -7.96 + 1, 50 }));
+        level->add(new Items::DogTreat(level->pWorld, { 17.35, -9.18 + 1, 50 }));
+        level->add(new Items::DogTreat(level->pWorld, { 20.2, -10.11 + 1, 50 }));
+
+        level->add(goal);
+        level->add(slide);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
         break;
     }
     default:

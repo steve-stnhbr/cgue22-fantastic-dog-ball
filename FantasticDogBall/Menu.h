@@ -25,7 +25,7 @@ namespace Menu {
 		StartMenu();
 
 		void draw();
-		void on(int key) override;
+		void press(int key) override;
 	};
 	class FinishedMenu : public Inputs::Processor {
 	private:
@@ -34,7 +34,7 @@ namespace Menu {
 		FinishedMenu();
 
 		void draw(unsigned time, unsigned score);
-		void on(int key) override;
+		void press(int key) override;
 	};
 	class TimeOverMenu : public Inputs::Processor {
 	private:
@@ -43,7 +43,7 @@ namespace Menu {
 		TimeOverMenu();
 
 		void draw();
-		void on(int key) override;
+		void press(int key) override;
 	};
 	class GameOverMenu : public Inputs::Processor {
 	private:
@@ -52,6 +52,6 @@ namespace Menu {
 		GameOverMenu();
 
 		void draw();
-		void on(int key) override;
+		void press(int key) override;
 	};
 }

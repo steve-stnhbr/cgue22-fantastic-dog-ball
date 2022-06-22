@@ -19,7 +19,7 @@ class Level : public Inputs::Processor
 {
 private:
 	const static glm::mat4 rotateA, rotateD;
-	const float gravityMultiplier = 3.8f;
+	const float gravityMultiplier = 7.8f;
 public:
 	const static inline btVector3 GRAVITY = { 0, -6.2f, 0 };
 	Scene scene;
@@ -59,8 +59,8 @@ public:
 	void releaseA();
 	void releaseS();
 	void releaseD();
-	void on(int key) override;
-	void off(int key) override;
+	void pressed(int key) override;
+	void release(int key) override;
 
 protected:
 	// core Bullet components

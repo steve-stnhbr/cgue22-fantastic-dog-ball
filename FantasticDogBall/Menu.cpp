@@ -27,7 +27,7 @@ void Menu::StartMenu::draw()
 	gltEndDraw();
 }
 
-void Menu::StartMenu::on(int key)
+void Menu::StartMenu::press(int key)
 {
 	if (key >= 49 && key <= 57) { // numbers from 1 to 9
 		LevelManager::load(key - 49);
@@ -55,7 +55,7 @@ void Menu::TimeOverMenu::draw()
 	gltEndDraw();
 }
 
-void Menu::TimeOverMenu::on(int key)
+void Menu::TimeOverMenu::press(int key)
 {
 	switch (key) {
 	case GLFW_KEY_E:
@@ -88,7 +88,7 @@ void Menu::GameOverMenu::draw()
 	gltEndDraw();
 }
 
-void Menu::GameOverMenu::on(int key)
+void Menu::GameOverMenu::press(int key)
 {
 	switch (key) {
 	case GLFW_KEY_E:
@@ -133,7 +133,7 @@ void Menu::FinishedMenu::draw(unsigned time, unsigned score)
 	gltEndDraw();
 }
 
-void Menu::FinishedMenu::on(int key)
+void Menu::FinishedMenu::press(int key)
 {
 	switch (key) {
 	case GLFW_KEY_E:

@@ -20,10 +20,10 @@ unsigned Globals::WINDOW_HEIGHT = 1080;
 unsigned Globals::NUM_LEVELS = 2;
 unsigned Globals::FOV = 45;
 
-float Globals::MAX_PLAYER_SPEED = 4.3f;
-float Globals::INPUT_ROTATION = 40.f;
+float Globals::MAX_PLAYER_SPEED = 8.8f;
+float Globals::INPUT_ROTATION = 60.f;
 
-std::string Globals::RESOURCES = "./res";
+std::string Globals::RESOURCES = "../res";
 
 std::string Utils::readFile(const char* path)
 {
