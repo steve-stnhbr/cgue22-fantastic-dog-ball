@@ -203,7 +203,7 @@ void Decoration::Physics::init(RenderObject* object)
 
 	pBody = new btRigidBody(rigidBodyCI);
 	pBody->setUserPointer(object);
-	pBody->setRollingFriction(.2);
+	pBody->setRollingFriction(.01);
 	pBody->setDeactivationTime(0);
 	pBody->setSleepingThresholds(1.f, 1.f);
 

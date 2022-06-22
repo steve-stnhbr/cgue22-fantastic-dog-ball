@@ -84,8 +84,8 @@ void Texture::Texture::load(std::string filePath_)
 	defined = true;
 	int comp;
 	filePath = filePath_;
-	data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
 	stbi_set_flip_vertically_on_load(true);
+	data = stbi_load(filePath_.c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
 
 	if (data == nullptr)
 	{

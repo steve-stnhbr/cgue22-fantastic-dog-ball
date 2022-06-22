@@ -104,9 +104,9 @@ void Player::init(btDynamicsWorld* pWorld)
 	transform = glm::mat4(1);
 	dog->transform = transform;
 
-	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 7.4, .2);
+	auto* ball_mat = new Material::StaticMaterial({ .8, .8, .9, .76 }, { .32 }, { .8 }, 35, .1);
 	ball = new RenderObject{ new Render::Sphere(1, 16, 32), ball_mat, "PlayerBall", false };
-	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 10);
+	auto* physics = new Decoration::Physics(pWorld, new btSphereShape(1), 25);
 	ball->add(physics);
 
 	ball->transform = transform;

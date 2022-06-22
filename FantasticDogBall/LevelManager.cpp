@@ -74,25 +74,91 @@ void LevelManager::load(unsigned short levelNr)
         level->add(treat1);
         auto* treat2 = new Items::DogTreat(level->pWorld, glm::vec3(0, 0, 15));
         level->add(treat2);
-        auto* treat3 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 35));
+        auto* treat3 = new Items::DogTreat(level->pWorld, glm::vec3(0, 4, 50));
         level->add(treat3);
-        auto* treat4 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 40));
+        auto* treat4 = new Items::DogTreat(level->pWorld, glm::vec3(0, 4, 55));
         level->add(treat4);
-        auto* treat5 = new Items::DogTreat(level->pWorld, glm::vec3(0, 3, 45));
+        auto* treat5 = new Items::DogTreat(level->pWorld, glm::vec3(0, 4, 60));
         level->add(treat5);
 
-        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, -1, 40), 5);
+        auto* jumpPad = new Items::JumpPad(level->pWorld, glm::vec3(0, -1, 40), 3);
         level->add(jumpPad);
 
-        auto* goal = new Items::Goal(glm::vec3(0, 4, 75));
+        auto* goal = new Items::Goal(glm::vec3(0, 3, 75));
         goal->rotate(glm::radians(90.f), {0, 1, 0});
         level->add(goal);
 
         level->finalize();
         current = level;
         Inputs::setProcessor(current);
+        break;
     }
-    break;
+    case 1: {
+        auto level = new Level(playerTemplate, 50);
+
+        Light::Directional d = {
+            glm::vec3(2, -8, -1),
+            glm::vec3(.5),
+            glm::vec3(1.3),
+            glm::vec3(1.9),
+            true
+        };
+
+        level->add(d);
+
+        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/NissiBeach"));
+        level->scene.lights.finalize();
+
+        auto ground_material = new Material::TextureMaterial(
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/color.jpg"),
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/normal.jpg"),
+            new Texture::Texture(.3),
+            new Texture::Texture(.5),
+            new Texture::Texture(Globals::RESOURCES + "/terazzo/shininess.jpg"),
+            1.2
+        );
+        auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
+
+        const int offset = 30;
+        const float rotation = glm::radians(20.f);
+
+        auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
+        platform1->translate({ 0, -2,  10 });
+        platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform2 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform2");
+        platform2
+            ->translate({ 10,-4, offset })
+            ->rotate(rotation, { 0, 0, 1 });
+        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto platform3 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform3");
+        platform3
+            ->translate({ 8,-6, offset * 2 })
+            ->rotate(-rotation, { 0, 0, 1 });
+        platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
+        auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
+        platform4
+            ->translate({ 10,-10, offset * 2 + 20});
+        platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
+        auto goal = new Items::Goal({ 5, -10, offset * 2 + 20 });
+
+        level->add(platform1);
+        level->add(platform2);
+        level->add(new Items::DogTreat(level->pWorld, { 10, -3.5, 35 }));
+        level->add(new Items::DogTreat(level->pWorld, { 10, -3.5, 40 }));
+        level->add(new Items::DogTreat(level->pWorld, { 10, -3.5, 45 }));
+        level->add(platform3);
+        level->add(new Items::DogTreat(level->pWorld, { 8, -5.5, 65 }));
+        level->add(new Items::DogTreat(level->pWorld, { 8, -5.5, 70 }));
+        level->add(new Items::DogTreat(level->pWorld, { 8, -5.5, 75 }));
+        level->add(platform4);
+        level->add(goal);
+
+        level->finalize();
+        Inputs::setProcessor(level);
+        state = State::PLAYING;
+        current = level;
+        break;
+    }
     case 2: {
         auto level = new Level(playerTemplate, 50);
 
@@ -127,7 +193,7 @@ void LevelManager::load(unsigned short levelNr)
         platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         auto platform2 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
         platform2->translate({ 0, -5,  20 });
-        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
+        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
         auto platform3 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
         platform3->translate({ 0, -10,  10 });
         platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0));
@@ -138,112 +204,22 @@ void LevelManager::load(unsigned short levelNr)
         auto goal = new Items::Goal({ 0, -15, 20 });
 
         level->add(platform1);
+        level->add(new Items::DogTreat(level->pWorld, { -5, 1, 5 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, 1, 5 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, 1, 15 }));
+        level->add(new Items::DogTreat(level->pWorld, { -5, 1, 15 }));
         level->add(platform2);
+        level->add(new Items::DogTreat(level->pWorld, { -5, -4, 15 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, -4, 15 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, -4, 25 }));
+        level->add(new Items::DogTreat(level->pWorld, { -5, -4, 25 }));
         level->add(platform3);
+        level->add(new Items::DogTreat(level->pWorld, { -5, -9, 5 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, -9, 5 }));
+        level->add(new Items::DogTreat(level->pWorld, { 5, -9, 15 }));
+        level->add(new Items::DogTreat(level->pWorld, { -5, -9, 15 }));
         level->add(platform4);
         level->add(goal);
-
-        level->finalize();
-        Inputs::setProcessor(level);
-        state = State::PLAYING;
-        current = level;
-        break;
-    }
-    case 1: {
-        auto level = new Level(playerTemplate, 50);
-
-        Light::Directional d = {
-            glm::vec3(2, -8, -1),
-            glm::vec3(.5),
-            glm::vec3(1.3),
-            glm::vec3(1.9),
-            true
-        };
-
-        level->add(d);
-
-        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/NissiBeach"));
-        level->scene.lights.finalize();
-
-        auto ground_material = new Material::TextureMaterial(
-            new Texture::Texture(Globals::RESOURCES + "/terazzo/color.jpg"),
-            new Texture::Texture(Globals::RESOURCES + "/terazzo/normal.jpg"),
-            new Texture::Texture(.3),
-            new Texture::Texture(.5),
-            new Texture::Texture(Globals::RESOURCES + "/terazzo/shininess.jpg"),
-            1.2
-        );
-        auto physics = new Decoration::Physics(level->pWorld, nullptr, 0);
-
-        const int offset = 30;
-        const float rotation = glm::radians(10.f);
-
-        auto platform1 = new RenderObject(new Render::Plane(18, 25), ground_material, "Platform1");
-        platform1->translate({ 0, -2,  10 });
-        platform1->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto platform2 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform2");
-        platform2
-            ->rotate(rotation, { 0, 0, 1 })
-            ->translate({ 10,-4, offset });
-        platform2->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto platform3 = new RenderObject(new Render::Plane(8, 30), ground_material, "Platform3");
-        platform3
-            ->rotate(-rotation, { 0, 0, 1 })
-            ->translate({ 10,-6, offset * 2 });
-        platform3->add(new Decoration::Physics(level->pWorld, nullptr, 0)); 
-        auto platform4 = new RenderObject(new Render::Plane(18, 18), ground_material, "Platform4");
-        platform4
-            ->translate({ 10,-10, offset * 2 + 20});
-        platform4->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-        auto goal = new Items::Goal({ 5, -10, offset * 2 + 20 });
-
-        level->add(platform1);
-        level->add(platform2);
-        level->add(platform3);
-        level->add(platform4);
-        level->add(goal);
-
-        level->finalize();
-        Inputs::setProcessor(level);
-        state = State::PLAYING;
-        current = level;
-        break;
-    }
-    case 10: {
-        auto level = new Level(playerTemplate, 50);
-
-        Light::Directional d = {
-            glm::vec3(2, -8, -1),
-            glm::vec3(.5),
-            glm::vec3(1.3),
-            glm::vec3(1.9),
-            true
-        };
-
-        level->add(d);
-
-        level->scene.lights.finalize();
-        level->set(new Cubemap(Globals::RESOURCES + "/cubemaps/Yokohama2"));
-
-        auto slide = new RenderObject(
-            Render::Mesh::fromFile(Globals::RESOURCES + "/Slide.robj")[0],
-            new Material::TextureMaterial(
-                new Texture::Texture(Globals::RESOURCES + "/terracotta/color.jpg"),
-                new Texture::Texture(Globals::RESOURCES + "/terracotta/normal.jpg"),
-                new Texture::Texture(.5),
-                new Texture::Texture(.4),
-                new Texture::Texture(Globals::RESOURCES + "/terracotta/shininess.jpg"),
-                1.4f
-            ),
-            "Slide"
-        );
-
-        slide->add(new Decoration::Physics(level->pWorld, nullptr, 0));
-
-        auto goal = new Items::Goal({ 0, 33, -7.8 });
-
-        level->add(goal);
-        level->add(slide);
 
         level->finalize();
         Inputs::setProcessor(level);
